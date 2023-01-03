@@ -4,12 +4,10 @@
 
 - React JS
 - Next JS
-- Twailind css
 
 ## Features
 
-- Tailwind install - done;
-- QR code login by Google auth
+- QR code login by Google auth => TO implement on backend
   - Auth :https://nextjs.org/docs/authentication
   - 42 login
 - SocketIO (Chat)

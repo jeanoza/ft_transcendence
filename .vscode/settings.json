@@ -4,5 +4,7 @@
 	"editor.insertSpaces": false,
 	"editor.tabSize": 2,
 	"editor.detectIndentation": false,
-	"prettier.useTabs": true
+	"prettier.useTabs": true,
+	"editor.formatOnPaste": true,
+	"editor.formatOnSave": true
 }
