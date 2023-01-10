@@ -16,5 +16,6 @@ This is a boiler plate to use generally at my futur web application.
   - one
 - Backend:
   - connect Postgresql with typeorm
+  - assemble .env => gitignore but how to partager with collaborator??
 - Database:
   - one
