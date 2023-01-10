@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Navbar() {
 	const router = useRouter();
-	const elements = ["/", "/about"];
+	const elements = ["/", "/about", "/user"];
 
 	return (
 		<nav>
