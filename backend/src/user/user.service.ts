@@ -7,7 +7,11 @@ import { User } from './entities/user.entity';
 export class UserService {
   private users: User[] = [];
   create(data: CreateUserDto): number {
-    const id = this.users.length + 1;
+    let max = 0;
+    this.users.forEach((el) => {
+      if (max < el.id) max = el.id;
+    });
+    const id = max + 1;
 
     this.users.push({ id, ...data });
     return id;

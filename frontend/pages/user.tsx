@@ -24,10 +24,11 @@ export default function User() {
 		e.preventDefault();
 
 		const targetName = e.currentTarget.name;
+		let url = "http://localhost:8888/user/";
+		let headers = { "Content-Type": "application/json" };
+		let method = "POST";
 
 		if (targetName === "create" || (targetName === "update" && id > 0)) {
-			let url = "http://localhost:8888/user/";
-			let method = "POST";
 			if (targetName === "update") {
 				url += id;
 				method = "PATCH";
@@ -40,9 +41,7 @@ export default function User() {
 			const res = await (
 				await fetch(url, {
 					method,
-					headers: {
-						"Content-Type": "application/json",
-					},
+					headers,
 					body: JSON.stringify(data),
 				})
 			).json();
@@ -56,10 +55,20 @@ export default function User() {
 			else setUserData((before) => [...before, { id: res, ...data }]);
 
 			//after update empty each input
-			setName("");
-			setEmail("");
-			setId(0);
+
+		} else if (targetName === "delete") {
+			url += id;
+			method = "DELETE"
+			const res = await (await fetch(url, {
+				method,
+				headers
+			})).json()
+			console.log(res)
+			setUserData(before => [...before.filter(el => el.id !== id)])
 		}
+		setName("");
+		setEmail("");
+		setId(0);
 	}
 
 	function onChange(e: React.ChangeEvent<HTMLInputElement>) {
