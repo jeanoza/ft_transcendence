@@ -15,6 +15,6 @@ This is a boiler plate to use generally at my futur web application.
 - Frontend:
   - one
 - Backend:
-  - one
+  - connect Postgresql with typeorm
 - Database:
   - one
