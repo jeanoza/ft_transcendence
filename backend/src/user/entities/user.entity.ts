@@ -9,8 +9,8 @@ import {
 
 export class User {
   id: number;
-  name: string;
-  email: string;
+  name?: string;
+  email?: string;
 }
 
 //@Entity({ schema: 'boilerplate', name: 'users' })
