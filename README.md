@@ -19,3 +19,22 @@ This is a boiler plate to use generally at my futur web application.
   - assemble .env => gitignore but how to partager with collaborator??
 - Database:
   - one
+
+## Useful commands
+
+### PostgreSQL:
+
+- psql -U $POSTGRES_USER -d $POSTGRES_DB
+
+### Docker :
+
+- docker-compose up --build -V
+
+  - V: remove anonymous volume
+
+- clean
+  docker-compose down
+  docker container prune --force
+  docker image prune --force --all
+  docker network prune --force
+  docker volume prune --force
