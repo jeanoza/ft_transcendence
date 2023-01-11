@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
+//in postgresql do not put schema
 @Entity({ name: 'users' })
 export class User {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
