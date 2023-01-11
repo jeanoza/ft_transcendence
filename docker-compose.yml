@@ -1,3 +1,6 @@
+#https://www.tomray.dev/nestjs-docker-compose-postgres
+#https://blog.logrocket.com/containerized-development-nestjs-docker/
+
 version: "3.8"
 
 services:
@@ -42,7 +45,7 @@ services:
       POSTGRES_DB: ${DB_DATABASE}
       PG_DATA: /var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - ${DB_PORT}:${DB_PORT}
     volumes:
       - pgdata:/var/lib/postgresql/data
 volumes:
