@@ -14,22 +14,22 @@ export class User {
   id: number;
 
   @Column('varchar', { name: 'name', unique: true, length: 30 })
-  name?: string;
+  name: string;
 
   @Column('varchar', { name: 'email', unique: true, length: 30 })
-  email?: string;
+  email: string;
 
   @Column('varchar', { name: 'password', length: 100, select: false })
-  password?: string;
+  password: string;
 
   @CreateDateColumn()
-  createdAt?: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updatedAt?: Date;
+  updatedAt: Date;
 
   @DeleteDateColumn()
-  deletedAt?: Date;
+  deletedAt: Date;
 }
 
 //export class User {

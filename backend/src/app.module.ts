@@ -18,7 +18,7 @@ import { User } from './user/entities/user.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      synchronize: true, // 'true' at the first time then 'false' to do not lose data
+      synchronize: false, // 'true' at the first time then 'false' to do not lose data
       entities: [User],
       logging: process.env.NODE_ENV !== 'production', // logging only on dev
       keepConnectionAlive: true, //hot-reloading disconnect db when code change
