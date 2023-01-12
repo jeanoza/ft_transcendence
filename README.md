@@ -13,15 +13,40 @@ This is a boiler plate to use generally at my futur web application.
 ## Features
 
 - Frontend:
-  - one
+
+  - [x] login btn => change dynamically ('login' -> 'Hello USER_NAME')
+
+  - [x] auth page for sign-up/sign-in
+
+  - [x] request to server
+
+  - [ ] see refactoring : line 33 in auth.tsx
+
+  - [ ] session
+
+  - [ ] post page implement
+
 - Backend:
 
-  - [ ] connect Postgresql with typeorm
+  - [x] connect Postgresql with typeorm
 
   - [x] assemble .env => gitignore but how to partager with collaborator??
 
+  - [x] auth
+
+  - [ ] see refactoring - user.service, entities
+
+  - [ ] add table for post
+
+  - [ ] service and controller
+
 - Database:
-  - one
+
+  - [x] config PostgreSQL and connect with nestJS server
+
+- Docker:
+
+  - [x] docker-compose.yml
 
 ## Useful commands
 

@@ -13,13 +13,14 @@ export class User {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
-  @Column('varchar', { name: 'name', unique: true, length: 30 })
+  @Column('varchar', { name: 'name', length: 30 })
   name: string;
 
   @Column('varchar', { name: 'email', unique: true, length: 30 })
   email: string;
 
-  @Column('varchar', { name: 'password', length: 100, select: false })
+  //@Column('varchar', { name: 'password', length: 100, select: false })
+  @Column('varchar', { name: 'password', length: 100 })
   password: string;
 
   @CreateDateColumn()

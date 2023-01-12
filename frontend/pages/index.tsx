@@ -5,7 +5,7 @@ export default function Home() {
 		<>
 			<Seo title="Home" />
 			<main>
-				<h1 className="">User</h1>
+				<h1 className="">Home</h1>
 			</main>
 		</>
 	);
