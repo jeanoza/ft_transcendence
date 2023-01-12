@@ -33,8 +33,11 @@ This is a boiler plate to use generally at my futur web application.
   - V: remove anonymous volume
 
 - clean
-  docker-compose down
-  docker container prune --force
-  docker image prune --force --all
-  docker network prune --force
-  docker volume prune --force
+
+```bash
+docker-compose down
+docker container prune --force
+docker image prune --force --all
+docker network prune --force
+docker volume prune --force
+```
