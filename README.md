@@ -44,6 +44,12 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] config PostgreSQL and connect with nestJS server
 
+  - [x] User table
+
+  - [ ] Post table
+
+  - [ ] Chat table
+
 - Docker:
 
   - [x] docker-compose.yml
