@@ -8,7 +8,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { LoginUserDto } from './dto/login-user.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -30,24 +29,25 @@ export class UserService {
     return { name: data.name, email: data.email };
   }
 
-  async login(data: LoginUserDto) {
-    const user = await this.findByEmail(data.email);
-    if (!user) throw new NotFoundException(`No user with ${data.email}`);
-    if (!(await bcrypt.compare(data.password, user.password)))
-      throw new NotFoundException('Wrong password');
-    return { name: user.name, email: user.email };
-  }
-
   findAll() {
     //return this.users;
   }
 
-  findByEmail(email: string) {
-    return this.userRepository
-      .createQueryBuilder('user')
-      .where({ email })
-      .getOne();
-    //return this.userRepository.findOne({ where: { email } });
+  async findByEmail(email: string) {
+    //with queryBuilder() : do not forget to add table nickname name (ex:'user') for next line(ex:'user.name', 'user.email' etc)!!
+    //const res = await this.userRepository
+    //  .createQueryBuilder('user')
+    //  .where('user.email = :email', { email })
+    //  .select(['user.name', 'user.password', 'user.email']) // to add password manually (password is select:false in entity for security)
+    //  .getOne();
+
+    //with typeorm method
+    const res = await this.userRepository.findOne({
+      where: { email },
+      select: ['name', 'password', 'email'],
+    });
+    //console.log(res);
+    return res;
   }
 
   findOne(id: number) {

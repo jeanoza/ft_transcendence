@@ -19,8 +19,7 @@ export class User {
   @Column('varchar', { name: 'email', unique: true, length: 30 })
   email: string;
 
-  //@Column('varchar', { name: 'password', length: 100, select: false })
-  @Column('varchar', { name: 'password', length: 100 })
+  @Column('varchar', { name: 'password', length: 100, select: false })
   password: string;
 
   @CreateDateColumn()

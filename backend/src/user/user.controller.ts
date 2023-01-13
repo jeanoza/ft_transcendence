@@ -6,37 +6,40 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
+import { LocalAuthGuard } from 'src/auth/local-auth.guard';
+import { NotLoggedInGuard } from 'src/auth/not-logged-in.guard';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Get()
+  async getCurrentUser(@Request() req) {
+    console.log(req.user);
+    return req.user || false;
+  }
+
+  @UseGuards(new NotLoggedInGuard())
   @Post()
   create(@Body() data: CreateUserDto) {
     console.log(data);
-    //newAccount ? create(join)
-    //1. verify email
-    //1.1 already ? => throw error
-    //1.2 no-register => create => user | name:string
-
-    //login? signin
-    //1. verify email && password(hashed)
-    //1.1. no email? => throw error
-    //1.2 no password => throw error
-    //else => user | name:string
     return this.userService.create(data);
   }
 
+  @UseGuards(LocalAuthGuard)
   @Post('login')
-  login(@Body() data: LoginUserDto) {
-    console.log(data);
-    return this.userService.login(data);
+  login(@Request() req) {
+    console.log('login con', req.user);
+    return req.user;
   }
+
+  //TODO: logout guard
 
   @Get()
   findAll() {

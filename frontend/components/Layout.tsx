@@ -1,11 +1,21 @@
 import Navbar from "./navbar";
 import AppContext from "../utils/AppContext";
 import { useState } from "react";
+import { BASE_URL } from "../utils/global";
 
 export function Layout({ children }: React.PropsWithChildren) {
 
 	const [logged, setLogged] = useState(false);
 	const [user, setUser] = useState({ name: "", email: "" })
+
+	//FIXME: here
+	//const test = fetch(BASE_URL + 'user', {
+	//	method: 'GET',
+	//}).then(res => {
+	//	console.log(res);
+	//})
+
+	//console.log(test);
 
 	return (
 		<AppContext.Provider value={{
