@@ -21,30 +21,30 @@ export class UserController {
 
   @Get()
   async getCurrentUser(@Request() req) {
-    console.log(req.user);
+    console.log('here1');
+    console.log('here', req.isAuthenticated());
     return req.user || false;
   }
 
   @UseGuards(new NotLoggedInGuard())
   @Post()
   create(@Body() data: CreateUserDto) {
-    console.log(data);
     return this.userService.create(data);
   }
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
   login(@Request() req) {
-    console.log('login con', req.user);
+    console.log('login con', req.isAuthenticated());
     return req.user;
   }
 
   //TODO: logout guard
 
-  @Get()
-  findAll() {
-    return this.userService.findAll();
-  }
+  //@Get()
+  //findAll() {
+  //  return this.userService.findAll();
+  //}
 
   @Get(':id')
   findOne(@Param('id') id: string) {
