@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Request,
+  Response,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -21,8 +22,8 @@ export class UserController {
 
   @Get()
   async getCurrentUser(@Request() req) {
-    console.log('here1');
-    console.log('here', req.isAuthenticated());
+    //console.log('here1');
+    console.log('isAuthenticated()', req.isAuthenticated());
     return req.user || false;
   }
 
@@ -35,8 +36,12 @@ export class UserController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   login(@Request() req) {
-    console.log('login con', req.isAuthenticated());
     return req.user;
+  }
+
+  @Post('logout')
+  logout(@Response() res) {
+    return res.send('ok');
   }
 
   //TODO: logout guard

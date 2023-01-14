@@ -2,15 +2,17 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import AppContext from "../utils/AppContext";
 import { useContext } from "react";
+import { useState } from "react";
+import axios from "axios";
+import { BASE_URL } from "../utils/global";
+import { useCookies } from "react-cookie";
 
-//FIXME: this page will disapear.
 export default function Navbar() {
 	const router = useRouter();
 	const elements = ["/", "/about"];
 
-	//Can use login variable globally	thanks for React Context
-	const loggedIn = useContext(AppContext).state.logged;
-	const user = useContext(AppContext).state.user;
+	const [cookie, setCookie] = useCookies(["user"]);
+	const user = cookie.user;
 
 	return (
 		<nav>
@@ -27,14 +29,12 @@ export default function Navbar() {
 					);
 				})}
 			</ul>
-			<Link href="auth">
-				{!loggedIn && <span className="auth">Sign In</span>}
-			</Link>
-			{loggedIn && (
-				<span className="auth">
-					{user.name} ({user.email})
-				</span>
+			{!user && (
+				<Link href="auth">
+					<span className="auth">Sign In</span>
+				</Link>
 			)}
+			{user && <span className="auth">{user.email}</span>}
 			<style jsx>{`
 				nav {
 					background-color: #424245;

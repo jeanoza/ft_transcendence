@@ -21,12 +21,12 @@ export class UserService {
     if (user) throw new UnauthorizedException('User already exist');
 
     const hashedPassword = await bcrypt.hash(data.password, 12);
-    await this.userRepository.save({
+    const ret = await this.userRepository.save({
       email: data.email,
       name: data.name,
       password: hashedPassword,
     });
-    return { name: data.name, email: data.email };
+    return { id: ret.id, email: ret.email };
   }
 
   findAll() {

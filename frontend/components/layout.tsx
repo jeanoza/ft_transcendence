@@ -3,21 +3,13 @@ import AppContext from "../utils/AppContext";
 import { useCallback, useState } from "react";
 import { BASE_URL, HEADER } from "../utils/global";
 import axios from "axios";
+import { useCookies } from "react-cookie";
 
 export function Layout({ children }: React.PropsWithChildren) {
-	const [logged, setLogged] = useState(false);
-	const [user, setUser] = useState({ name: "", email: "" });
+	//const [logged, setLogged] = useState(false);
+	//const [user, setUser] = useState({ name: "", email: "" });
 
 	//FIXME: here
-
-	axios
-		.get(BASE_URL + "user", { withCredentials: true })
-		.then((res) => {
-			console.log(res);
-		})
-		.catch((e) => {
-			console.error("here", e.code);
-		});
 
 	//axios.get(BASE_URL + "user").then((res) => {
 	//	console.log(res);
@@ -32,13 +24,7 @@ export function Layout({ children }: React.PropsWithChildren) {
 	//});
 
 	return (
-		<AppContext.Provider
-			value={{
-				state: { logged, user },
-				setLogged,
-				setUser,
-			}}
-		>
+		<>
 			<Navbar />
 			<div className="container">{children}</div>
 			<style jsx global>{`
@@ -51,6 +37,6 @@ export function Layout({ children }: React.PropsWithChildren) {
 					min-width: 400px;
 				}
 			`}</style>
-		</AppContext.Provider>
+		</>
 	);
 }
