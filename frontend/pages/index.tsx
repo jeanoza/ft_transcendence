@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Seo from "../components/Seo";
 import Navbar from "../components/navbar";
 import { useRouter } from "next/router";
@@ -11,7 +12,9 @@ export async function getServerSideProps(context: any) {
 export default function Home({ user }: any) {
 	const router = useRouter();
 
-	if (!user) router.push("auth");
+	useEffect(() => {
+		if (!user) router.push("auth");
+	}, [user])
 	return (
 		<>
 			<Seo title="Home" />

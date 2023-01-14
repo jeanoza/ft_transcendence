@@ -70,6 +70,9 @@ export default function Navbar({ user }: any) {
 					top: 16px;
 					right: 16px;
 				}
+				button {
+					margin-left:8px;
+				}
 			`}</style>
 		</nav>
 	);
