@@ -1,18 +1,21 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
-import AppContext from "../utils/AppContext";
-import { useContext } from "react";
-import { useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../utils/global";
 import { useCookies } from "react-cookie";
 
-export default function Navbar() {
+export default function Navbar({ user }: any) {
 	const router = useRouter();
 	const elements = ["/", "/about"];
+	const [, , remove] = useCookies(["user"]);
 
-	const [cookie, setCookie] = useCookies(["user"]);
-	const user = cookie.user;
+	async function onClick(e) {
+		await axios.get(BASE_URL + "user/logout", {
+			withCredentials: true,
+		});
+		remove("user");
+		router.push("/");
+	}
 
 	return (
 		<nav>
@@ -29,12 +32,19 @@ export default function Navbar() {
 					);
 				})}
 			</ul>
-			{!user && (
-				<Link href="auth">
-					<span className="auth">Sign In</span>
-				</Link>
-			)}
-			{user && <span className="auth">{user.email}</span>}
+			<div className="auth">
+				{!user && (
+					<Link href="auth">
+						<span>Sign In</span>
+					</Link>
+				)}
+				{user && (
+					<div>
+						<span>{user.email}</span>
+						<button onClick={onClick}>Logout</button>
+					</div>
+				)}
+			</div>
 			<style jsx>{`
 				nav {
 					background-color: #424245;

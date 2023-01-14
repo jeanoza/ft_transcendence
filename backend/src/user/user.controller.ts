@@ -39,7 +39,7 @@ export class UserController {
     return req.user;
   }
 
-  @Post('logout')
+  @Get('logout')
   logout(@Response() res) {
     return res.send('ok');
   }

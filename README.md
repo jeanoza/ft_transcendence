@@ -20,7 +20,13 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] request to server
 
-  - [ ] see refactoring : line 33 in auth.tsx
+  - [x] auth
+
+  - [ ] refactoring navbar
+
+  - [ ] refactoring auth
+
+  - [ ] Navbar need user/login...?
 
   - [ ] session
 

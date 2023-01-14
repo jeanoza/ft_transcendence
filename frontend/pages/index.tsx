@@ -1,11 +1,21 @@
 import Seo from "../components/Seo";
-import axios from "axios";
-import { BASE_URL } from "../utils/global";
+import Navbar from "../components/navbar";
+import { useRouter } from "next/router";
 
-export default function Home() {
+export async function getServerSideProps(context: any) {
+	const _cookie = context.req.cookies["user"];
+	if (_cookie) return { props: { user: JSON.parse(_cookie) } };
+	return { props: {} };
+}
+
+export default function Home({ user }: any) {
+	const router = useRouter();
+
+	if (!user) router.push("auth");
 	return (
 		<>
 			<Seo title="Home" />
+			<Navbar user={user} />
 			<main>
 				<h1 className="">Home</h1>
 			</main>
