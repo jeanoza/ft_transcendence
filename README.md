@@ -20,15 +20,13 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] request to server
 
-  - [x] auth
+  - [ ] auth(with cookie && session)
+
+  - [ ] auth(cookie => passport && jwt)
 
   - [ ] refactoring navbar
 
-  - [ ] refactoring auth
-
   - [ ] Navbar need user/login...?
-
-  - [ ] session
 
   - [ ] post page implement
 
