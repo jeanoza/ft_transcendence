@@ -20,9 +20,9 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] request to server
 
-  - [ ] auth(with cookie && session)
+  - [ ] auth(with session)
 
-  - [ ] auth(cookie => passport && jwt)
+  - [ ] auth(session => passport && jwt)
 
   - [ ] refactoring navbar
 
