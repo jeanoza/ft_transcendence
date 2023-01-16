@@ -1,35 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { BASE_URL } from "../utils/global";
+import React, { useState } from "react";
+import Seo from "./seo";
+import axios, { AxiosError } from "axios";
 import { useRouter } from "next/router";
-import { useCookies } from "react-cookie";
-import Seo from "../components/Seo";
-import Navbar from "../components/navbar";
-import axios from "axios";
 
-type data = {
+type UserData = {
 	name?: string;
 	email: string;
 	password: string;
 };
 
-//TODO: implement session or cookie to remain in logged
-//export async function getServerSideProps(context: any) {
-//	const _cookie = context.req.cookies["user"];
-//	if (_cookie) return { props: { user: JSON.parse(_cookie) } };
-//	return { props: {} };
-//}
-
-export default function Auth({ user }: any) {
+export default function Auth({ revalid }: any) {
 	const [email, setEmail] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
 	const [name, setName] = useState<string>("");
 	const [newAccount, setNewAccount] = useState<boolean>(false);
-	const [cookie, setCookie] = useCookies(["user"]);
 	const router = useRouter();
-
-	//useEffect(() => {
-	//	if (user) router.push("/");
-	//}, [user]);
 
 	function toggleAccount() {
 		setEmail("");
@@ -47,22 +32,29 @@ export default function Auth({ user }: any) {
 	async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 
-		let data: data = { email, password };
-		let url = BASE_URL + "user";
+		let data: UserData = { email, password };
+		let url = "user";
 
 		if (newAccount) data = { name, ...data };
 		else url += "/login";
 
 		try {
-			const res = await axios.post(url, data);
-			router.push("/");
-		} catch (e) {
-			window.alert(e);
+			await axios.post(url, data);
+
+			// to login automatically after create success
+			if (newAccount) {
+				let { name, ...resData } = data;
+				await axios.post(url + "/login", resData);
+			}
+			revalid();
+			router.push("/"); //optional
+		} catch (e: AxiosError | any) {
+			window.alert(e?.response?.data?.message);
 		}
 	}
 	return (
 		<>
-			<Seo title="Home" />
+			<Seo title="Auth" />
 			<main>
 				<h1>Auth</h1>
 				<form onSubmit={onSubmit}>

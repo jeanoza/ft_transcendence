@@ -1,6 +1,6 @@
 import {
+  ForbiddenException,
   Injectable,
-  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -26,7 +26,8 @@ export class UserService {
       name: data.name,
       password: hashedPassword,
     });
-    return { id: ret.id, email: ret.email };
+    if (ret) return 'ok';
+    throw new ForbiddenException();
   }
 
   findAll() {
@@ -46,7 +47,6 @@ export class UserService {
       where: { email },
       select: ['name', 'password', 'email'],
     });
-    //console.log(res);
     return res;
   }
 

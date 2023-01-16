@@ -20,13 +20,13 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] request to server
 
-  - [ ] auth(with session)
+  - [x] auth(with session)
+
+  - [x] refactoring navbar
 
   - [ ] auth(session => passport && jwt)
 
-  - [ ] refactoring navbar
-
-  - [ ] Navbar need user/login...?
+  - [ ] 42 auth
 
   - [ ] post page implement
 
@@ -36,9 +36,13 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] assemble .env => gitignore but how to partager with collaborator??
 
-  - [x] auth
+  - [x] auth with session
+
+  - [ ] auth(session => passport && jwt)
 
   - [ ] see refactoring - user.service, entities
+
+  - [ ] 42 auth
 
   - [ ] add table for post
 

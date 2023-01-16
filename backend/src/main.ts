@@ -6,7 +6,6 @@ import * as passport from 'passport';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  //console.log('env', process.env.CLIENT_URL);
   app.enableCors({
     origin: process.env.CLIENT_URL,
     credentials: true,

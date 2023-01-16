@@ -17,13 +17,12 @@ import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 import { NotLoggedInGuard } from 'src/auth/not-logged-in.guard';
 import { LoggedInGuard } from 'src/auth/logged-in.guard';
 
-@Controller('user')
+@Controller('api/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
   async getCurrentUser(@Request() req) {
-    //console.log('here1');
     console.log('isAuthenticated()', req.isAuthenticated());
     return req.user || false;
   }

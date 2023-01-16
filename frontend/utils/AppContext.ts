@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, createContext } from "react";
 
-//Can use login variable globally	thanks for React Context
+//Will be useful when wanna use React state globally
 
 type User = {
 	name: string;
