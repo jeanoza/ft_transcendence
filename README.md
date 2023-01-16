@@ -24,7 +24,7 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] refactoring navbar
 
-  - [x] auth(session => passport && jwt)
+  - [x] auth(passport && jwt) -implemented using sessionStorage
 
   - [ ] 42 auth
 
