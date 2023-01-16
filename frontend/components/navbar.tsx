@@ -1,14 +1,25 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
 import axios from "axios";
+import { useEffect } from "react";
 
 export default function Navbar({ user, revalid }: any) {
 	const router = useRouter();
 	const elements = ["/", "/about"];
 
 	async function onClick(e: React.MouseEvent<HTMLButtonElement>) {
-		await axios.get("user/logout");
-		revalid();
+		//sessionStorage.removeItem("access_token");
+
+		try {
+			const res = await axios.get("user/logout");
+			if (res) {
+				sessionStorage.removeItem("access_token");
+				//router.push("/");
+				revalid();
+			}
+		} catch (e) {
+			throw e;
+		}
 	}
 
 	return (

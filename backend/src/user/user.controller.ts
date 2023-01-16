@@ -16,15 +16,22 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 import { NotLoggedInGuard } from 'src/auth/not-logged-in.guard';
 import { LoggedInGuard } from 'src/auth/logged-in.guard';
+import { AuthService } from 'src/auth/auth.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('api/user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
+  ) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async getCurrentUser(@Request() req) {
-    console.log('isAuthenticated()', req.isAuthenticated());
-    return req.user || false;
+    //console.log('isAuthenticated()', req.isAuthenticated());
+    console.log(req.user);
+    return req.user;
   }
 
   @UseGuards(NotLoggedInGuard)
@@ -36,7 +43,7 @@ export class UserController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   login(@Request() req) {
-    return req.user;
+    return this.authService.login(req.user);
   }
 
   @UseGuards(LoggedInGuard)

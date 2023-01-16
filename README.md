@@ -24,7 +24,7 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] refactoring navbar
 
-  - [ ] auth(session => passport && jwt)
+  - [x] auth(session => passport && jwt)
 
   - [ ] 42 auth
 
@@ -38,7 +38,7 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] auth with session
 
-  - [ ] auth(session => passport && jwt)
+  - [x] auth(session => passport && jwt)
 
   - [ ] see refactoring - user.service, entities
 

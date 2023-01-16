@@ -26,8 +26,9 @@ export class UserService {
       name: data.name,
       password: hashedPassword,
     });
-    if (ret) return 'ok';
-    throw new ForbiddenException();
+    if (!ret) throw new ForbiddenException();
+
+    return 'ok';
   }
 
   findAll() {

@@ -14,6 +14,7 @@ export default function Auth({ revalid }: any) {
 	const [password, setPassword] = useState<string>("");
 	const [name, setName] = useState<string>("");
 	const [newAccount, setNewAccount] = useState<boolean>(false);
+
 	const router = useRouter();
 
 	function toggleAccount() {
@@ -39,15 +40,18 @@ export default function Auth({ revalid }: any) {
 		else url += "/login";
 
 		try {
-			await axios.post(url, data);
+			const res = await axios.post(url, data);
+			//console.log(res.data);
 
 			// to login automatically after create success
-			if (newAccount) {
-				let { name, ...resData } = data;
-				await axios.post(url + "/login", resData);
-			}
+			//if (newAccount) {
+			//	let { name, ...resData } = data;
+			//	await axios.post(url + "/login", resData);
+			//}
+			if (!newAccount)
+				sessionStorage.setItem("access_token", res.data.access_token);
 			revalid();
-			router.push("/"); //optional
+			//router.push("/"); //optional
 		} catch (e: AxiosError | any) {
 			window.alert(e?.response?.data?.message);
 		}
