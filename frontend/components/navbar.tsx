@@ -4,16 +4,12 @@ import axios from "axios";
 import { BASE_URL } from "../utils/global";
 import { useCookies } from "react-cookie";
 
-export default function Navbar({ user }: any) {
+export default function Navbar({ user, revalid }: any) {
 	const router = useRouter();
 	const elements = ["/", "/about"];
-	const [, , remove] = useCookies(["user"]);
 
 	async function onClick(e) {
-		await axios.get(BASE_URL + "user/logout", {
-			withCredentials: true,
-		});
-		remove("user");
+		await axios.get("user/logout");
 		router.push("/");
 	}
 
@@ -71,7 +67,7 @@ export default function Navbar({ user }: any) {
 					right: 16px;
 				}
 				button {
-					margin-left:8px;
+					margin-left: 8px;
 				}
 			`}</style>
 		</nav>

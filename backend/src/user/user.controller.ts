@@ -15,6 +15,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 import { NotLoggedInGuard } from 'src/auth/not-logged-in.guard';
+import { LoggedInGuard } from 'src/auth/logged-in.guard';
 
 @Controller('user')
 export class UserController {
@@ -27,7 +28,7 @@ export class UserController {
     return req.user || false;
   }
 
-  @UseGuards(new NotLoggedInGuard())
+  @UseGuards(NotLoggedInGuard)
   @Post()
   create(@Body() data: CreateUserDto) {
     return this.userService.create(data);
@@ -39,8 +40,10 @@ export class UserController {
     return req.user;
   }
 
+  @UseGuards(LoggedInGuard)
   @Get('logout')
   logout(@Response() res) {
+    res.clearCookie('connect.sid', { httpOnly: true });
     return res.send('ok');
   }
 

@@ -10,14 +10,14 @@ type data = {
 	name?: string;
 	email: string;
 	password: string;
-}
+};
 
 //TODO: implement session or cookie to remain in logged
-export async function getServerSideProps(context: any) {
-	const _cookie = context.req.cookies["user"];
-	if (_cookie) return { props: { user: JSON.parse(_cookie) } };
-	return { props: {} };
-}
+//export async function getServerSideProps(context: any) {
+//	const _cookie = context.req.cookies["user"];
+//	if (_cookie) return { props: { user: JSON.parse(_cookie) } };
+//	return { props: {} };
+//}
 
 export default function Auth({ user }: any) {
 	const [email, setEmail] = useState<string>("");
@@ -27,9 +27,9 @@ export default function Auth({ user }: any) {
 	const [cookie, setCookie] = useCookies(["user"]);
 	const router = useRouter();
 
-	useEffect(() => {
-		if (user) router.push("/")
-	}, [user])
+	//useEffect(() => {
+	//	if (user) router.push("/");
+	//}, [user]);
 
 	function toggleAccount() {
 		setEmail("");
@@ -48,23 +48,21 @@ export default function Auth({ user }: any) {
 		e.preventDefault();
 
 		let data: data = { email, password };
-		let url = BASE_URL + 'user';
+		let url = BASE_URL + "user";
 
-		if (newAccount) data = { name, ...data }
-		else url += '/login'
+		if (newAccount) data = { name, ...data };
+		else url += "/login";
 
 		try {
 			const res = await axios.post(url, data);
-			setCookie("user", JSON.stringify(res.data));
 			router.push("/");
 		} catch (e) {
-			window.alert(e)
+			window.alert(e);
 		}
 	}
 	return (
 		<>
 			<Seo title="Home" />
-			<Navbar user={user} />
 			<main>
 				<h1>Auth</h1>
 				<form onSubmit={onSubmit}>

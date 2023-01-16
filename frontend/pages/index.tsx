@@ -1,24 +1,24 @@
-import { useEffect } from "react";
 import Seo from "../components/Seo";
-import Navbar from "../components/navbar";
 import { useRouter } from "next/router";
 
-export async function getServerSideProps(context: any) {
-	const _cookie = context.req.cookies["user"];
-	if (_cookie) return { props: { user: JSON.parse(_cookie) } };
-	return { props: {} };
-}
-
-export default function Home({ user }: any) {
+export default function Home() {
 	const router = useRouter();
 
-	useEffect(() => {
-		if (!user) router.push("auth");
-	}, [user])
+	//const {
+	//	data: userData,
+	//	mutate: revalid,
+	//	isLoading,
+	//} = useSWR("user", async (url) => {
+	//	return await (
+	//		await axios.get(url)
+	//	).data;
+	//});
+
+	//console.log("home", userData);
+
 	return (
 		<>
 			<Seo title="Home" />
-			<Navbar user={user} />
 			<main>
 				<h1 className="">Home</h1>
 			</main>
