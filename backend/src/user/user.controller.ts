@@ -9,15 +9,16 @@ import {
   UseGuards,
   Request,
   Response,
+  Redirect,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { LocalAuthGuard } from 'src/auth/local-auth.guard';
-import { NotLoggedInGuard } from 'src/auth/not-logged-in.guard';
-import { LoggedInGuard } from 'src/auth/logged-in.guard';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { LocalAuthGuard } from 'src/auth/local-auth.guard';
+import { LoggedInGuard } from 'src/auth/logged-in.guard';
+import { NoLoggedInGuard } from 'src/auth/no-logged-in.guard';
 
 @Controller('api/user')
 export class UserController {
@@ -29,12 +30,10 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async getCurrentUser(@Request() req) {
-    //console.log('isAuthenticated()', req.isAuthenticated());
-    console.log(req.user);
-    return req.user;
+    return await this.userService.findByEmail(req.user.email);
   }
 
-  @UseGuards(NotLoggedInGuard)
+  @UseGuards(NoLoggedInGuard)
   @Post()
   create(@Body() data: CreateUserDto) {
     return this.userService.create(data);

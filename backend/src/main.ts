@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import * as session from 'express-session';
-import * as passport from 'passport';
+
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,19 +11,7 @@ async function bootstrap() {
     credentials: true,
   });
 
-  app.use(
-    session({
-      resave: false,
-      saveUninitialized: false,
-      secret: 'secret', //TODO: to replace with token such as 'ASDF21312fasdf',
-      cookie: {
-        httpOnly: true,
-      },
-    }),
-  );
-
-  app.use(passport.initialize());
-  app.use(passport.session());
+  app.use(cookieParser());
 
   const port = process.env.PORT || 8888;
   await app.listen(port);
