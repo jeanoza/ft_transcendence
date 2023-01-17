@@ -46,10 +46,7 @@ export class UserController {
   }
 
   @Get('login')
-  loginWith42() {
-    console.log('here');
-    return 'ok';
-  }
+  loginWith42() {}
 
   @UseGuards(LoggedInGuard)
   @Get('logout')

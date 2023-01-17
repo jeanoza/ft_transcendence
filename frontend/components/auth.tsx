@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Seo from "./seo";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 type UserData = {
 	name?: string;
@@ -27,7 +28,8 @@ export default function Auth({ revalid }: any) {
 	async function loginWith42() {
 		try {
 
-			await axios.get('/user/login')
+			const res = await axios.get('https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-2b85232134731a3fb4d03b3253513557343dc939342f7e351a2a5ad2f269f4ae&redirect_uri=http%3A%2F%2Flocalhost%3A3333&response_type=code')
+			console.log(res);
 		} catch (e) {
 			console.log(e);
 		}
@@ -111,7 +113,9 @@ export default function Auth({ revalid }: any) {
 					</div>
 					<div>
 						<span>You want to authentificate with 42 ?</span>
-						<span className="signup" onClick={loginWith42}>Click</span>
+						<Link href="https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-2b85232134731a3fb4d03b3253513557343dc939342f7e351a2a5ad2f269f4ae&redirect_uri=http%3A%2F%2Flocalhost%3A3333&response_type=code">
+							<span className="signup" >Click</span>
+						</Link>
 					</div>
 					<button>{newAccount ? "Create Account" : "Sign In"} </button>
 				</form>
