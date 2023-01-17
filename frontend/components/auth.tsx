@@ -24,6 +24,15 @@ export default function Auth({ revalid }: any) {
 		setNewAccount((prev) => !prev);
 	}
 
+	async function loginWith42() {
+		try {
+
+			await axios.get('/user/login')
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
 	function onChange(e: React.ChangeEvent<HTMLInputElement>) {
 		const { name, value } = e.currentTarget;
 		if (name === "email") setEmail(value);
@@ -97,8 +106,12 @@ export default function Auth({ revalid }: any) {
 								: "You have already account?"}
 						</span>
 						<span className="signup" onClick={toggleAccount}>
-							{newAccount ? "Sign In" : "Create Account"}{" "}
+							{newAccount ? "Sign In" : "Create Account"}
 						</span>
+					</div>
+					<div>
+						<span>You want to authentificate with 42 ?</span>
+						<span className="signup" onClick={loginWith42}>Click</span>
 					</div>
 					<button>{newAccount ? "Create Account" : "Sign In"} </button>
 				</form>

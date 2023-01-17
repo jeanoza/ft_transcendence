@@ -45,6 +45,12 @@ export class UserController {
     return this.authService.login(req.user);
   }
 
+  @Get('login')
+  loginWith42() {
+    console.log('here');
+    return 'ok';
+  }
+
   @UseGuards(LoggedInGuard)
   @Get('logout')
   logout(@Response() res) {
