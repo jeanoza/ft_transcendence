@@ -1,11 +1,14 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
 import axios from "axios";
+import { useUser } from "../utils/customHooks";
 
 
-export default function Navbar({ user, revalid }: any) {
+export default function Navbar({ token }) {
 	const router = useRouter();
 	const elements = ["/", "/about"];
+	const { user } = useUser(token)
+	console.log(token, user);
 
 
 	async function onLogout(e: React.MouseEvent<HTMLButtonElement>) {
@@ -13,9 +16,7 @@ export default function Navbar({ user, revalid }: any) {
 			const res = await axios.get("user/logout");
 			if (res) {
 				delete axios.defaults.headers.common["Authorization"];
-				localStorage.removeItem("accessToken");
-				//router.push("/");
-				revalid();
+				//revalid();
 			}
 		} catch (e) {
 			throw e;
@@ -45,6 +46,7 @@ export default function Navbar({ user, revalid }: any) {
 					<button onClick={onLogout}>Logout</button>
 				</div>
 			)}
+
 			<style jsx>{`
 				nav {
 					background-color: #424245;

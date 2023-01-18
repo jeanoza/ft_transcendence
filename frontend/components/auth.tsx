@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Seo from "./seo";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { useCookies } from "react-cookie";
 
 type UserData = {
 	name?: string;
@@ -11,15 +10,18 @@ type UserData = {
 	password: string;
 };
 
-
-export default function Auth({ revalid }: any) {
+export default function Auth() {
 	const [email, setEmail] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
 	const [name, setName] = useState<string>("");
 	const [newAccount, setNewAccount] = useState<boolean>(false);
-
-
+	const [logged, setLogged] = useState<boolean>(false)
 	const router = useRouter();
+
+	useEffect(() => {
+		setLogged(true)
+		router.push("/")
+	}, [logged])
 
 	function toggleAccount() {
 		setEmail("");
@@ -46,9 +48,6 @@ export default function Auth({ revalid }: any) {
 		try {
 			const res = await axios.post(url, data);
 
-			if (!newAccount)
-				localStorage.setItem("accessToken", res.data.accessToken);
-			revalid();
 		} catch (e: AxiosError | any) {
 			window.alert(e?.response?.data?.message);
 		}

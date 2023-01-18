@@ -35,6 +35,7 @@ export class UserController {
   }
 
   @UseGuards(NoLoggedInGuard)
+  @Redirect(process.env.CLIENT_URL, 301)
   @Post()
   create(@Body() data: CreateUserDto) {
     return this.userService.create(data);
@@ -60,10 +61,12 @@ export class UserController {
   }
 
   @UseGuards(LoggedInGuard)
+  @Redirect(process.env.CLIENT_URL, 301)
   @Get('logout')
   logout(@Response() res) {
     res.clearCookie('connect.sid', { httpOnly: true });
-    return res.send('ok');
+    res.clearCookie('accessToken', { httpOnly: true });
+    return { msg: 'ok' };
   }
 
   //TODO: logout guard

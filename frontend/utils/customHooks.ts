@@ -1,8 +1,10 @@
 import useSWR from "swr";
 import fetcher from "./fetcher";
 
-export function useUser() {
-	const { data, error, mutate, isLoading } = useSWR(`/user`, fetcher);
+export function useUser(token: string) {
+	const { data, error, mutate, isLoading } = useSWR("user", (url) =>
+		fetcher(url, token)
+	);
 
 	return {
 		user: data,
