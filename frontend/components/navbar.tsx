@@ -2,18 +2,18 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import axios from "axios";
 
+
 export default function Navbar({ user, revalid }: any) {
 	const router = useRouter();
 	const elements = ["/", "/about"];
 
-	async function onLogout(e: React.MouseEvent<HTMLButtonElement>) {
-		//localStorage.removeItem("access_token");
 
+	async function onLogout(e: React.MouseEvent<HTMLButtonElement>) {
 		try {
 			const res = await axios.get("user/logout");
 			if (res) {
 				delete axios.defaults.headers.common["Authorization"];
-				localStorage.removeItem("access_token");
+				localStorage.removeItem("accessToken");
 				//router.push("/");
 				revalid();
 			}

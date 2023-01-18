@@ -3,6 +3,7 @@ import Seo from "./seo";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { useCookies } from "react-cookie";
 
 type UserData = {
 	name?: string;
@@ -10,11 +11,13 @@ type UserData = {
 	password: string;
 };
 
+
 export default function Auth({ revalid }: any) {
 	const [email, setEmail] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
 	const [name, setName] = useState<string>("");
 	const [newAccount, setNewAccount] = useState<boolean>(false);
+
 
 	const router = useRouter();
 
@@ -23,16 +26,6 @@ export default function Auth({ revalid }: any) {
 		setPassword("");
 		setName("");
 		setNewAccount((prev) => !prev);
-	}
-
-	async function loginWith42() {
-		try {
-
-			const res = await axios.get('https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-2b85232134731a3fb4d03b3253513557343dc939342f7e351a2a5ad2f269f4ae&redirect_uri=http%3A%2F%2Flocalhost%3A3333&response_type=code')
-			console.log(res);
-		} catch (e) {
-			console.log(e);
-		}
 	}
 
 	function onChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -54,7 +47,7 @@ export default function Auth({ revalid }: any) {
 			const res = await axios.post(url, data);
 
 			if (!newAccount)
-				localStorage.setItem("access_token", res.data.access_token);
+				localStorage.setItem("accessToken", res.data.accessToken);
 			revalid();
 		} catch (e: AxiosError | any) {
 			window.alert(e?.response?.data?.message);
@@ -113,7 +106,7 @@ export default function Auth({ revalid }: any) {
 					</div>
 					<div>
 						<span>You want to authentificate with 42 ?</span>
-						<Link href="https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-2b85232134731a3fb4d03b3253513557343dc939342f7e351a2a5ad2f269f4ae&redirect_uri=http%3A%2F%2Flocalhost%3A3333&response_type=code">
+						<Link href="https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-f7b65c738a72369be1182fdf9ec406461da8a335432f9f3f4d828e110d4b4b70&redirect_uri=http%3A%2F%2Flocalhost%3A8888%2Fapi%2Fuser%2Fauth&response_type=code">
 							<span className="signup" >Click</span>
 						</Link>
 					</div>

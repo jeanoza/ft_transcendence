@@ -19,6 +19,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 import { LoggedInGuard } from 'src/auth/logged-in.guard';
 import { NoLoggedInGuard } from 'src/auth/no-logged-in.guard';
+import { Auth42Guard } from 'src/auth/auth42.guard';
 
 @Controller('api/user')
 export class UserController {
@@ -41,12 +42,22 @@ export class UserController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  login(@Request() req) {
-    return this.authService.login(req.user);
+  login(@Request() req, @Response({ passthrough: true }) res) {
+    res.cookie('accessToken', this.authService.login(req.user), {
+      httpOnly: true,
+    });
+    return { msg: 'success' };
   }
 
-  @Get('login')
-  loginWith42() {}
+  @UseGuards(Auth42Guard)
+  @Get('auth')
+  @Redirect(process.env.CLIENT_URL, 301)
+  async loginWith42(@Response({ passthrough: true }) res) {
+    res.cookie('accessToken', this.authService.getAccessToken(), {
+      httpOnly: true,
+    });
+    return { msg: 'success' };
+  }
 
   @UseGuards(LoggedInGuard)
   @Get('logout')

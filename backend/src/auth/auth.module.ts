@@ -7,6 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import { LocalStrategy } from './local.strategy';
 import { LocalSerializer } from './local-serializer';
+import { Auth42Strategy } from './auth42.strategy';
 
 @Module({
   imports: [
@@ -14,10 +15,16 @@ import { LocalSerializer } from './local-serializer';
     TypeOrmModule.forFeature([User]),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '10s' },
+      signOptions: { expiresIn: '1d' },
     }),
   ],
-  providers: [AuthService, JwtStrategy, LocalStrategy, LocalSerializer],
+  providers: [
+    AuthService,
+    JwtStrategy,
+    LocalStrategy,
+    LocalSerializer,
+    Auth42Strategy,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}

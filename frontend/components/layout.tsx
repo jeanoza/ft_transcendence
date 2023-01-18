@@ -1,16 +1,17 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
 import Navbar from "./navbar";
 import useSWR from "swr";
 import Auth from "./auth";
 import { Loader } from "./loader";
 import fetcher from "../utils/fetcher";
+import { cookies } from "next/headers"
 
 axios.defaults.baseURL =
 	process.env.NODE_ENV === "development"
 		? "http://localhost:8888/api/"
 		: "https://TO_PUT_URL_ON_PROD_LATER";
 axios.defaults.withCredentials = true;
+
 
 export function Layout({ children }: React.PropsWithChildren) {
 	const {

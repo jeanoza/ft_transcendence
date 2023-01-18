@@ -1,6 +1,9 @@
+import { useCookies } from "react-cookie";
 import Seo from "../components/seo";
 
 export default function Home() {
+
+
 	return (
 		<>
 			<Seo title="Home" />
