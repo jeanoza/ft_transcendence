@@ -7,6 +7,6 @@ export class NoLoggedInGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
-    return !Boolean(request.headers.authorization);
+    return !Boolean(request.cookies.accessToken);
   }
 }

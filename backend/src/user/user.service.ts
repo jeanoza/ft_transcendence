@@ -36,17 +36,9 @@ export class UserService {
   }
 
   async findByEmail(email: string) {
-    //with queryBuilder() : do not forget to add table nickname name (ex:'user') for next line(ex:'user.name', 'user.email' etc)!!
-    //const res = await this.userRepository
-    //  .createQueryBuilder('user')
-    //  .where('user.email = :email', { email })
-    //  .select(['user.name', 'user.password', 'user.email']) // to add password manually (password is select:false in entity for security)
-    //  .getOne();
-
-    //with typeorm method
     const res = await this.userRepository.findOne({
       where: { email },
-      select: ['name', 'password', 'email'],
+      select: ['name', 'email'],
     });
     return res;
   }

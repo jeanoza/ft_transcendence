@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import Seo from "./seo";
+import Seo from "../components/seo";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { Layout } from "../components/layout";
+import Navbar from "../components/navbar";
 
 type UserData = {
 	name?: string;
@@ -16,8 +18,6 @@ export default function Auth() {
 	const [name, setName] = useState<string>("");
 	const [newAccount, setNewAccount] = useState<boolean>(false);
 	const router = useRouter();
-
-
 
 	function toggleAccount() {
 		setEmail("");
@@ -43,13 +43,15 @@ export default function Auth() {
 
 		try {
 			const res = await axios.post(url, data);
+			if (res) router.push("/")
 
 		} catch (e: AxiosError | any) {
 			window.alert(e?.response?.data?.message);
 		}
 	}
 	return (
-		<>
+		<Layout>
+			{/*<Navbar token={null} />*/}
 			<Seo title="Auth" />
 			<main>
 				<h1>Auth</h1>
@@ -123,6 +125,6 @@ export default function Auth() {
 					cursor: pointer;
 				}
 			`}</style>
-		</>
+		</Layout>
 	);
 }

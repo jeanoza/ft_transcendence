@@ -2,13 +2,16 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import axios from "axios";
 import { useUser } from "../utils/customHooks";
+import { useEffect } from "react";
+import { withCookies } from "react-cookie";
 
 
-export default function Navbar({ token }) {
+export default function Navbar({ token }: { token: string | null }) {
 	const router = useRouter();
+	const { user, revalid, isLoading } = useUser(token)
 	const elements = ["/", "/about"];
-	const { user } = useUser(token)
-	console.log(token, user);
+
+
 
 
 	async function onLogout(e: React.MouseEvent<HTMLButtonElement>) {
@@ -16,7 +19,8 @@ export default function Navbar({ token }) {
 			const res = await axios.get("user/logout");
 			if (res) {
 				delete axios.defaults.headers.common["Authorization"];
-				//revalid();
+				console.log('onLogout', res.headers.cookies);
+				revalid();
 			}
 		} catch (e) {
 			throw e;

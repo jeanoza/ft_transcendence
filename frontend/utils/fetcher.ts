@@ -1,6 +1,4 @@
 import axios from "axios";
-import cookies from "next-cookies";
-import { getCookie } from "cookies-next";
 //https://stackoverflow.com/questions/69494662/x-auth-token-vs-x-access-token-vs-authorization-in-jwt
 
 export default function (url: string, token: string) {
