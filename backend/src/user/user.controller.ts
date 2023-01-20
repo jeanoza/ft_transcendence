@@ -43,8 +43,8 @@ export class UserController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Request() req, @Response({ passthrough: true }) res) {
-    res.cookie('access_token', this.authService.login(req.user), {
+  login(@Request() req, @Response({ passthrough: true }) res) {
+    res.cookie('accessToken', this.authService.login(req.user), {
       httpOnly: true,
       maxAge: 10 * 1000,
     });
@@ -55,7 +55,7 @@ export class UserController {
   @Get('auth')
   @Redirect(process.env.CLIENT_URL, 301)
   async loginWith42(@Response({ passthrough: true }) res) {
-    res.cookie('access_token', this.authService.getAccessToken(), {
+    res.cookie('accessToken', this.authService.getAccessToken(), {
       httpOnly: true,
       maxAge: 10 * 1000,
     });
@@ -65,17 +65,14 @@ export class UserController {
   @UseGuards(LoggedInGuard)
   //@Redirect(process.env.CLIENT_URL, 301)
   @Get('logout')
-  async logout(@Response() res) {
-    console.log('here');
+  async logout(@Response({ passthrough: true }) res) {
     res.clearCookie('connect.sid', { httpOnly: true });
-    res.clearCookie('access_token', {
+    res.clearCookie('accessToken', {
       httpOnly: true,
-      maxAge: 10 * 1000,
+      maxAge: 0,
     });
-    return { msg: 'ok' };
+    return { msg: 'success' };
   }
-
-  //TODO: logout guard
 
   //@Get()
   //findAll() {

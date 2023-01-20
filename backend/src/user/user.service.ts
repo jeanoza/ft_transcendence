@@ -38,7 +38,7 @@ export class UserService {
   async findByEmail(email: string) {
     const res = await this.userRepository.findOne({
       where: { email },
-      select: ['name', 'email'],
+      select: ['name', 'email', 'imageURL'],
     });
     return res;
   }

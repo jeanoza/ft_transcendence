@@ -38,7 +38,8 @@ export class Auth42Strategy extends PassportStrategy(Strategy, 'auth42') {
       this.authService.login({ id: userId, name, email });
       return true;
     } catch (e) {
-      console.log(e);
+      console.error(e);
+      throw new UnauthorizedException();
     }
   }
 }

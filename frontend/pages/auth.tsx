@@ -4,7 +4,8 @@ import axios, { AxiosError } from "axios";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { Layout } from "../components/layout";
-import Navbar from "../components/navbar";
+import { useUser } from "../utils/customHooks";
+import { NotAuthNavbar } from "../components/navbar";
 
 type UserData = {
 	name?: string;
@@ -17,6 +18,8 @@ export default function Auth() {
 	const [password, setPassword] = useState<string>("");
 	const [name, setName] = useState<string>("");
 	const [newAccount, setNewAccount] = useState<boolean>(false);
+	const { revalid } = useUser();
+
 	const router = useRouter();
 
 	function toggleAccount() {
@@ -42,8 +45,9 @@ export default function Auth() {
 		else url += "/login";
 
 		try {
-			const res = await axios.post(url, data);
-			if (res) router.push("/")
+			await axios.post(url, data);
+			//revalid();
+			router.push("/")
 
 		} catch (e: AxiosError | any) {
 			window.alert(e?.response?.data?.message);
@@ -51,7 +55,7 @@ export default function Auth() {
 	}
 	return (
 		<Layout>
-			{/*<Navbar token={null} />*/}
+			<NotAuthNavbar />
 			<Seo title="Auth" />
 			<main>
 				<h1>Auth</h1>

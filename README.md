@@ -26,7 +26,7 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] auth(passport && jwt) -implemented using localStorage
 
-  - [ ] 42 auth
+  - [x] 42 auth
 
   - [ ] post page implement
 
@@ -40,9 +40,9 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] auth(session => passport && jwt)
 
-  - [ ] see refactoring - user.service, entities
+  - [x] 42 auth
 
-  - [ ] 42 auth
+  - [ ] create && give auth at the same time?
 
   - [ ] add table for post
 
@@ -61,6 +61,28 @@ This is a boiler plate to use generally at my futur web application.
 - Docker:
 
   - [x] docker-compose.yml
+
+## BUG to fix
+
+- frontend:
+
+  - [ ]
+
+- backend:
+
+  - [ ] validate local-auth : unique value validation to add for name
+
+  - [ ] redirection after create user
+
+## Refactoring
+
+- frontend:
+
+  - [ ] clean code navbar
+
+- backend:
+
+  - [ ] see refactoring - user.service, entities
 
 ## Useful commands
 

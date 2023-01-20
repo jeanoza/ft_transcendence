@@ -20,9 +20,6 @@ export class AuthService {
 
   //FIXME: here or user service?
   async addUser42(user): Promise<number> | null {
-    //const res = await this.userRepository.save(user);
-    //if (!res) throw new ForbiddenException();
-    //return res;
     const res = await this.userRepository.save(user);
     if (!res) throw new ForbiddenException();
     return res.id;

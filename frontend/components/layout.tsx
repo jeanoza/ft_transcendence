@@ -12,3 +12,15 @@ export function Layout({ children }: React.PropsWithChildren) {
 		</div>
 	);
 }
+export function getServerSideProps({ req }: any) {
+	const accessToken = req.cookies["accessToken"] || null
+	if (!accessToken)
+		return {
+			redirect: {
+				permanent: false,
+				destination: "/auth",
+			},
+			props: {},
+		};
+	return { props: { accessToken } }
+}

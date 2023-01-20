@@ -1,16 +1,15 @@
 import cookies from "next-cookies";
 import Seo from "../components/seo";
 import { useUser } from "../utils/customHooks";
-import Navbar from "../components/navbar";
-import Auth from "../components/auth";
+import { Navbar } from "../components/navbar";
 import { Layout } from "../components/layout";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import axios from "axios";
 
 export function getServerSideProps({ req }: any) {
-	const token = req.cookies["access_token"] || null
-	console.log('index', token);
-	if (!token)
+	const accessToken = req.cookies["accessToken"] || null
+	if (!accessToken)
 		return {
 			redirect: {
 				permanent: false,
@@ -18,17 +17,21 @@ export function getServerSideProps({ req }: any) {
 			},
 			props: {},
 		};
-	return { props: { token } }
+	axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+	return { props: { accessToken } }
 }
-export default function Home({ token }: { token: string }) {
-	const { user, revalid, isLoading } = useUser(token)
-
+//FIXME:Send accessToken to page or not?
+export default function Home() {
+	const { user } = useUser();
 	return (
 		<Layout>
-			{/*<Navbar token={token} />*/}
+			<Navbar />
 			<Seo title="Home" />
 			<main>
 				<h1 className="">Home</h1>
+				<div>
+					<span>hello, {user?.name}</span>
+				</div>
 			</main>
 		</Layout>
 	);

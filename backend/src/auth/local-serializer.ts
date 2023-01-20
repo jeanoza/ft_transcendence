@@ -16,10 +16,11 @@ export class LocalSerializer extends PassportSerializer {
   }
 
   async deserializeUser(userId: string, done: CallableFunction) {
-    return await this.userRepository
+    return this.userRepository
       .findOneOrFail({
         where: { id: +userId },
         select: ['id', 'email', 'name'],
+        //select: ['id', 'email'],
       })
       .then((user) => {
         done(null, user);

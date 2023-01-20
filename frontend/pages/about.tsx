@@ -1,13 +1,13 @@
 import Seo from "../components/seo";
 import { useUser } from "../utils/customHooks";
-import Navbar from "../components/navbar";
+import { Navbar } from "../components/navbar";
 import { Layout } from "../components/layout";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 export function getServerSideProps({ req }: any) {
-	const token = req.cookies["access_token"] || null
-	if (!token)
+	const accessToken = req.cookies["accessToken"] || null
+	if (!accessToken)
 		return {
 			redirect: {
 				permanent: false,
@@ -15,15 +15,15 @@ export function getServerSideProps({ req }: any) {
 			},
 			props: {},
 		};
-	return { props: { token } }
+	//return { props: { accessToken } }
+	return { props: {} }
 }
-export default function About({ token }: { token: string }) {
-	const { user, revalid, isLoading } = useUser(token)
-	const router = useRouter();
 
+//FIXME:Send accessToken to page or not?
+export default function About() {
 	return (
 		<Layout>
-			{/*<Navbar token={token} />*/}
+			<Navbar />
 			<Seo title="About" />
 			<main>
 				<h1 className="">About</h1>

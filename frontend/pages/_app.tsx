@@ -1,9 +1,8 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
-
 import axios from "axios";
-import Navbar from "../components/navbar";
 import { useUser } from "../utils/customHooks";
+import { SWRConfig } from "swr";
 
 axios.defaults.baseURL =
 	process.env.NODE_ENV === "development"
@@ -12,24 +11,9 @@ axios.defaults.baseURL =
 axios.defaults.withCredentials = true;
 
 export default function App({ Component, pageProps }: AppProps) {
-	const { user } = useUser(pageProps.token)
-
 	return (
-		<>
-			<Navbar token={pageProps.token} />
+		<SWRConfig>
 			<Component {...pageProps} />
-		</>
+		</SWRConfig>
 	);
-}
-export function getServerSideProps({ req }: any) {
-	const token = req.cookies["access_token"] || null
-	if (!token)
-		return {
-			redirect: {
-				permanent: false,
-				destination: "/auth",
-			},
-			props: {},
-		};
-	return { props: { token } }
 }
