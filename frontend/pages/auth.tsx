@@ -4,7 +4,7 @@ import axios, { AxiosError } from "axios";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { Layout } from "../components/layout";
-import { useUser } from "../utils/useUser";
+import { useUser } from "../utils/hooks/useUser";
 import { NotAuthNavbar } from "../components/navbar";
 
 //type UserData = {

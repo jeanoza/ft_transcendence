@@ -1,7 +1,7 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import axios from "axios";
-import { useUser } from "../utils/useUser";
+import { useUser } from "../utils/hooks/useUser";
 import { SWRConfig } from "swr";
 
 axios.defaults.baseURL =

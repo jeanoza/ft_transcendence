@@ -1,9 +1,8 @@
 import { useRouter } from "next/router";
-import Link from "next/link";
 import axios from "axios";
-import { useUser } from "../utils/useUser";
+import { useUser } from "../utils/hooks/useUser";
 import { Profile } from "./navbar/profile";
-
+import { PageList } from "./navbar/pageList";
 const navbarStyles = `
 	nav {
 		background-color: #424245;
@@ -26,26 +25,11 @@ const navbarStyles = `
 	}`;
 
 export function Navbar() {
-	const router = useRouter();
 	const { user } = useUser();
-
-	const elements = ["/", "/about"];
 
 	return (
 		<nav>
-			<ul>
-				{elements.map((el) => {
-					return (
-						<li key={el}>
-							<Link href={el}>
-								<span className={`${router.pathname === el ? "active" : ""}`}>
-									{el === "/" ? "Home" : el[1].toUpperCase() + el.slice(2)}
-								</span>
-							</Link>
-						</li>
-					);
-				})}
-			</ul>
+			<PageList />
 			{user && <Profile user={user} />}
 			<style jsx>{`
 				${navbarStyles}
@@ -55,24 +39,9 @@ export function Navbar() {
 }
 
 export function NotAuthNavbar() {
-	const router = useRouter();
-	const elements = ["/", "/about"];
-
 	return (
 		<nav>
-			<ul>
-				{elements.map((el) => {
-					return (
-						<li key={el}>
-							<Link href={el}>
-								<span className={`${router.pathname === el ? "active" : ""}`}>
-									{el === "/" ? "Home" : el[1].toUpperCase() + el.slice(2)}
-								</span>
-							</Link>
-						</li>
-					);
-				})}
-			</ul>
+			<PageList />
 			<style jsx>{navbarStyles}</style>
 		</nav>
 	);

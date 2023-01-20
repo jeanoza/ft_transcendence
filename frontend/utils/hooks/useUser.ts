@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import fetcher from "./fetcher";
+import fetcher from "../fetcher";
 
 export function useUser() {
 	const { data, error, mutate, isLoading } = useSWR("user", fetcher, {

@@ -1,5 +1,5 @@
 import Seo from "../components/seo";
-import { useUser } from "../utils/useUser";
+import { useUser } from "../utils/hooks/useUser";
 import { Navbar } from "../components/navbar";
 import { Layout } from "../components/layout";
 import { useRouter } from "next/router";
