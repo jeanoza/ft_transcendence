@@ -42,7 +42,7 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] 42 auth
 
-  - [ ] create && give auth at the same time?
+  - [x] create User then send cookie for auth(No redirection but send cookie with access token in response)
 
   - [ ] add table for post
 
@@ -66,13 +66,11 @@ This is a boiler plate to use generally at my futur web application.
 
 - frontend:
 
-  - [ ]
-
 - backend:
 
-  - [ ] validate local-auth : unique value validation to add for name
+  - [x] validate local-auth : unique value validation to add for name
 
-  - [ ] redirection after create user
+  - [ ]
 
 ## Refactoring
 

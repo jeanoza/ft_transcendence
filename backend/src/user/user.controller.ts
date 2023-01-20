@@ -21,6 +21,8 @@ import { LoggedInGuard } from 'src/auth/logged-in.guard';
 import { NoLoggedInGuard } from 'src/auth/no-logged-in.guard';
 import { Auth42Guard } from 'src/auth/auth42.guard';
 
+const MAX_AGE = 24 * 60 * 60 * 1000; // one day
+
 @Controller('api/user')
 export class UserController {
   constructor(
@@ -35,10 +37,19 @@ export class UserController {
   }
 
   @UseGuards(NoLoggedInGuard)
-  @Redirect(process.env.CLIENT_URL, 301)
   @Post()
-  create(@Body() data: CreateUserDto) {
-    return this.userService.create(data);
+  async create(
+    @Body() data: CreateUserDto,
+    @Response({ passthrough: true }) res,
+  ) {
+    const user = await this.userService.create(data);
+
+    res.cookie('accessToken', this.authService.login(user), {
+      httpOnly: true,
+      maxAge: MAX_AGE,
+    });
+
+    return { msg: 'created' };
   }
 
   @UseGuards(LocalAuthGuard)
@@ -46,7 +57,7 @@ export class UserController {
   login(@Request() req, @Response({ passthrough: true }) res) {
     res.cookie('accessToken', this.authService.login(req.user), {
       httpOnly: true,
-      maxAge: 10 * 1000,
+      maxAge: MAX_AGE,
     });
     return { msg: 'success' };
   }
@@ -57,13 +68,12 @@ export class UserController {
   async loginWith42(@Response({ passthrough: true }) res) {
     res.cookie('accessToken', this.authService.getAccessToken(), {
       httpOnly: true,
-      maxAge: 10 * 1000,
+      maxAge: MAX_AGE,
     });
     return { msg: 'success' };
   }
 
   @UseGuards(LoggedInGuard)
-  //@Redirect(process.env.CLIENT_URL, 301)
   @Get('logout')
   async logout(@Response({ passthrough: true }) res) {
     res.clearCookie('connect.sid', { httpOnly: true });

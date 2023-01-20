@@ -1,12 +1,12 @@
 import Seo from "../components/seo";
-import { useUser } from "../utils/customHooks";
+import { useUser } from "../utils/useUser";
 import { Navbar } from "../components/navbar";
 import { Layout } from "../components/layout";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 export function getServerSideProps({ req }: any) {
-	const accessToken = req.cookies["accessToken"] || null
+	const accessToken = req.cookies["accessToken"] || null;
 	if (!accessToken)
 		return {
 			redirect: {
@@ -16,7 +16,7 @@ export function getServerSideProps({ req }: any) {
 			props: {},
 		};
 	//return { props: { accessToken } }
-	return { props: {} }
+	return { props: {} };
 }
 
 //FIXME:Send accessToken to page or not?

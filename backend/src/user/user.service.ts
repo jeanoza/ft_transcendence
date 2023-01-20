@@ -16,9 +16,13 @@ export class UserService {
   private userRepository: Repository<User>;
 
   async create(data: CreateUserDto) {
-    const user = await this.findByEmail(data.email);
-
+    //user already exist case
+    let user = await this.findByEmail(data.email);
     if (user) throw new UnauthorizedException('User already exist');
+
+    //user name already exist
+    user = await this.findByName(data.name);
+    if (user) throw new UnauthorizedException('User name already exist');
 
     const hashedPassword = await bcrypt.hash(data.password, 12);
     const ret = await this.userRepository.save({
@@ -28,37 +32,25 @@ export class UserService {
     });
     if (!ret) throw new ForbiddenException();
 
-    return 'ok';
-  }
-
-  findAll() {
-    //return this.users;
+    return ret;
   }
 
   async findByEmail(email: string) {
-    const res = await this.userRepository.findOne({
+    return await this.userRepository.findOne({
       where: { email },
       select: ['name', 'email', 'imageURL'],
     });
-    return res;
   }
 
-  findOne(id: number) {
-    //const res = this.users.find((el) => el.id === id);
-    //if (!res) throw new NotFoundException(`Not found user with id ${id}`);
-    //return res;
+  async findByName(name: string) {
+    return await this.userRepository.findOne({
+      where: { name },
+    });
   }
 
-  update(id: number, data: UpdateUserDto) {
-    //this.findOne(id);
-    //this.remove(id);
-    //this.users.push({ id, ...data });
-    //return id;
-  }
+  findOne(id: number) {}
 
-  remove(id: number) {
-    //this.findOne(id);
-    //this.users = this.users.filter((el) => el.id !== id);
-    //return id;
-  }
+  update(id: number, data: UpdateUserDto) {}
+
+  remove(id: number) {}
 }
