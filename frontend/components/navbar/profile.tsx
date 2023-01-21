@@ -22,7 +22,7 @@ export function Profile({ user }: { user: IUser }) {
 				}}
 			/>
 			<span>
-				{user.name}({user.email})
+				{user.name} ({user.email})
 			</span>
 			<button onClick={onLogout}>Logout</button>
 			<style jsx>{`
