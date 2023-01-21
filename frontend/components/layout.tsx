@@ -3,10 +3,11 @@ export function Layout({ children }: React.PropsWithChildren) {
 		<div>
 			<div className="container">{children}</div>
 			<style jsx global>{`
-				main {
+				.container {
 					height:100vh;
+				}
+				main {
 					margin: 0 auto;
-					padding-top: 46px;
 					width: 50%;
 					min-width: 400px;
 				}

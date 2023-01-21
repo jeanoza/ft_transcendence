@@ -5,6 +5,7 @@ export function Loader() {
 			<style jsx>{`
 				main {
 					width:100%;
+					height:calc(100vh - 46px);
 					display:flex;
 					justify-content:center;
 					align-items:center;

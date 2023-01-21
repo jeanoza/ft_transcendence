@@ -6,9 +6,8 @@ const navbarStyles = `
 	nav {
 		background-color: #424245;
 		color: rgba(200, 200, 200, 0.92);
-		position: fixed;
-		top:0px;
 		width:100%;
+		position:relative;
 	}
 	ul {
 		display: flex;

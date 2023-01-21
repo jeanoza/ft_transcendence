@@ -35,6 +35,8 @@ export default function Home() {
 					</div>
 				</main>
 			}
+			{/* line to test loader */}
+			{/*<Loader />*/}
 		</Layout>
 	);
 }
