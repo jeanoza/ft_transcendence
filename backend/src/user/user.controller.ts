@@ -10,16 +10,17 @@ import {
   Request,
   Response,
   Redirect,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthService } from 'src/auth/auth.service';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { LocalAuthGuard } from 'src/auth/local-auth.guard';
-import { LoggedInGuard } from 'src/auth/logged-in.guard';
-import { NoLoggedInGuard } from 'src/auth/no-logged-in.guard';
-import { Auth42Guard } from 'src/auth/auth42.guard';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
+import { LocalAuthGuard } from 'src/auth/guard/local-auth.guard';
+import { LoggedInGuard } from 'src/auth/guard/logged-in.guard';
+import { NoLoggedInGuard } from 'src/auth/guard/no-logged-in.guard';
+import { Auth42Guard } from 'src/auth/guard/auth42.guard';
 
 const MAX_AGE = 24 * 60 * 60 * 1000; // one day
 
@@ -32,8 +33,14 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async getCurrentUser(@Request() req) {
-    return await this.userService.findByEmail(req.user.email);
+  async getCurrentUser(@Request() req, @Response({ passthrough: true }) res) {
+    const user = await this.userService.findByEmail(req.user.email);
+    if (!user)
+      res.clearCookie('accessToken', {
+        httpOnly: true,
+        maxAge: 0,
+      });
+    return user;
   }
 
   @UseGuards(NoLoggedInGuard)

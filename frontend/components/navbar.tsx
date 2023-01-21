@@ -1,13 +1,14 @@
-import { useRouter } from "next/router";
-import axios from "axios";
 import { useUser } from "../utils/hooks/useUser";
 import { Profile } from "./navbar/profile";
 import { PageList } from "./navbar/pageList";
+
 const navbarStyles = `
 	nav {
 		background-color: #424245;
 		color: rgba(200, 200, 200, 0.92);
-		position: relative;
+		position: fixed;
+		top:0px;
+		width:100%;
 	}
 	ul {
 		display: flex;

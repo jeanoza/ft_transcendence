@@ -9,8 +9,8 @@ body {
 	font-family: SF Pro Text, SF Pro Icons, AOS Icons, Helvetica Neue, Helvetica,
 		Arial, sans-serif;
 	font-size: 12px;
+	height: 100%;
 }
-
 a {
 	text-decoration: none;
 	color: inherit;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Seo from "../components/seo";
+import { Seo } from "../components/seo";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -18,7 +18,6 @@ export default function Auth() {
 	const [password, setPassword] = useState<string>("");
 	const [name, setName] = useState<string>("");
 	const [newAccount, setNewAccount] = useState<boolean>(false);
-	const { revalid } = useUser();
 
 	const router = useRouter();
 
@@ -46,12 +45,6 @@ export default function Auth() {
 
 		try {
 			await axios.post(url, data);
-			//if (newAccount) {
-			//	window.alert(
-			//		"Your account has been successfully created. Please sign in"
-			//	);
-			//	toggleAccount();
-			//} else router.push("/");
 			router.push("/");
 		} catch (e: AxiosError | any) {
 			window.alert(e?.response?.data?.message);

@@ -1,9 +1,9 @@
-import Seo from "../components/seo";
-import { useUser } from "../utils/hooks/useUser";
+import { Seo } from "../components/seo";
 import { Navbar } from "../components/navbar";
 import { Layout } from "../components/layout";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import axios from "axios";
+import { useUser } from "../utils/hooks/useUser";
+import { Loader } from "../components/loader";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -15,19 +15,22 @@ export function getServerSideProps({ req }: any) {
 			},
 			props: {},
 		};
-	//return { props: { accessToken } }
+	axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 	return { props: {} };
 }
 
-//FIXME:Send accessToken to page or not?
 export default function About() {
+	const { user, isLoading } = useUser();
 	return (
 		<Layout>
 			<Navbar />
 			<Seo title="About" />
-			<main>
-				<h1 className="">About</h1>
-			</main>
+			{isLoading && <Loader />}
+			{user &&
+				<main>
+					<h1 className="">About</h1>
+				</main>
+			}
 		</Layout>
 	);
 }

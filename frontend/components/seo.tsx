@@ -7,7 +7,7 @@ type props = {
 	title: string;
 };
 
-export default function Seo({ title }: props) {
+export function Seo({ title }: props) {
 	return (
 		<Head>
 			<title>{`${APP_NAME} | ${title}`}</title>

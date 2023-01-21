@@ -12,49 +12,58 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  #accessToken;
+  #accessToken: string;
 
-  getAccessToken() {
+  /**
+   * Getter
+   * @returns accessToken
+   */
+  getAccessToken(): string {
     return this.#accessToken;
   }
 
+  /**
+   * Add user identificated to database by 42 auth
+   * @param user
+   * @returns
+   */
   //FIXME: here or user service?
-  async addUser42(user): Promise<number> | null {
-    const res = await this.userRepository.save(user);
-    if (!res) throw new ForbiddenException();
-    return res.id;
+  async addUser42(user): Promise<User> | undefined {
+    const ret = await this.userRepository.save(user);
+    if (!ret) throw new ForbiddenException('addUser42 failed');
+    return ret;
   }
 
-  //TODO:refactoring with validateUser
-  async validateUser42(email: string): Promise<number> | null {
-    try {
-      const user = await this.userRepository.findOne({
-        where: { email },
-        select: ['id', 'email'],
-      });
-      if (user) return user.id;
-    } catch (e) {
-      console.log(e);
-    }
-
-    return null;
-  }
-
-  async validateUser(email: string, password: string) {
+  /**
+   * Validate User(local or auth42)
+   * @param email
+   * @param _password
+   * @returns
+   */
+  async validateUser(
+    email: string,
+    _password: string | undefined = undefined,
+  ): Promise<User> | null {
     const user = await this.userRepository.findOne({
       where: { email },
       select: ['id', 'email', 'password'],
     });
 
-    if (user && (await bcrypt.compare(password, user.password))) {
-      const { password, ...result } = user;
-      return result;
+    if (user) {
+      if (_password && !(await bcrypt.compare(_password, user.password)))
+        return null;
+      const { password, ...rest } = user;
+      return rest;
     }
     return null;
   }
 
-  login(user: any) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  /**
+   * Generate accessToken via jwt and save it as private attribute
+   * @param user
+   * @returns
+   */
+  login(user: any): string {
     const payload = { ...user };
     this.#accessToken = this.jwtService.sign(payload);
     return this.#accessToken;

@@ -4,10 +4,10 @@ import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtStrategy } from './jwt.strategy';
-import { LocalStrategy } from './local.strategy';
-import { LocalSerializer } from './local-serializer';
-import { Auth42Strategy } from './auth42.strategy';
+import { JwtStrategy } from './strategy/jwt.strategy';
+import { LocalStrategy } from './strategy/local.strategy';
+import { LocalSerializer } from './strategy/local-serializer';
+import { Auth42Strategy } from './strategy/auth42.strategy';
 
 @Module({
   imports: [

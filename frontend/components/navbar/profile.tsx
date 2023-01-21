@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 
 export function Profile({ user }: { user: IUser }) {
 	const router = useRouter();
-	console.log(user);
 	async function onLogout(e: React.MouseEvent<HTMLButtonElement>) {
 		try {
 			await axios.get("user/logout");
@@ -18,9 +17,8 @@ export function Profile({ user }: { user: IUser }) {
 			<div
 				className="avatar"
 				style={{
-					backgroundImage: `url(${
-						user.imageURL ? user.imageURL : "/default_profile.png"
-					})`,
+					backgroundImage: `url(${user.imageURL ? user.imageURL : "/default_profile.png"
+						})`,
 				}}
 			/>
 			<span>
@@ -36,6 +34,7 @@ export function Profile({ user }: { user: IUser }) {
 					display: flex;
 					justify-content: space-between;
 					align-items: center;
+					gap:8px;
 				}
 				.avatar {
 					background-size: cover;
@@ -43,10 +42,6 @@ export function Profile({ user }: { user: IUser }) {
 					height: 3rem;
 					border-radius: 50%;
 					border: 1px solid white;
-					margin-right: 4px;
-				}
-				button {
-					margin-left: 8px;
 				}
 			`}</style>
 		</div>

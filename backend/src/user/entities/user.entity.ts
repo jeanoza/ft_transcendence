@@ -25,10 +25,10 @@ export class User {
     select: false,
     nullable: true,
   })
-  password: string | null;
+  password?: string;
 
   @Column('varchar', { name: 'imageURL', length: 500, nullable: true })
-  imageURL: string | null;
+  imageURL: string;
 
   @Column('varchar', {
     name: 'login',
@@ -47,9 +47,3 @@ export class User {
   @DeleteDateColumn()
   deletedAt: Date;
 }
-
-//export class User {
-//  id: number;
-//  name?: string;
-//  email?: string;
-//}

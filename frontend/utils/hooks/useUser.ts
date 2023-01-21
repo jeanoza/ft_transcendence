@@ -5,7 +5,7 @@ export function useUser() {
 	const { data, error, mutate, isLoading } = useSWR("user", fetcher, {
 		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
 			// Never retry on 404.
-			if (error.response.status === 404) return;
+			if (error?.response?.status === 404) return;
 
 			// Never retry for a specific key.
 			if (key === "user") return;

@@ -20,13 +20,9 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] request to server
 
-  - [x] auth(with session)
+  - [x] auth(via cookie)
 
-  - [x] refactoring navbar
-
-  - [x] auth(passport && jwt) -implemented using localStorage
-
-  - [x] 42 auth
+  - [x] 42 auth via cookie
 
   - [ ] post page implement
 
@@ -36,11 +32,7 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] assemble .env => gitignore but how to partager with collaborator??
 
-  - [x] auth with session
-
-  - [x] auth(session => passport && jwt)
-
-  - [x] 42 auth
+  - [x] 42 auth(passport && jwt => send cookie on server side)
 
   - [x] create User then send cookie for auth(No redirection but send cookie with access token in response)
 
@@ -76,7 +68,7 @@ This is a boiler plate to use generally at my futur web application.
 
 - frontend:
 
-  - [ ] clean code navbar
+  - [x] clean code navbar
 
 - backend:
 

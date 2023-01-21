@@ -1,7 +1,9 @@
 import { Strategy } from 'passport-oauth2';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { AuthService } from '../auth.service';
+import { User } from 'src/user/entities/user.entity';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
 @Injectable()
 export class Auth42Strategy extends PassportStrategy(Strategy, 'auth42') {
@@ -23,7 +25,7 @@ export class Auth42Strategy extends PassportStrategy(Strategy, 'auth42') {
       });
       const { login, image, email, displayname: name } = await res.json();
 
-      let userId = await this.authService.validateUser42(email);
+      let userId = await this.authService.validateUser(email);
 
       if (!userId) {
         const imageURL = image.versions.small;
@@ -38,8 +40,7 @@ export class Auth42Strategy extends PassportStrategy(Strategy, 'auth42') {
       this.authService.login({ id: userId, name, email });
       return true;
     } catch (e) {
-      console.error(e);
-      throw new UnauthorizedException();
+      throw e;
     }
   }
 }
