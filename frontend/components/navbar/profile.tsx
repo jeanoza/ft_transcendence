@@ -17,8 +17,7 @@ export function Profile({ user }: { user: IUser }) {
 			<div
 				className="avatar"
 				style={{
-					backgroundImage: `url(${user.imageURL ? user.imageURL : "/default_profile.png"
-						})`,
+					backgroundImage: `url(${user.imageURL ? user.imageURL : "/default_profile.png"})`,
 				}}
 			/>
 			<span>
