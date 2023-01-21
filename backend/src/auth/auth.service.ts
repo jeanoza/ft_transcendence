@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, Res } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -52,6 +52,7 @@ export class AuthService {
     if (user) {
       if (_password && !(await bcrypt.compare(_password, user.password)))
         return null;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...rest } = user;
       return rest;
     }

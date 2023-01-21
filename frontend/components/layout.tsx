@@ -4,8 +4,9 @@ export function Layout({ children }: React.PropsWithChildren) {
 			<div className="container">{children}</div>
 			<style jsx global>{`
 				main {
-					margin: auto;
-					margin-top: 46px;
+					height:100vh;
+					margin: 0 auto;
+					padding-top: 46px;
 					width: 50%;
 					min-width: 400px;
 				}

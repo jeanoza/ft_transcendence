@@ -1,9 +1,7 @@
 import { Strategy } from 'passport-oauth2';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { AuthService } from '../auth.service';
-import { User } from 'src/user/entities/user.entity';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
 @Injectable()
 export class Auth42Strategy extends PassportStrategy(Strategy, 'auth42') {
