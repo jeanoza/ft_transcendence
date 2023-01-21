@@ -68,11 +68,13 @@ This is a boiler plate to use generally at my futur web application.
 
 - frontend:
 
-  - [x] clean code navbar
+  - [x] navbar
+
+  - [x] auth page
 
 - backend:
 
-  - [ ] see refactoring - user.service, entities
+  - [x] see refactoring - user.service, entities
 
 ## Useful commands
 
