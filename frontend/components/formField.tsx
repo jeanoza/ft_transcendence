@@ -1,6 +1,6 @@
 import React, { SetStateAction } from "react";
 
-export function AuthField({ type, name, state, setState }:
+export function FormField({ type, name, state, setState }:
 	{ type: string, name: string, state: string, setState: SetStateAction<any> }) {
 
 	function onChange(e: React.ChangeEvent<HTMLInputElement>) {

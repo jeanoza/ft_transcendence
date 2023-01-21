@@ -2,7 +2,8 @@ import axios, { AxiosError } from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { AuthField } from "./authField";
+import { FormField } from "../formField";
+
 
 export function AuthForm() {
 	const [email, setEmail] = useState<string>("");
@@ -38,9 +39,9 @@ export function AuthForm() {
 
 	return (
 		<form onSubmit={onSubmit}>
-			<AuthField type="email" name="email" state={email} setState={setEmail} />
-			<AuthField type="password" name="password" state={password} setState={setPassword} />
-			{newAccount && (<AuthField type="text" name="name" state={name} setState={setName} />)}
+			<FormField type="email" name="email" state={email} setState={setEmail} />
+			<FormField type="password" name="password" state={password} setState={setPassword} />
+			{newAccount && (<FormField type="text" name="name" state={name} setState={setName} />)}
 			<div>
 				<span>
 					{newAccount ? "You doesn't have yet account?" : "You have already account?"}

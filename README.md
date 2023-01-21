@@ -36,7 +36,7 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] create User then send cookie for auth(No redirection but send cookie with access token in response)
 
-  - [ ] add table for post
+  - [ ] add post entity
 
   - [ ] service and controller
 

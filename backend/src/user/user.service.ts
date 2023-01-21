@@ -48,9 +48,9 @@ export class UserService {
     });
   }
 
-  findOne(id: number) {}
+  //findOne(id: number) {}
 
-  update(id: number, data: UpdateUserDto) {}
+  //update(id: number, data: UpdateUserDto) {}
 
-  remove(id: number) {}
+  //remove(id: number) {}
 }
