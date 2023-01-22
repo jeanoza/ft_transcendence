@@ -36,9 +36,7 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] create User then send cookie for auth(No redirection but send cookie with access token in response)
 
-  - [ ] add post entity
-
-  - [ ] service and controller
+  - [ ] add post module, entity, service and controller
 
 - Database:
 
@@ -46,7 +44,7 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] User table
 
-  - [ ] Post table
+  - [ ] Post table : id, title, content, userId(foreign), ...etc
 
   - [ ] Chat table
 
