@@ -24,6 +24,8 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] 42 auth via cookie
 
+  - [ ] to see how to protect AuthUrl in authForm instead of use Link href
+
   - [ ] post page implement
 
 - Backend:

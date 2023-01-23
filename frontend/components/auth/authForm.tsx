@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { FormField } from "../formField";
 
-export function AuthForm() {
+export function AuthForm({ authUrl }: { authUrl: string }) {
 	const [email, setEmail] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
 	const [name, setName] = useState<string>("");
@@ -60,7 +60,7 @@ export function AuthForm() {
 			</div>
 			<div>
 				<span>You want to authentificate with 42 ?</span>
-				<Link href="https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-f7b65c738a72369be1182fdf9ec406461da8a335432f9f3f4d828e110d4b4b70&redirect_uri=http%3A%2F%2Flocalhost%3A8888%2Fapi%2Fuser%2Fauth&response_type=code">
+				<Link href={authUrl}>
 					<span className="cursor-pointer">Click</span>
 				</Link>
 			</div>
