@@ -19,18 +19,18 @@ export function getServerSideProps({ req }: any) {
 	return { props: {} };
 }
 
-export default function About() {
+export default function Note() {
 	const { user, isLoading } = useUser();
 	return (
 		<Layout>
 			<Navbar />
-			<Seo title="About" />
+			<Seo title="Note" />
 			{isLoading && <Loader />}
-			{user &&
+			{user && (
 				<main>
-					<h1 className="">About</h1>
+					<h1 className="">Note</h1>
 				</main>
-			}
+			)}
 		</Layout>
 	);
 }
