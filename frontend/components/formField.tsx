@@ -1,8 +1,16 @@
 import React, { SetStateAction } from "react";
 
-export function FormField({ type, name, state, setState }:
-	{ type: string, name: string, state: string, setState: SetStateAction<any> }) {
-
+export function FormField({
+	type,
+	name,
+	state,
+	setState,
+}: {
+	type: string;
+	name: string;
+	state: string;
+	setState: SetStateAction<any>;
+}) {
 	function onChange(e: React.ChangeEvent<HTMLInputElement>) {
 		setState(e.currentTarget.value);
 	}
@@ -10,16 +18,11 @@ export function FormField({ type, name, state, setState }:
 		<div>
 			<label>
 				{name}
-				<input
-					type={type}
-					name={name}
-					onChange={onChange}
-					value={state}
-				/>
+				<input type={type} name={name} onChange={onChange} value={state} />
 			</label>
 			<style jsx>{`
 				label {
-					width: 216px;
+					width: 240px;
 					display: flex;
 					justify-content: space-between;
 				}
@@ -28,5 +31,5 @@ export function FormField({ type, name, state, setState }:
 				}
 			`}</style>
 		</div>
-	)
+	);
 }

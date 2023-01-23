@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { FormField } from "../formField";
 
-
 export function AuthForm() {
 	const [email, setEmail] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
@@ -40,11 +39,20 @@ export function AuthForm() {
 	return (
 		<form onSubmit={onSubmit}>
 			<FormField type="email" name="email" state={email} setState={setEmail} />
-			<FormField type="password" name="password" state={password} setState={setPassword} />
-			{newAccount && (<FormField type="text" name="name" state={name} setState={setName} />)}
+			<FormField
+				type="password"
+				name="password"
+				state={password}
+				setState={setPassword}
+			/>
+			{newAccount && (
+				<FormField type="text" name="name" state={name} setState={setName} />
+			)}
 			<div>
 				<span>
-					{newAccount ? "You doesn't have yet account?" : "You have already account?"}
+					{newAccount
+						? "You doesn't have yet account?"
+						: "You have already account?"}
 				</span>
 				<span className="cursor-pointer" onClick={toggleAccount}>
 					{newAccount ? "Sign In" : "Create Account"}
@@ -68,6 +76,5 @@ export function AuthForm() {
 				}
 			`}</style>
 		</form>
-	)
+	);
 }
-
