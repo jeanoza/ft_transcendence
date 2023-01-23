@@ -12,8 +12,7 @@ export class CreateUserDto {
 
   //login: string;
   //imageURL: string;
-
-  createdAt?: Date;
-  updatedAt?: Date;
-  deletedAt?: Date | null;
+  //createdAt?: Date;
+  //updatedAt?: Date;
+  //deletedAt?: Date | null;
 }

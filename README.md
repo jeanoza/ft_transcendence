@@ -28,6 +28,12 @@ This is a boiler plate to use generally at my futur web application.
 
   - [ ] Note page implement
 
+    - [ ] All note(/note)
+
+    - [ ] Create note(/note/create)
+
+    - [ ] note(/note/:id)
+
 - Backend:
 
   - [x] connect Postgresql with typeorm
@@ -38,7 +44,13 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] create User then send cookie for auth(No redirection but send cookie with access token in response)
 
-  - [ ] add Note module, entity, service and controller
+  - [x] add Note module, entity, service and controller
+
+  - [ ] verify bug in Note CRUD
+
+  - [ ] put loggedIn guard?
+
+  - [ ] to implement swagger to make simple dto code
 
 - Database:
 

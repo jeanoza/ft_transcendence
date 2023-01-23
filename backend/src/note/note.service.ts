@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -6,6 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateNoteDto } from './dto/create-note.dto';
+import { UpdateNoteDto } from './dto/update-note.dto';
 import { Note } from './entities/note.entity';
 
 @Injectable()
@@ -14,13 +16,10 @@ export class NoteService {
   private noteRepository: Repository<Note>;
 
   async create(note: CreateNoteDto) {
-    try {
-      await this.noteRepository.save(note);
-      return { msg: 'note success' }; //FIXME:or send noteid for redirect on front after receive response
-    } catch (e) {
-      console.log('note service', e);
+    return await this.noteRepository.save(note).catch((e) => {
+      console.log(e);
       throw new UnauthorizedException();
-    }
+    });
   }
 
   async findAll() {
@@ -28,20 +27,30 @@ export class NoteService {
   }
 
   async findOne(id: number) {
-    try {
-      return await this.noteRepository.findOneOrFail({
-        where: { id },
+    return await this.noteRepository
+      .findOneOrFail({ where: { id } })
+      .catch((e) => {
+        console.log(e);
+        throw new NotFoundException();
       });
-    } catch (e) {
-      throw new NotFoundException();
-    }
   }
 
   async delete(id: number) {
+    await this.findOne(id);
+    return await this.noteRepository.softDelete(id).catch((e) => {
+      console.log(e);
+      throw new UnauthorizedException();
+    });
+  }
+
+  async update(id: number, note: UpdateNoteDto) {
+    await this.findOne(id);
     try {
-      return await this.noteRepository.softDelete(id);
+      await this.noteRepository.update(id, { ...note });
+      return { msg: 'updated' };
     } catch (e) {
-      throw new NotFoundException();
+      console.log(e);
+      throw new UnauthorizedException();
     }
   }
 }

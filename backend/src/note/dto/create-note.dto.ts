@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsInt, IsString } from 'class-validator';
 
 export class CreateNoteDto {
   @IsString()
@@ -7,11 +7,10 @@ export class CreateNoteDto {
   @IsString()
   content: string;
 
-  @IsNumber()
-  @IsNotEmpty()
+  @IsInt()
   authorId: number;
 
-  createdAt?: Date;
-  updatedAt?: Date;
-  deletedAt?: Date | null;
+  //createdAt?: Date;
+  //updatedAt?: Date;
+  //deletedAt?: Date | null;
 }
