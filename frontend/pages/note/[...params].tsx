@@ -5,7 +5,7 @@ import { Layout } from "../../components/layout";
 import { Navbar } from "../../components/navbar";
 import { Seo } from "../../components/seo";
 
-export default function NoteDetail() {
+export default function UpdateNote() {
 	const [note, setNote] = useState<INote>();
 	const router = useRouter();
 	const [id] = router.query.params || [];
@@ -16,14 +16,18 @@ export default function NoteDetail() {
 			setNote(res.data);
 		}
 		if (id) getNote();
+		else router.push("/note")
 	}, []);
 
 	return (
 		<Layout>
 			<Navbar />
-			<Seo title="detail" />
-			<h3>{note?.title}</h3>
-			<span>{note?.content}</span>
+			<Seo title="Update" />
+			<main>
+				<h1>Update</h1>
+				<h3>{note?.title}</h3>
+				<span>{note?.content}</span>
+			</main>
 		</Layout>
 	);
 }

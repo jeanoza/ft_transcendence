@@ -14,3 +14,5 @@ declare global {
 		updatedAt: string;
 	}
 }
+
+export { IUser, INote };
