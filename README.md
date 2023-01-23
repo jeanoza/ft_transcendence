@@ -26,7 +26,7 @@ This is a boiler plate to use generally at my futur web application.
 
   - [ ] to see how to protect AuthUrl in authForm instead of use Link href
 
-  - [ ] post page implement
+  - [ ] Note page implement
 
 - Backend:
 
@@ -38,7 +38,7 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] create User then send cookie for auth(No redirection but send cookie with access token in response)
 
-  - [ ] add post module, entity, service and controller
+  - [ ] add Note module, entity, service and controller
 
 - Database:
 
@@ -46,7 +46,7 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] User table
 
-  - [ ] Post table : id, title, content, userId(foreign), ...etc
+  - [x] Note table : id, title, content, userId(foreign key), ...etc
 
   - [ ] Chat table
 

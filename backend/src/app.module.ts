@@ -6,6 +6,8 @@ import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
+import { NoteModule } from './note/note.module';
+import { Note } from './note/entities/note.entity';
 
 @Module({
   imports: [
@@ -20,13 +22,14 @@ import { AuthModule } from './auth/auth.module';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
       synchronize: true, // 'true' at the first time then 'false' to do not lose data
-      entities: [User],
+      entities: [User, Note],
       logging: process.env.NODE_ENV !== 'production', // logging only on dev
       keepConnectionAlive: true, //hot-reloading disconnect db when code change
     }),
     //TypeOrmModule.forFeature([User]),
     UserModule,
     AuthModule,
+    NoteModule,
   ],
   controllers: [AppController],
   providers: [AppService],

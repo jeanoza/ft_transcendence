@@ -64,7 +64,7 @@ export class UserController {
       httpOnly: true,
       maxAge: MAX_AGE,
     });
-    return { msg: 'success' };
+    return { msg: 'logged in' };
   }
 
   @UseGuards(Auth42Guard)
@@ -75,7 +75,7 @@ export class UserController {
       httpOnly: true,
       maxAge: MAX_AGE,
     });
-    return { msg: 'success' };
+    return { msg: 'logged in by 42 auth' };
   }
 
   @UseGuards(LoggedInGuard)
@@ -86,7 +86,7 @@ export class UserController {
       httpOnly: true,
       maxAge: 0,
     });
-    return { msg: 'success' };
+    return { msg: 'logged out' };
   }
 
   //@Get()
