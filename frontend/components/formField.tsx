@@ -23,6 +23,7 @@ export function FormField({
 			<style jsx>{`
 				label {
 					width: 240px;
+
 					display: flex;
 					justify-content: space-between;
 				}
