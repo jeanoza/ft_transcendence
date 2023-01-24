@@ -6,7 +6,6 @@ import { useUser } from "../utils/hooks/useUser";
 import { Loader } from "../components/loader";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { NoteTable } from "../components/note/noteTable";
 
 export function getServerSideProps({ req }: any) {

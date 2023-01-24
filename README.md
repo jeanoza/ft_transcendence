@@ -26,15 +26,17 @@ This is a boiler plate to use generally at my futur web application.
 
   - [ ] to see how to protect AuthUrl in authForm instead of use Link href
 
-  - [ ] Note page implement
+  - [x] Note page implement
 
-    - [ ] All note(/note)
+    - [x] All note(/note)
 
-    - [ ] Create note(/note/create)
+    - [x] Create note(/note/create)
 
-    - [ ] note(/note/:id)
+    - [x] note(/note/:id)
 
-    - [ ] divide FormField => InputField(FormField), TextareaField
+    - [x] divide FormField => InputField(FormField), TextareaField
+
+    - [x] redirect if no accessToken
 
 - Backend:
 
@@ -48,7 +50,7 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] add Note module, entity, service and controller
 
-  - [ ] verify bug in Note CRUD
+  - [x] verify bug in Note CRUD
 
   - [ ] put loggedIn guard?
 

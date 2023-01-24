@@ -5,6 +5,19 @@ import { Navbar } from "../../components/navbar";
 import { NoteForm } from "../../components/note/noteForm";
 import { Seo } from "../../components/seo";
 
+export function getServerSideProps({ req }: any) {
+	const accessToken = req.cookies["accessToken"] || null;
+	if (!accessToken)
+		return {
+			redirect: {
+				permanent: false,
+				destination: "/auth",
+			},
+			props: {},
+		};
+	return {};
+}
+
 export default function UpdateNote() {
 	const router = useRouter();
 	const [id] = router.query.params || [];
