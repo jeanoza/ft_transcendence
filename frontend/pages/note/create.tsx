@@ -17,7 +17,7 @@ export default function Create() {
 				<Link href="/note">
 					<span className="cursor-pointer text-right">back</span>
 				</Link>
-				<NoteForm />
+				<NoteForm id={null} />
 			</main>
 		</Layout>
 	);

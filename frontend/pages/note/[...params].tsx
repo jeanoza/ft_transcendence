@@ -3,22 +3,14 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Layout } from "../../components/layout";
+import { Loader } from "../../components/loader";
 import { Navbar } from "../../components/navbar";
+import { NoteForm } from "../../components/note/noteForm";
 import { Seo } from "../../components/seo";
 
 export default function UpdateNote() {
-	const [note, setNote] = useState<INote>();
 	const router = useRouter();
 	const [id] = router.query.params || [];
-
-	useEffect(() => {
-		async function getNote() {
-			let res = await axios(`/note/${id}`);
-			setNote(res.data);
-		}
-		if (id) getNote();
-		else router.push("/note");
-	}, []);
 
 	return (
 		<Layout>
@@ -29,13 +21,8 @@ export default function UpdateNote() {
 				<Link href="/note">
 					<span className="cursor-pointer text-right">Back</span>
 				</Link>
-				<h3>{note?.title}</h3>
-				<span>{note?.content}</span>
+				{id && <NoteForm id={id} />}
 			</main>
-			<style jsx>{`
-				.cursor-pointer {
-				}
-			`}</style>
 		</Layout>
 	);
 }

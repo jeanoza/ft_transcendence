@@ -24,6 +24,17 @@ h1 {
 	margin: 1rem 0;
 }
 
+button {
+	padding: 4px 24px;
+	border-radius: 8px;
+	cursor: pointer;
+	background-color: rgb(240, 240, 240);
+	border: 0;
+}
+button:hover {
+	color: #06c;
+}
+
 .cursor-pointer {
 	text-decoration: underline;
 	color: #06c;
@@ -33,4 +44,40 @@ h1 {
 .text-right {
 	display: block;
 	text-align: end;
+}
+
+.d-flex {
+	display: flex;
+}
+.d-flex.center {
+	justify-content: center;
+	align-items: center;
+}
+.d-flex.end {
+	justify-content: end;
+}
+.d-flex.between {
+	justify-content: space-between;
+}
+
+/* .field in form tag */
+.field {
+	position: relative;
+	margin: 16px 0px;
+}
+.field > label {
+	position: absolute;
+	top: 8px;
+	left: 8px;
+	font-weight: 700;
+	color: #06c;
+	text-transform: capitalize;
+}
+.field > input,
+.field > textarea {
+	width: 100%;
+	padding: 8px;
+	padding-top: 24px;
+	border-radius: 8px;
+	resize: none;
 }

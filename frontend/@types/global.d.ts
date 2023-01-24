@@ -1,5 +1,6 @@
 declare global {
 	interface IUser {
+		id?: number;
 		name?: string;
 		email?: string;
 		imageURL?: string;
@@ -7,11 +8,12 @@ declare global {
 	}
 	interface INote {
 		id?: number;
-		authorId?: number;
 		title: string;
 		content: string;
 		createdAt?: string;
 		updatedAt?: string;
+		authorId?: number;
+		author?: IUser;
 	}
 }
 

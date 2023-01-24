@@ -11,6 +11,7 @@ export function NoteTable({ notes }: { notes: INote[] | any }) {
 				<tr>
 					<th>Title</th>
 					<th>Content</th>
+					<th>Author</th>
 					<th>Created at</th>
 					<th>Updated at</th>
 				</tr>
@@ -18,9 +19,10 @@ export function NoteTable({ notes }: { notes: INote[] | any }) {
 			<tbody>
 				{notes &&
 					notes.map((el: INote) => (
-						<tr key={el.id} onClick={() => onClick(el.id)}>
+						<tr key={el.id} onClick={() => onClick(el.id!)}>
 							<td>{el.title}</td>
 							<td>{el.content}</td>
+							<td>{el.author?.name}</td>
 							<td>{el.createdAt}</td>
 							<td>{el.updatedAt}</td>
 						</tr>
@@ -39,6 +41,11 @@ export function NoteTable({ notes }: { notes: INote[] | any }) {
 				td {
 					border: 1px solid white;
 					height: 24px;
+					max-width: 100px;
+					padding: 8px;
+					overflow: hidden;
+					white-space: nowrap;
+					text-overflow: ellipsis;
 				}
 				th {
 					background-color: #bdc3c7;

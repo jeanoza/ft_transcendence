@@ -5,6 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
@@ -14,6 +15,7 @@ import { Note } from './entities/note.entity';
 export class NoteService {
   @InjectRepository(Note)
   private noteRepository: Repository<Note>;
+  private userRepository: Repository<User>;
 
   async create(note: CreateNoteDto) {
     return await this.noteRepository.save(note).catch((e) => {
@@ -23,7 +25,11 @@ export class NoteService {
   }
 
   async findAll() {
-    return await this.noteRepository.find();
+    return await this.noteRepository
+      .createQueryBuilder('note')
+      .innerJoin('note.author', 'author')
+      .select(['note', 'author.name'])
+      .getMany();
   }
 
   async findOne(id: number) {

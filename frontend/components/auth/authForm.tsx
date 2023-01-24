@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { FormField } from "../formField";
+import { InputField } from "../inputField";
 
 export function AuthForm({ authUrl }: { authUrl: string }) {
 	const [email, setEmail] = useState<string>("");
@@ -38,15 +38,15 @@ export function AuthForm({ authUrl }: { authUrl: string }) {
 
 	return (
 		<form onSubmit={onSubmit}>
-			<FormField type="email" name="email" state={email} setState={setEmail} />
-			<FormField
+			<InputField type="email" name="email" state={email} setState={setEmail} />
+			<InputField
 				type="password"
 				name="password"
 				state={password}
 				setState={setPassword}
 			/>
 			{newAccount && (
-				<FormField type="text" name="name" state={name} setState={setName} />
+				<InputField type="text" name="name" state={name} setState={setName} />
 			)}
 			<div>
 				<span>
@@ -64,7 +64,9 @@ export function AuthForm({ authUrl }: { authUrl: string }) {
 					<span className="cursor-pointer">Click</span>
 				</Link>
 			</div>
-			<button>{newAccount ? "Create Account" : "Sign In"} </button>
+			<div className="d-flex end">
+				<button>{newAccount ? "Create Account" : "Sign In"} </button>
+			</div>
 			<style jsx>{`
 				form > div {
 					margin: 16px 0px;
