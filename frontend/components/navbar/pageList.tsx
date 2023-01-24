@@ -15,7 +15,7 @@ export function PageList() {
 					<li key={name}>
 						<Link href={path}>
 							<span className={`${router.pathname === path ? "active" : ""}`}>
-								{name[0].toUpperCase() + name[0].slice(1)}
+								{name[0].toUpperCase() + name.slice(1)}
 							</span>
 						</Link>
 					</li>)
