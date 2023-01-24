@@ -23,8 +23,8 @@ export function NoteTable({ notes }: { notes: INote[] | any }) {
 							<td>{el.title}</td>
 							<td>{el.content}</td>
 							<td>{el.author?.name}</td>
-							<td>{el.createdAt}</td>
-							<td>{el.updatedAt}</td>
+							<td>{new Date(el.createdAt).toLocaleString()}</td>
+							<td>{new Date(el.updatedAt).toLocaleString()}</td>
 						</tr>
 					))}
 			</tbody>
