@@ -12,10 +12,15 @@ export default function Auth({ authUrl }: { authUrl: string }) {
 		<Layout>
 			<NotAuthNavbar />
 			<Seo title="Auth" />
-			<main>
+			<main className="d-flex column center">
 				<h1>Auth</h1>
 				<AuthForm authUrl={authUrl} />
 			</main>
+			<style jsx>{`
+				main {
+					flex-direction:column;
+				}
+			`}</style>
 		</Layout>
 	);
 }

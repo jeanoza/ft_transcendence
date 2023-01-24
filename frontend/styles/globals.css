@@ -41,29 +41,48 @@ button:hover {
 	cursor: pointer;
 }
 
-.text-right {
-	display: block;
-	text-align: end;
-}
-
 .d-flex {
 	display: flex;
+}
+.d-flex.column {
+	flex-direction: column;
 }
 .d-flex.center {
 	justify-content: center;
 	align-items: center;
 }
-.d-flex.end {
+.d-flex.justify-start {
+	justify-content: start;
+}
+.d-flex.justify-end {
 	justify-content: end;
 }
-.d-flex.between {
+.d-flex.justify-between {
 	justify-content: space-between;
+}
+.d-flex.align-start {
+	align-items: start;
+}
+.d-flex.align-end {
+	align-items: end;
+}
+.d-flex.align-between {
+	align-items: space-between;
 }
 
 /* .field in form tag */
 .field {
 	position: relative;
 	margin: 16px 0px;
+}
+.field.sm {
+	width: 20rem;
+}
+.field.md {
+	width: 30rem;
+}
+.field.lg {
+	width: 40rem;
 }
 .field > label {
 	position: absolute;
@@ -80,4 +99,11 @@ button:hover {
 	padding-top: 24px;
 	border-radius: 8px;
 	resize: none;
+}
+.field > textarea {
+	outline: 1px solid;
+	font-family: inherit;
+}
+.field > textarea:focus {
+	border: 1px solid #06c;
 }

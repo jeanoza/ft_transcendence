@@ -38,15 +38,16 @@ export function AuthForm({ authUrl }: { authUrl: string }) {
 
 	return (
 		<form onSubmit={onSubmit}>
-			<InputField type="email" name="email" state={email} setState={setEmail} />
+			<InputField size="sm" type="email" name="email" state={email} setState={setEmail} />
 			<InputField
+				size="sm"
 				type="password"
 				name="password"
 				state={password}
 				setState={setPassword}
 			/>
 			{newAccount && (
-				<InputField type="text" name="name" state={name} setState={setName} />
+				<InputField size="sm" type="text" name="name" state={name} setState={setName} />
 			)}
 			<div>
 				<span>
@@ -64,7 +65,7 @@ export function AuthForm({ authUrl }: { authUrl: string }) {
 					<span className="cursor-pointer">Click</span>
 				</Link>
 			</div>
-			<div className="d-flex end">
+			<div className="d-flex justify-end">
 				<button>{newAccount ? "Create Account" : "Sign In"} </button>
 			</div>
 			<style jsx>{`

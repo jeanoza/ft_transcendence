@@ -46,9 +46,11 @@ export default function Note() {
 			{user && (
 				<main>
 					<h1 className="">Note</h1>
-					<Link href="/note/create">
-						<span className="cursor-pointer text-right">Create</span>
-					</Link>
+					<div className="d-flex justify-end">
+						<Link href="/note/create">
+							<span className="cursor-pointer">Create</span>
+						</Link>
+					</div>
 					<NoteTable notes={notes} />
 				</main>
 			)}

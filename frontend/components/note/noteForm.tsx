@@ -10,7 +10,7 @@ import { TextareaField } from "../textareaField";
  * @param id
  * @returns
  */
-export function NoteForm({ id }: { id: string | null }) {
+export function NoteForm({ id }: { id?: string }) {
 	const [title, setTitle] = useState<string>("");
 	const [content, setContent] = useState<string>("");
 	const { user } = useUser();
@@ -45,7 +45,7 @@ export function NoteForm({ id }: { id: string | null }) {
 		<form onSubmit={onSubmit}>
 			<InputField type="text" name="title" state={title} setState={setTitle} />
 			<TextareaField name="content" state={content} setState={setContent} />
-			<div className="d-flex end">
+			<div className="d-flex justify-end">
 				<button>Send</button>
 			</div>
 			<style jsx>{`
