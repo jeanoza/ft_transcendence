@@ -18,15 +18,18 @@ export function NoteTable({ notes }: { notes: INote[] | any }) {
 			</thead>
 			<tbody>
 				{notes &&
-					notes.map((el: INote) => (
-						<tr key={el.id} onClick={() => onClick(el.id!)}>
-							<td>{el.title}</td>
-							<td>{el.content}</td>
-							<td>{el.author?.name}</td>
-							<td>{new Date(el.createdAt).toLocaleString()}</td>
-							<td>{new Date(el.updatedAt).toLocaleString()}</td>
-						</tr>
-					))}
+					notes.map((el: INote) => {
+						console.log(typeof el.createdAt)
+						return (
+							<tr key={el.id} onClick={() => onClick(el.id!)}>
+								<td>{el.title}</td>
+								<td>{el.content}</td>
+								<td>{el.author?.name}</td>
+								<td>{new Date(el.createdAt).toLocaleString()}</td>
+								<td>{new Date(el.updatedAt).toLocaleString()}</td>
+							</tr>
+						)
+					})}
 			</tbody>
 			<style jsx>{`
 				table {

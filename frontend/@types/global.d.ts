@@ -10,10 +10,10 @@ declare global {
 		id?: number;
 		title: string;
 		content: string;
-		createdAt?: string;
-		updatedAt?: string;
+		createdAt?: string | any;
+		updatedAt?: string | any;
 		authorId?: number;
-		author?: IUser;
+		author?: IUser | null;
 	}
 }
 
