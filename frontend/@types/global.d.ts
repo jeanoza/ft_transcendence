@@ -6,12 +6,12 @@ declare global {
 		password?: string;
 	}
 	interface INote {
-		id: 7;
-		authorId: number;
+		id?: number;
+		authorId?: number;
 		title: string;
 		content: string;
-		createdAt: string;
-		updatedAt: string;
+		createdAt?: string;
+		updatedAt?: string;
 	}
 }
 

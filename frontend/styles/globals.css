@@ -19,3 +19,18 @@ a {
 li {
 	list-style: none;
 }
+
+h1 {
+	margin: 1rem 0;
+}
+
+.cursor-pointer {
+	text-decoration: underline;
+	color: #06c;
+	cursor: pointer;
+}
+
+.text-right {
+	display: block;
+	text-align: end;
+}

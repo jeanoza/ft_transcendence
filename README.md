@@ -34,6 +34,8 @@ This is a boiler plate to use generally at my futur web application.
 
     - [ ] note(/note/:id)
 
+    - [ ] divide FormField => InputField(FormField), TextareaField
+
 - Backend:
 
   - [x] connect Postgresql with typeorm

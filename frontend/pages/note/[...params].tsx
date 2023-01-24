@@ -1,4 +1,5 @@
 import axios from "axios";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Layout } from "../../components/layout";
@@ -16,7 +17,7 @@ export default function UpdateNote() {
 			setNote(res.data);
 		}
 		if (id) getNote();
-		else router.push("/note")
+		else router.push("/note");
 	}, []);
 
 	return (
@@ -25,9 +26,16 @@ export default function UpdateNote() {
 			<Seo title="Update" />
 			<main>
 				<h1>Update</h1>
+				<Link href="/note">
+					<span className="cursor-pointer text-right">Back</span>
+				</Link>
 				<h3>{note?.title}</h3>
 				<span>{note?.content}</span>
 			</main>
+			<style jsx>{`
+				.cursor-pointer {
+				}
+			`}</style>
 		</Layout>
 	);
 }

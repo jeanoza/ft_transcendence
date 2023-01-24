@@ -69,11 +69,6 @@ export function AuthForm({ authUrl }: { authUrl: string }) {
 				form > div {
 					margin: 16px 0px;
 				}
-				.cursor-pointer {
-					text-decoration: underline;
-					color: blue;
-					cursor: pointer;
-				}
 			`}</style>
 		</form>
 	);

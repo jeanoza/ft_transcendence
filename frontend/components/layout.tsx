@@ -1,10 +1,10 @@
 export function Layout({ children }: React.PropsWithChildren) {
 	return (
-		<div>
-			<div className="container">{children}</div>
+		<div className="container">
+			{children}
 			<style jsx global>{`
 				.container {
-					height:100vh;
+					height: 100vh;
 				}
 				main {
 					margin: 0 auto;
