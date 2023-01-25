@@ -31,7 +31,7 @@ export default function Chat() {
 
 	useEffect(() => {
 		const socketInitializer = async () => {
-			await fetch('http://localhost:8888/api/ws-chat')
+			await fetch('http://localhost:8888/')
 			socket = io()
 
 			socket.on('connect', () => {
