@@ -31,11 +31,6 @@ export default function UpdateNote() {
 			<Seo title="Update" />
 			<main>
 				<h1>Update</h1>
-				<div className="d-flex justify-end">
-					<Link href="/note">
-						<span className="cursor-pointer">Back</span>
-					</Link>
-				</div>
 				{id && <NoteForm id={id} />}
 			</main>
 		</Layout>

@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import router, { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import React, { ButtonHTMLAttributes, useEffect, useState } from "react";
 import { useUser } from "../../utils/hooks/swrHelper";
 import { InputField } from "../inputField";
 import { TextareaField } from "../textareaField";
@@ -41,16 +41,40 @@ export function NoteForm({ id }: { id?: string }) {
 			window.alert(e?.response?.data?.message);
 		}
 	}
+	async function onDelete(e: React.MouseEvent) {
+		e.preventDefault();
+		if (window.confirm('Do you want remove this note?')) {
+			try {
+				const url = `/note/${id}`
+				await axios.delete(url)
+				router.push("/note")
+			} catch (e: AxiosError | any) {
+				window.alert(e?.response?.data?.message);
+			}
+		}
+	}
+	function onCancel(e: React.MouseEvent) {
+		e.preventDefault();
+		router.push("/note")
+	}
 	return (
 		<form onSubmit={onSubmit}>
 			<InputField type="text" name="title" state={title} setState={setTitle} />
 			<TextareaField name="content" state={content} setState={setContent} />
 			<div className="d-flex justify-end">
 				<button>Send</button>
+				{id && <button onClick={onDelete}>Delete</button>}
+				<button onClick={onCancel}>Cancel</button>
 			</div>
 			<style jsx>{`
+				form {
+					margin-top:2rem;
+				}
 				form > div {
-					margin: 16px 0px;
+					margin: 1rem 0px;
+				}
+				.d-flex {
+					gap:8px;
 				}
 			`}</style>
 		</form>

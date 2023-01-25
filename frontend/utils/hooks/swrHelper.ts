@@ -48,28 +48,3 @@ export function useAllNote() {
 		error,
 	};
 }
-
-export function useNote() {
-	const { data, error, mutate, isLoading } = useSWR("note", fetcher, {
-		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-			console.log(key);
-			// Never retry on 404.
-			if (error?.response?.status === 404) return;
-
-			// Never retry for a specific key.
-			if (key === "user") return;
-
-			// Only retry up to 10 times.
-			if (retryCount >= 10) return;
-
-			// Retry after 5 seconds.
-			setTimeout(() => revalidate({ retryCount }), 5000);
-		},
-	});
-	return {
-		note: data,
-		revalid: mutate,
-		isLoading,
-		error,
-	};
-}

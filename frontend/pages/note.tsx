@@ -4,9 +4,9 @@ import { Layout } from "../components/layout";
 import axios from "axios";
 import { useAllNote, useUser } from "../utils/hooks/swrHelper";
 import { Loader } from "../components/loader";
-import { useEffect, useState } from "react";
-import Link from "next/link";
+import React from "react";
 import { NoteTable } from "../components/note/noteTable";
+import { useRouter } from "next/router";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -26,6 +26,12 @@ export function getServerSideProps({ req }: any) {
 export default function Note() {
 	const { user, isLoading } = useUser();
 	const { notes, isLoading: noteIsLoading } = useAllNote();
+	const router = useRouter();
+
+	function onClick(e: React.MouseEvent) {
+		e.preventDefault();
+		router.push("/note/create")
+	}
 
 	return (
 		<Layout>
@@ -35,14 +41,18 @@ export default function Note() {
 			{user && (
 				<main>
 					<h1 className="">Note</h1>
-					<div className="d-flex justify-end">
-						<Link href="/note/create">
-							<span className="cursor-pointer">Create</span>
-						</Link>
-					</div>
 					<NoteTable notes={notes} />
+					<div className="d-flex justify-end">
+						<button onClick={onClick}>Add note</button>
+					</div>
 				</main>
 			)}
+			<style jsx>{`
+				.d-flex {
+					margin-top:2rem;
+				}
+				
+			`}</style>
 		</Layout>
 	);
 }

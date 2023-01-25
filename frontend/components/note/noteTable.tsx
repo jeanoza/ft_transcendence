@@ -32,7 +32,7 @@ export function NoteTable({ notes }: { notes: INote[] | any }) {
 			</tbody>
 			<style jsx>{`
 				table {
-					margin-top: 16px;
+					margin-top: 2rem;
 					width: 100%;
 					border-collapse: collapse;
 				}
