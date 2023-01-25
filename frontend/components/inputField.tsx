@@ -21,7 +21,7 @@ export function InputField({
 		setState(e.currentTarget.value);
 	}
 	return (
-		<div className={`field ${size}`}>
+		<div className={`field ${size ? size : ''}`}>
 			<label>{name}</label>
 			<input type={type} name={name} onChange={onChange} value={state}></input>
 		</div>

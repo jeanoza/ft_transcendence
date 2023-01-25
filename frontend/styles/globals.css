@@ -10,6 +10,7 @@ body {
 	font-family: SF Pro Text, SF Pro Icons, AOS Icons, Helvetica Neue, Helvetica,
 		Arial, sans-serif;
 	font-size: 12px;
+	color: #424245;
 }
 
 a {
@@ -78,7 +79,8 @@ button:hover {
 /* #region field */
 .field {
 	position: relative;
-	margin: 16px 0px;
+	margin: 1rem 0;
+	/*width: 100%;*/
 }
 .field.sm {
 	width: 20rem;
@@ -93,7 +95,7 @@ button:hover {
 	position: absolute;
 	top: 8px;
 	left: 8px;
-	font-weight: 700;
+	font-weight: 600;
 	color: #06c;
 	text-transform: capitalize;
 }
@@ -103,12 +105,11 @@ button:hover {
 	padding: 8px;
 	padding-top: 24px;
 	border-radius: 8px;
+	border: 1px solid #424245;
 }
 .field > textarea {
-	outline: 1px solid;
 	font-family: inherit;
 	resize: none;
-	height: 200px;
 }
 .field > textarea:focus {
 	border: 1px solid #06c;

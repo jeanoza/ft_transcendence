@@ -50,8 +50,7 @@ export function NoteTable({ notes }: { notes: INote[] | any }) {
 					text-overflow: ellipsis;
 				}
 				th {
-					background-color: #bdc3c7;
-					color: white;
+					background-color: rgb(240,240,240);
 				}
 			`}</style>
 		</table>

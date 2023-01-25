@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-const elements = { home: "/", note: "/note" };
+const elements = { home: "/", note: "/note", chat: "/chat" };
 
 export function PageList() {
 	const router = useRouter();

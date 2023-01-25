@@ -38,7 +38,7 @@ This is a boiler plate to use generally at my futur web application.
 
     - [x] redirect if no accessToken
 
-  -
+  - [ ] Chat page
 
 - Backend:
 
