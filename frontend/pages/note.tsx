@@ -41,18 +41,12 @@ export default function Note() {
 			{user && (
 				<main>
 					<h1 className="">Note</h1>
-					<NoteTable notes={notes} />
 					<div className="d-flex justify-end">
-						<button onClick={onClick}>Add note</button>
+						<button onClick={onClick}>Add</button>
 					</div>
+					<NoteTable notes={notes} />
 				</main>
 			)}
-			<style jsx>{`
-				.d-flex {
-					margin-top:2rem;
-				}
-				
-			`}</style>
 		</Layout>
 	);
 }
