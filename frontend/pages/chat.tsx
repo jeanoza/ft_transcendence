@@ -30,15 +30,11 @@ export default function Chat() {
 	const [message, setMessage] = useState<string>('');
 
 	useEffect(() => {
-		const socketInitializer = async () => {
-			await fetch('http://localhost:8888/')
-			socket = io()
-
-			socket.on('connect', () => {
-				console.log('connected')
-			})
-		}
-		socketInitializer();
+		fetch('http://localhost:8888/')
+		socket = io();
+		//socket.on('connect', () => {
+		//	console.log('connected')
+		//})
 	}, [])
 	return (
 		<Layout>
