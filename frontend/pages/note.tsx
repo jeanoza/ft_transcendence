@@ -41,7 +41,7 @@ export default function Note() {
 		<Layout>
 			<Navbar />
 			<Seo title="Note" />
-			{isLoading && <Loader />}
+			{(isLoading || !notes) && <Loader />}
 			{user && (
 				<main>
 					<h1 className="">Note</h1>

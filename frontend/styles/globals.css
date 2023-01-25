@@ -1,3 +1,4 @@
+/* #region default settings */
 * {
 	box-sizing: border-box;
 	padding: 0;
@@ -9,8 +10,8 @@ body {
 	font-family: SF Pro Text, SF Pro Icons, AOS Icons, Helvetica Neue, Helvetica,
 		Arial, sans-serif;
 	font-size: 12px;
-	height: 100%;
 }
+
 a {
 	text-decoration: none;
 	color: inherit;
@@ -21,7 +22,8 @@ li {
 }
 
 h1 {
-	margin: 1rem 0;
+	margin: 0;
+	margin-bottom: 1rem;
 }
 
 button {
@@ -40,7 +42,9 @@ button:hover {
 	color: #06c;
 	cursor: pointer;
 }
+/* #endregion */
 
+/* #region flex */
 .d-flex {
 	display: flex;
 }
@@ -69,8 +73,9 @@ button:hover {
 .d-flex.align-between {
 	align-items: space-between;
 }
+/* #endregion */
 
-/* .field in form tag */
+/* #region field */
 .field {
 	position: relative;
 	margin: 16px 0px;
@@ -98,12 +103,14 @@ button:hover {
 	padding: 8px;
 	padding-top: 24px;
 	border-radius: 8px;
-	resize: none;
 }
 .field > textarea {
 	outline: 1px solid;
 	font-family: inherit;
+	resize: none;
+	height: 200px;
 }
 .field > textarea:focus {
 	border: 1px solid #06c;
 }
+/* #endregion */

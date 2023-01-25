@@ -4,6 +4,7 @@ import { Layout } from "../../components/layout";
 import { Navbar } from "../../components/navbar";
 import { NoteForm } from "../../components/note/noteForm";
 import { Seo } from "../../components/seo";
+import { useUser } from "../../utils/hooks/useUser";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -15,7 +16,7 @@ export function getServerSideProps({ req }: any) {
 			},
 			props: {},
 		};
-	return {};
+	return { props: {} };
 }
 
 export default function Create() {

@@ -19,7 +19,6 @@ export function NoteTable({ notes }: { notes: INote[] | any }) {
 			<tbody>
 				{notes &&
 					notes.map((el: INote) => {
-						console.log(typeof el.createdAt)
 						return (
 							<tr key={el.id} onClick={() => onClick(el.id!)}>
 								<td>{el.title}</td>

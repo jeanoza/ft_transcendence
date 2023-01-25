@@ -16,12 +16,12 @@ export function getServerSideProps({ req }: any) {
 			props: {},
 		};
 	axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-	return { props: { accessToken } };
+	//return { props: { accessToken } };
+	return { props: {} };
 }
 //FIXME:Send accessToken to page or not?
 export default function Home() {
 	const { user, isLoading } = useUser();
-	if (isLoading) return <Loader />
 	return (
 		<Layout>
 			<Navbar />
@@ -35,8 +35,6 @@ export default function Home() {
 					</div>
 				</main>
 			}
-			{/* line to test loader */}
-			{/*<Loader />*/}
 		</Layout>
 	);
 }

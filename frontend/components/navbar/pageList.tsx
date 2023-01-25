@@ -14,7 +14,10 @@ export function PageList() {
 				return (
 					<li key={name}>
 						<Link href={path}>
-							<span className={`${router.pathname === path ? "active" : ""}`}>
+							<span className={`
+								${router.pathname === path
+									|| (router.pathname !== "/" && router.pathname.includes(name))
+									? "active" : ""}`}>
 								{name}
 							</span>
 						</Link>

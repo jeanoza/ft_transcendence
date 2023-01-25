@@ -15,7 +15,7 @@ export function getServerSideProps({ req }: any) {
 			},
 			props: {},
 		};
-	return {};
+	return { props: {} };
 }
 
 export default function UpdateNote() {

@@ -38,6 +38,8 @@ This is a boiler plate to use generally at my futur web application.
 
     - [x] redirect if no accessToken
 
+  -
+
 - Backend:
 
   - [x] connect Postgresql with typeorm
@@ -52,7 +54,7 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] verify bug in Note CRUD
 
-  - [ ] put loggedIn guard?
+  - [x] put loggedIn guard to Note request
 
   - [ ] to implement swagger to make simple dto code
 
@@ -69,6 +71,10 @@ This is a boiler plate to use generally at my futur web application.
 - Docker:
 
   - [x] docker-compose.yml
+
+- ETC:
+
+  - [ ] save only locally .env
 
 ## BUG to fix
 
