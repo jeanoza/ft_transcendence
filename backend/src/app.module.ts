@@ -8,6 +8,8 @@ import { User } from './user/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { NoteModule } from './note/note.module';
 import { Note } from './note/entities/note.entity';
+import { EventsGateway } from './events/events.gateway';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -30,8 +32,9 @@ import { Note } from './note/entities/note.entity';
     UserModule,
     AuthModule,
     NoteModule,
+    EventsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, EventsGateway],
 })
 export class AppModule {}

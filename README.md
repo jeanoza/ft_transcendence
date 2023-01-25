@@ -38,7 +38,9 @@ This is a boiler plate to use generally at my futur web application.
 
     - [x] redirect if no accessToken
 
-  - [ ] Chat page
+  - [x] Chat page
+
+  - [ ] Websocket/socketio connection with server
 
 - Backend:
 
@@ -55,6 +57,8 @@ This is a boiler plate to use generally at my futur web application.
   - [x] verify bug in Note CRUD
 
   - [x] put loggedIn guard to Note request
+
+  - [ ] Websocket/Socketio connection with client
 
   - [ ] to implement swagger to make simple dto code
 

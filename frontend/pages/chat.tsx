@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Layout } from "../components/layout";
 import { Loader } from "../components/loader";
 import { Navbar } from "../components/navbar";
@@ -7,6 +7,9 @@ import { TextareaField } from "../components/textareaField";
 import { useUser } from "../utils/hooks/swrHelper";
 import { InputField } from "../components/inputField";
 import axios from "axios";
+import io from 'socket.io-client'
+
+let socket;
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -25,6 +28,18 @@ export function getServerSideProps({ req }: any) {
 export default function Chat() {
 	const { user, isLoading } = useUser();
 	const [message, setMessage] = useState<string>('');
+
+	useEffect(() => {
+		const socketInitializer = async () => {
+			await fetch('http://localhost:8888/api/ws-chat')
+			socket = io()
+
+			socket.on('connect', () => {
+				console.log('connected')
+			})
+		}
+		socketInitializer();
+	}, [])
 	return (
 		<Layout>
 			<Navbar />
