@@ -1,5 +1,5 @@
 import { Seo } from "../components/seo";
-import { useUser } from "../utils/hooks/useUser";
+import { useUser } from "../utils/hooks/swrHelper";
 import { Navbar } from "../components/navbar";
 import { Layout } from "../components/layout";
 import axios from "axios";
@@ -7,7 +7,8 @@ import { Loader } from "../components/loader";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
-	if (!accessToken)
+	if (!accessToken) {
+		delete axios.defaults.headers.common.Authorization;
 		return {
 			redirect: {
 				permanent: false,
@@ -15,8 +16,8 @@ export function getServerSideProps({ req }: any) {
 			},
 			props: {},
 		};
+	}
 	axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-	//return { props: { accessToken } };
 	return { props: {} };
 }
 //FIXME:Send accessToken to page or not?

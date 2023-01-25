@@ -1,4 +1,4 @@
-import { useUser } from "../utils/hooks/useUser";
+import { useUser } from "../utils/hooks/swrHelper";
 import { Profile } from "./navbar/profile";
 import { PageList } from "./navbar/pageList";
 

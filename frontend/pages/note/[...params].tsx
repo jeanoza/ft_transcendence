@@ -4,17 +4,20 @@ import { Layout } from "../../components/layout";
 import { Navbar } from "../../components/navbar";
 import { NoteForm } from "../../components/note/noteForm";
 import { Seo } from "../../components/seo";
+import axios from "axios";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
-	if (!accessToken)
+	if (!accessToken) {
+		delete axios.defaults.headers.common.Authorization;
 		return {
 			redirect: {
 				permanent: false,
 				destination: "/auth",
 			},
 			props: {},
-		};
+		}
+	}
 	return { props: {} };
 }
 

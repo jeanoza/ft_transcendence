@@ -6,7 +6,7 @@ export default async function (url: string) {
 		.get(url)
 		.then((res) => res.data)
 		.catch((e) => {
-			delete axios.defaults.headers.common["Authorization"];
+			delete axios.defaults.headers.common.Authorization;
 			throw e;
 		});
 }

@@ -6,8 +6,7 @@ export function Profile({ user }: { user: IUser }) {
 	async function onLogout(e: React.MouseEvent<HTMLButtonElement>) {
 		try {
 			await axios.get("user/logout");
-			delete axios.defaults.headers.common["Authorization"];
-			router.push("/auth");
+			router.push("/");
 		} catch (err) {
 			throw err;
 		}

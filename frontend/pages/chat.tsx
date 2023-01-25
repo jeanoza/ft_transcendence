@@ -4,19 +4,22 @@ import { Loader } from "../components/loader";
 import { Navbar } from "../components/navbar";
 import { Seo } from "../components/seo";
 import { TextareaField } from "../components/textareaField";
-import { useUser } from "../utils/hooks/useUser";
+import { useUser } from "../utils/hooks/swrHelper";
 import { InputField } from "../components/inputField";
+import axios from "axios";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
-	if (!accessToken)
+	if (!accessToken) {
+		delete axios.defaults.headers.common.Authorization;
 		return {
 			redirect: {
 				permanent: false,
 				destination: "/auth",
 			},
 			props: {},
-		};
+		}
+	}
 	return { props: {} };
 }
 export default function Chat() {

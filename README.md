@@ -98,6 +98,8 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] see refactoring - user.service, entities
 
+  - [ ] UseEffect => useSWR
+
 ## Useful commands
 
 ### PostgreSQL:

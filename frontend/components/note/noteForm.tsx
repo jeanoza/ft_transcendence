@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import router, { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useUser } from "../../utils/hooks/useUser";
+import { useUser } from "../../utils/hooks/swrHelper";
 import { InputField } from "../inputField";
 import { TextareaField } from "../textareaField";
 
