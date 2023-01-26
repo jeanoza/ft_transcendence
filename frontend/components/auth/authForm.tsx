@@ -36,6 +36,16 @@ export function AuthForm({ authUrl }: { authUrl: string }) {
 		}
 	}
 
+	async function onClick(e) {
+
+		try {
+			const res = await fetch('/auth42')
+			console.log(res);
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
 	return (
 		<form onSubmit={onSubmit}>
 			<InputField size="sm" type="email" name="email" state={email} setState={setEmail} />
@@ -64,6 +74,8 @@ export function AuthForm({ authUrl }: { authUrl: string }) {
 				<Link href={authUrl}>
 					<span className="cursor-pointer">Click</span>
 				</Link>
+				{/*<span className="cursor-pointer" onClick={onClick}>Click</span>*/}
+
 			</div>
 			<div className="d-flex justify-end">
 				<button>{newAccount ? "Create Account" : "Sign In"} </button>
