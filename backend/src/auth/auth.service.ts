@@ -49,12 +49,19 @@ export class AuthService {
       select: ['id', 'email', 'password'],
     });
 
+    //FIXME: seperate on two function or fixe
     if (user) {
-      if (_password && !(await bcrypt.compare(_password, user.password)))
-        return null;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...rest } = user;
-      return rest;
+      if (user.password === null) {
+        const { password, ...rest } = user;
+        return rest;
+      } else if (
+        _password &&
+        (await bcrypt.compare(_password, user.password))
+      ) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password, ...rest } = user;
+        return rest;
+      }
     }
     return null;
   }
