@@ -42,6 +42,8 @@ This is a boiler plate to use generally at my futur web application.
 
   - [ ] Websocket/socketio connection with server
 
+    - [ ] minimum
+
 - Backend:
 
   - [x] connect Postgresql with typeorm
@@ -59,6 +61,10 @@ This is a boiler plate to use generally at my futur web application.
   - [x] put loggedIn guard to Note request
 
   - [ ] Websocket/Socketio connection with client
+
+    - [x] handle join room => to modify after
+
+    - [ ] handle leave room
 
   - [ ] to implement swagger to make simple dto code
 

@@ -1,42 +1,67 @@
+import { Logger } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
+  OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
   WsResponse,
 } from '@nestjs/websockets';
-import { Socket } from 'node:net';
 import { from, map, Observable } from 'rxjs';
-import { Server } from 'typeorm';
+import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
-  namespace: /\ws-/,
+  namespace: /\ws-.+/,
   cors: {
     origin: '*',
   },
 })
-export class EventsGateway {
+export class EventsGateway
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+{
   @WebSocketServer()
   server: Server;
 
-  @SubscribeMessage('events')
-  handleEvent(
-    @MessageBody() data: string,
-    @ConnectedSocket() client: Socket,
-  ): string {
-    return data;
+  private logger: Logger = new Logger('EventGateway');
+
+  afterInit(server: Server): any {
+    this.logger.log('after init');
+  }
+  handleConnection(@ConnectedSocket() client: Socket) {
+    this.logger.log(`Chat socket id:${client.id} connected`);
   }
 
-  @SubscribeMessage('message')
-  handleMessage(@MessageBody() data: string): void {
-    this.server.emit('message', data);
+  handleDisconnect(@ConnectedSocket() client: Socket) {
+    this.logger.log(`Chat socket id:${client.id} disconnected`);
   }
 
-  @SubscribeMessage('identity')
-  async identity(@MessageBody() data: number): Promise<number> {
-    return data;
+  @SubscribeMessage('joinRoom')
+  handleJoinRoom(client: Socket, data) {
+    client.join(data.room);
+    this.server.to(data.room).emit('receiveMessage', {
+      sender: data.room,
+      message: `${data.user} has joined.`,
+    });
+  }
+
+  //FIXME: to disconnect on other browser
+  @SubscribeMessage('leaveRoom')
+  handleLeaveRoom(client: Socket, data) {
+    console.log(data.user);
+    client.leave(data.room);
+    this.server.to(data.room).emit('receiveMessage', {
+      sender: data.room,
+      message: `${data.user} left`,
+    });
+  }
+
+  @SubscribeMessage('sendMessage')
+  handleMessage(@MessageBody() data: any): void {
+    this.server
+      .to(data.room)
+      .emit('receiveMessage', { sender: data.sender, message: data.message });
   }
 }

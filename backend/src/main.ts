@@ -2,11 +2,12 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 import * as cookieParser from 'cookie-parser';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const logger = new Logger('Main');
 
   app.enableCors({
     origin: process.env.CLIENT_URL,
@@ -24,6 +25,6 @@ async function bootstrap() {
 
   const port = process.env.PORT || 8888;
   await app.listen(port);
-  console.log(`Backend Server listen to ${port}`);
+  logger.log(`Backend http/ws server listen to ${port}`);
 }
 bootstrap();

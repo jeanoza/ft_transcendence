@@ -6,10 +6,9 @@ import { Seo } from "../components/seo";
 import { useUser } from "../utils/hooks/swrHelper";
 import { InputField } from "../components/inputField";
 import axios from "axios";
-import { Socket } from "socket.io";
 import { io } from "socket.io-client";
 
-let socket: Socket | any;
+let socket: any;
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -23,41 +22,45 @@ export function getServerSideProps({ req }: any) {
 			props: {},
 		};
 	}
+
 	return { props: {} };
 }
 export default function Chat() {
 	const { user, isLoading } = useUser();
 	const [message, setMessage] = useState<string>("");
+	const [received, setReceived] = useState<any[]>([]);
 
 	useEffect(() => {
 		async function socketConnector() {
-			socket = io("http://localhost:8888/ws-chat");
-			socket.on("connect", function () {
-				console.log("Chat Connected");
-
-				socket.emit("events", { id: user?.id });
-				socket.emit("identity", { user }, (response) =>
-					console.log("Identity:", response)
-				);
-			});
-			socket.on("events", function (data) {
-				console.log("event", data);
-			});
-			socket.on("exception", function (data) {
-				console.log("event", data);
-			});
-			socket.on("disconnect", function () {
-				console.log("Disconnected");
-			});
-			socket.on("message", function (data) {
-				console.log("message-client", data);
-			});
+			if (!socket) {
+				socket = io("http://localhost:8888/ws-chat");
+				socket.on("connect", function () {
+					console.log("Chat Connected");
+					socket.emit("joinRoom", { user: user.name, room: "default" }); // FIXME: to replace after
+				});
+				socket.on("disconnect", function () {
+					console.log("Disconnected");
+				});
+				socket.on("receiveMessage", function (data) {
+					setReceived((prev) => [...prev, data]);
+				});
+			}
 		}
-		socketConnector();
-	}, []);
+		if (user) socketConnector();
+	});
 
 	async function onKeydown(e) {
-		if (e.keyCode === 13) socket.emit("message", message);
+		if (e.keyCode === 13) {
+			socket.emit("sendMessage", {
+				sender: user.name,
+				message,
+				room: "default",
+			});
+			setMessage("");
+		}
+	}
+	async function onDisconnect(e) {
+		socket.emit("leaveRoom", { user: user.name, room: "default" }); // FIXME: to replace after
 	}
 
 	return (
@@ -72,9 +75,18 @@ export default function Chat() {
 							<div>bla</div>
 							<div>bla</div>
 							<div>bla</div>
+							<button onClick={onDisconnect}>Disconnect</button>
 						</div>
 						<div className="chat-display d-flex column justify-between">
-							<div className="chat-display-dialogue">bla</div>
+							<div className="chat-display-dialogue">
+								{received.length &&
+									received.map((el, index) => (
+										<div key={index}>
+											<span className="sender">{el.sender}:</span>
+											<span>{el.message}</span>
+										</div>
+									))}
+							</div>
 							<InputField
 								type="text"
 								name="message"
@@ -90,6 +102,10 @@ export default function Chat() {
 			<style jsx>{`
 				main {
 					/*width:80%;*/
+				}
+				.sender {
+					font-weight: 600;
+					margin-right: 1rem;
 				}
 				.chat {
 					height: 100%;
@@ -112,6 +128,7 @@ export default function Chat() {
 				}
 				.chat-display-dialogue {
 					padding: 1rem 0;
+					overflow-y: auto;
 				}
 			`}</style>
 		</Layout>
