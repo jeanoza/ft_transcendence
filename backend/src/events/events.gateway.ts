@@ -25,7 +25,8 @@ export class EventsGateway
 {
   @WebSocketServer()
   server: Server;
-  userList: Set<string> = new Set();
+  //rooms: Map<string, Set<string>> = new Map();
+  rooms = {};
 
   private logger: Logger = new Logger('EventGateway');
 
@@ -45,36 +46,36 @@ export class EventsGateway
 
   @SubscribeMessage('joinRoom')
   handleJoinRoom(client: Socket, data) {
-    //console.log(data);
-    client.join(data.room);
-
-    this.server.to(data.room).emit('recvMSG', {
-      sender: data.room,
-      message: `${data.user} has joined.`,
+    const { room, user } = data;
+    client.join(room);
+    if (!this.rooms[room]) this.rooms[room] = [];
+    if (!this.rooms[room].find((el) => el === user))
+      this.rooms[room].push(user);
+    this.server.to(room).emit('userList', this.rooms[room]);
+    this.server.to(room).emit('recvMSG', {
+      sender: room,
+      message: `${user} has joined.`,
     });
-    this.userList.add(data.user);
-    this.server.to(data.room).emit('userList', from(this.userList));
   }
 
   //FIXME: to disconnect on other browser
   @SubscribeMessage('leaveRoom')
   handleLeaveRoom(client: Socket, data) {
-    //console.log(data.user);
-    //console.log(client.rooms);
-    client.leave(data.room);
-    //console.log(client.rooms);
-    this.server.to(data.room).emit('recvMSG', {
-      sender: data.room,
-      message: `${data.user} left`,
-    });
+    const { room, user } = data;
+    client.leave(room);
 
-    this.server.to(data.room).emit('userList', this.userList);
+    this.rooms[room] = this.rooms[room]?.filter((el) => el != user);
+    this.server.to(room).emit('userList', this.rooms[room]);
+    this.server.to(room).emit('recvMSG', {
+      sender: room,
+      message: `${user} left`,
+    });
   }
 
   @SubscribeMessage('sendMSG')
   handleMessage(@MessageBody() data: any): void {
     this.server
-      .to(data.room)
+      .in(data.room)
       .emit('recvMSG', { sender: data.sender, message: data.message });
   }
 }

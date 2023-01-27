@@ -10,6 +10,7 @@ import { io } from "socket.io-client";
 import { Socket } from "socket.io";
 
 let socket: Socket | any;
+const roomList = ['room1', 'room2', 'room3']; // for test
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -30,19 +31,19 @@ export default function Chat() {
 	const { user, isLoading } = useUser();
 	const [message, setMessage] = useState<string>("");
 	const [received, setReceived] = useState<any[]>([]);
-	//const [userList, setUserList] = useState<string[]>([])
+	const [currentRoom, setCurrentRoom] = useState<string | null>(null);
+	const [userList, setUserList] = useState<string[]>([])
 
 	useEffect(() => {
 		async function socketConnector() {
 			socket = io("http://localhost:8888/ws-chat");
 			socket.on("connect", function () {
 				console.log("Chat Connected", socket.id);
-				socket.emit("joinRoom", { user: user.name, room: "default" }); // FIXME: to replace after
 			});
-			//socket.on('userList', function (data) {
-			//	console.log(data);
-			//	setUserList(data);
-			//})
+			socket.on('userList', function (data) {
+				console.log(data);
+				setUserList(data);
+			})
 			socket.on("disconnect", function () {
 				console.log("Disconnected", socket.id);
 			});
@@ -51,7 +52,6 @@ export default function Chat() {
 			});
 		}
 		if (user) socketConnector();
-		console.log('here');
 	}, [user]);
 
 	async function onKeydown(e) {
@@ -59,16 +59,29 @@ export default function Chat() {
 			socket?.emit("sendMSG", {
 				sender: user.name,
 				message,
-				room: "default",
+				room: currentRoom,
 			});
 			setMessage("");
 		}
 	}
-	async function onDisconnect(e) {
+	function onDisconnect(e) {
 		socket?.emit("leaveRoom", { user: user.name, room: "default" }, (data) => {
 			console.log(data);
 		}); // FIXME: to replace after
 	}
+
+	function onChangeRoom(e) {
+		const toJoin = e.currentTarget.innerText;
+		if (toJoin !== currentRoom) {
+			document.querySelector('button.active')?.classList.remove('active')
+			e.currentTarget.classList.add('active')
+			setReceived([]);
+			setCurrentRoom(toJoin);
+			socket.emit('leaveRoom', { room: currentRoom, user: user.name })
+			socket.emit('joinRoom', { room: toJoin, user: user.name })
+		}
+	}
+
 
 	return (
 		<Layout>
@@ -79,14 +92,11 @@ export default function Chat() {
 				<main>
 					<div className="chat d-flex justify-between">
 						<div className="chat-channels">
-							<div>bla</div>
-							<div>bla</div>
-							<div>bla</div>
-							<button onClick={onDisconnect}>Disconnect</button>
+							{roomList.map((el, index) => <button key={index} onClick={onChangeRoom}>{el}</button>)}
 						</div>
 						<div className="chat-display d-flex column justify-between">
 							<div className="chat-display-dialogue">
-								{received.length &&
+								{!received.length ? <div /> :
 									received.map((el, index) => (
 										<div key={index}>
 											<span className="sender">{el.sender}:</span>
@@ -104,7 +114,7 @@ export default function Chat() {
 						</div>
 						<div className="chat-users">
 							<ul>
-								{/*{userList?.map((el, index) => <li key={index}>{el}</li>)}*/}
+								{userList?.map((el, index) => <li key={index}>{el}</li>)}
 							</ul>
 						</div>
 					</div>
@@ -146,6 +156,10 @@ export default function Chat() {
 				.chat-display-dialogue {
 					padding: 1rem 0;
 					overflow-y: auto;
+				}
+				.active {
+					border:2px solid black;
+					color:inherit;
 				}
 			`}</style>
 		</Layout>
