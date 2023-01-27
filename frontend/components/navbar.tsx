@@ -9,15 +9,15 @@ const navbarStyles = `
 		width:100%;
 		position:relative;
 	}
-	ul {
+	nav > ul {
 		display: flex;
 		justify-content: center;
 	}
-	ul li {
+	nav > ul > li {
 		display: block;
 		padding: 16px;
 	}
-	ul li:hover {
+	nav > ul > li:hover {
 		color: white;
 	}
 	.active {

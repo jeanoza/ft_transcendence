@@ -7,8 +7,9 @@ import { useUser } from "../utils/hooks/swrHelper";
 import { InputField } from "../components/inputField";
 import axios from "axios";
 import { io } from "socket.io-client";
+import { Socket } from "socket.io";
 
-let socket: any;
+let socket: Socket | any;
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -29,29 +30,33 @@ export default function Chat() {
 	const { user, isLoading } = useUser();
 	const [message, setMessage] = useState<string>("");
 	const [received, setReceived] = useState<any[]>([]);
+	const [userList, setUserList] = useState<string[]>([])
 
 	useEffect(() => {
 		async function socketConnector() {
-			if (!socket) {
-				socket = io("http://localhost:8888/ws-chat");
-				socket.on("connect", function () {
-					console.log("Chat Connected");
-					socket.emit("joinRoom", { user: user.name, room: "default" }); // FIXME: to replace after
-				});
-				socket.on("disconnect", function () {
-					console.log("Disconnected");
-				});
-				socket.on("receiveMessage", function (data) {
-					setReceived((prev) => [...prev, data]);
-				});
-			}
+			socket = io("http://localhost:8888/ws-chat");
+			socket.on("connect", function () {
+				console.log("Chat Connected", socket.id);
+				socket.emit("joinRoom", { user: user.name, room: "default" }); // FIXME: to replace after
+			});
+			socket.on('userList', function (data) {
+				console.log(data);
+				setUserList(data);
+			})
+			socket.on("disconnect", function () {
+				console.log("Disconnected", socket.id);
+			});
+			socket.on("recvMSG", function (data) {
+				setReceived((prev) => [...prev, data]);
+			});
 		}
 		if (user) socketConnector();
-	});
+		console.log('here');
+	}, [user]);
 
 	async function onKeydown(e) {
 		if (e.keyCode === 13) {
-			socket.emit("sendMessage", {
+			socket?.emit("sendMSG", {
 				sender: user.name,
 				message,
 				room: "default",
@@ -60,7 +65,9 @@ export default function Chat() {
 		}
 	}
 	async function onDisconnect(e) {
-		socket.emit("leaveRoom", { user: user.name, room: "default" }); // FIXME: to replace after
+		socket?.emit("leaveRoom", { user: user.name, room: "default" }, (data) => {
+			console.log(data);
+		}); // FIXME: to replace after
 	}
 
 	return (
@@ -95,13 +102,23 @@ export default function Chat() {
 								onKeydown={onKeydown}
 							/>
 						</div>
-						<div className="chat-users"></div>
+						<div className="chat-users">
+							<ul>
+								{userList?.map((el, index) => <li key={index}>{el}</li>)}
+							</ul>
+						</div>
 					</div>
 				</main>
 			)}
 			<style jsx>{`
 				main {
 					/*width:80%;*/
+				}
+				ul {
+					display:flex;
+					flex-direction:column;
+				}
+				ul > li {
 				}
 				.sender {
 					font-weight: 600;
