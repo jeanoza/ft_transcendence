@@ -46,20 +46,20 @@ export class AuthService {
   ): Promise<User> | null {
     const user = await this.userRepository.findOne({
       where: { email },
-      select: ['id', 'email', 'password'],
+      select: ['id', 'email', 'password', 'login'],
     });
 
-    //FIXME: seperate on two function or fixe
     if (user) {
-      if (user.password === null) {
-        const { password, ...rest } = user;
-        return rest;
-      } else if (
-        _password &&
-        (await bcrypt.compare(_password, user.password))
+      // validate only two case
+      // 1. 42 auth login : login && no _password put by user
+      // 2. local login : no login && _password
+      if (
+        (user.login && !_password) ||
+        (!user.login &&
+          _password &&
+          (await bcrypt.compare(_password, user.password)))
       ) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { password, ...rest } = user;
+        const { password, login, ...rest } = user;
         return rest;
       }
     }

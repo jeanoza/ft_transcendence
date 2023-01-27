@@ -38,7 +38,7 @@ export class User {
     length: 30,
     nullable: true,
   })
-  login: string;
+  login?: string;
 
   @CreateDateColumn()
   createdAt: Date;
