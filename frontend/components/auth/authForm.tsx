@@ -35,6 +35,18 @@ export function AuthForm({ authUrl }: { authUrl: string }) {
 			window.alert(e?.response?.data?.message);
 		}
 	}
+	async function onAuth42(e) {
+		try {
+			const res = await axios.get("/user/auth", {
+				headers: {
+					'Access-Control-Allow-Origin': '*',
+				}
+			});
+			console.log(res)
+		} catch (e) {
+			console.log(e);
+		}
+	}
 
 	return (
 		<form onSubmit={onSubmit}>
@@ -76,7 +88,7 @@ export function AuthForm({ authUrl }: { authUrl: string }) {
 				<Link href={authUrl}>
 					<span className="cursor-pointer">Click</span>
 				</Link>
-				{/*<span className="cursor-pointer" onClick={onClick}>Click</span>*/}
+				{/*<span className="cursor-pointer" onClick={onAuth42}>Click</span>*/}
 			</div>
 			<div className="d-flex justify-end">
 				<button>{newAccount ? "Create Account" : "Sign In"} </button>

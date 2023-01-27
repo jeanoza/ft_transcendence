@@ -30,7 +30,7 @@ export default function Chat() {
 	const { user, isLoading } = useUser();
 	const [message, setMessage] = useState<string>("");
 	const [received, setReceived] = useState<any[]>([]);
-	const [userList, setUserList] = useState<string[]>([])
+	//const [userList, setUserList] = useState<string[]>([])
 
 	useEffect(() => {
 		async function socketConnector() {
@@ -39,10 +39,10 @@ export default function Chat() {
 				console.log("Chat Connected", socket.id);
 				socket.emit("joinRoom", { user: user.name, room: "default" }); // FIXME: to replace after
 			});
-			socket.on('userList', function (data) {
-				console.log(data);
-				setUserList(data);
-			})
+			//socket.on('userList', function (data) {
+			//	console.log(data);
+			//	setUserList(data);
+			//})
 			socket.on("disconnect", function () {
 				console.log("Disconnected", socket.id);
 			});
@@ -104,7 +104,7 @@ export default function Chat() {
 						</div>
 						<div className="chat-users">
 							<ul>
-								{userList?.map((el, index) => <li key={index}>{el}</li>)}
+								{/*{userList?.map((el, index) => <li key={index}>{el}</li>)}*/}
 							</ul>
 						</div>
 					</div>

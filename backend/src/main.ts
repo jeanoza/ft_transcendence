@@ -10,7 +10,7 @@ async function bootstrap() {
   const logger = new Logger('Main');
 
   app.enableCors({
-    origin: process.env.CLIENT_URL,
+    origin: [process.env.CLIENT_URL],
     credentials: true,
   });
 
