@@ -9,6 +9,7 @@ export function UserList({ userList }: { userList: string[] }) {
 				border-left:1px solid rgb(200,200,200);
 			}
 			li {
+				min-width:80px;
 				width:100%;
 			}
 		`}</style>

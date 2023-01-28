@@ -10,7 +10,6 @@ export function InputField({
 	name,
 	state,
 	setState,
-	socket,
 	onKeydown,
 }: {
 	size?: string;
@@ -18,17 +17,11 @@ export function InputField({
 	name: string;
 	state: string;
 	setState: SetStateAction<any>;
-	socket?: any;
+	onKeydown?: any;
 }) {
 	function onChange(e: React.ChangeEvent<HTMLInputElement>) {
 		setState(e.currentTarget.value);
 	}
-
-	//function onKeydown(e) {
-	//	if (e.keyCode === 13) {
-	//	}
-	//}
-
 	return (
 		<div className={`field ${size ? size : ""}`}>
 			<label>{name}</label>

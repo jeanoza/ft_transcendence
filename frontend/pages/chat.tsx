@@ -10,8 +10,9 @@ import { io } from "socket.io-client";
 import { Socket } from "socket.io";
 import { ChannelList } from "../components/chat/channelList";
 import { UserList } from "../components/chat/userList";
+import { useSocket } from "../utils/hooks/useSocket";
 
-let socket: Socket | any;
+//let socket: Socket | any;
 const chanList = ['chat1', 'chat2', 'chat3']; // for test
 
 export function getServerSideProps({ req }: any) {
@@ -35,25 +36,18 @@ export default function Chat() {
 	const [received, setReceived] = useState<any[]>([]);
 	const [channel, setChannel] = useState<string | null>(null); //current channel
 	const [userList, setUserList] = useState<string[] | null>(null)
+	const { socket } = useSocket('chat')
 	const dialogueRef = useRef<HTMLDivElement | null>(null);
 
 	useEffect(() => {
-		async function socketConnector() {
-			socket = io("http://localhost:8888/ws-chat");
-			socket.on("connect", function () {
-				console.log("Chat Connected", socket.id);
-			});
+		if (user) {
 			socket.on('userList', function (data) {
 				setUserList(data);
 			})
-			socket.on("disconnect", function () {
-				console.log("Disconnected", socket.id);
-			});
 			socket.on("recvMSG", function (data) {
 				setReceived((prev) => [...prev, data]);
 			});
 		}
-		if (user) socketConnector();
 	}, [user]);
 
 	async function onKeydown(e) {
