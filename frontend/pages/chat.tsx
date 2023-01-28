@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Layout } from "../components/layout";
 import { Loader } from "../components/loader";
 import { Navbar } from "../components/navbar";
@@ -31,8 +31,9 @@ export default function Chat() {
 	const { user, isLoading } = useUser();
 	const [message, setMessage] = useState<string>("");
 	const [received, setReceived] = useState<any[]>([]);
-	const [currentRoom, setCurrentRoom] = useState<string | null>(null);
+	const [room, setRoom] = useState<string | null>(null); //currentRoom
 	const [userList, setUserList] = useState<string[]>([])
+	const dialogueRef = useRef<HTMLDivElement | null>(null);
 
 	useEffect(() => {
 		async function socketConnector() {
@@ -41,7 +42,6 @@ export default function Chat() {
 				console.log("Chat Connected", socket.id);
 			});
 			socket.on('userList', function (data) {
-				console.log(data);
 				setUserList(data);
 			})
 			socket.on("disconnect", function () {
@@ -56,28 +56,30 @@ export default function Chat() {
 
 	async function onKeydown(e) {
 		if (e.keyCode === 13) {
+			const dialogueCont: HTMLDivElement = dialogueRef.current as HTMLDivElement;
 			socket?.emit("sendMSG", {
 				sender: user.name,
 				message,
-				room: currentRoom,
+				room,
 			});
+			dialogueCont.scrollTo(0, dialogueCont.scrollHeight) // scroll to last message
 			setMessage("");
 		}
 	}
 	function onDisconnect(e) {
-		socket?.emit("leaveRoom", { user: user.name, room: "default" }, (data) => {
+		socket?.emit("leaveRoom", { user: user.name, room }, (data) => {
 			console.log(data);
 		}); // FIXME: to replace after
 	}
 
 	function onChangeRoom(e) {
 		const toJoin = e.currentTarget.innerText;
-		if (toJoin !== currentRoom) {
+		if (toJoin !== room) {
 			document.querySelector('button.active')?.classList.remove('active')
 			e.currentTarget.classList.add('active')
 			setReceived([]);
-			setCurrentRoom(toJoin);
-			socket.emit('leaveRoom', { room: currentRoom, user: user.name })
+			setRoom(toJoin);
+			socket.emit('leaveRoom', { room, user: user.name })
 			socket.emit('joinRoom', { room: toJoin, user: user.name })
 		}
 	}
@@ -95,7 +97,7 @@ export default function Chat() {
 							{roomList.map((el, index) => <button key={index} onClick={onChangeRoom}>{el}</button>)}
 						</div>
 						<div className="chat-display d-flex column justify-between">
-							<div className="chat-display-dialogue">
+							<div className="chat-display-dialogue" ref={dialogueRef}>
 								{!received.length ? <div /> :
 									received.map((el, index) => (
 										<div key={index}>

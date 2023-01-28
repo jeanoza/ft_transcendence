@@ -11,7 +11,6 @@ import {
   WsResponse,
 } from '@nestjs/websockets';
 
-import { from, toArray } from 'rxjs';
 import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
