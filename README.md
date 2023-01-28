@@ -104,11 +104,17 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] auth page
 
+  - [ ] chat page
+
+    - [ ] left(channelList)
+
+    - [ ] center(dialogue pannel) + messageInput
+
+    - [ ] right(currentUserList)
+
 - backend:
 
   - [x] see refactoring - user.service, entities
-
-  - [ ] UseEffect => useSWR
 
 ## Useful commands
 

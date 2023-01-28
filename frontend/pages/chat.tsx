@@ -10,7 +10,7 @@ import { io } from "socket.io-client";
 import { Socket } from "socket.io";
 
 let socket: Socket | any;
-const roomList = ['room1', 'room2', 'room3']; // for test
+const chanList = ['chat1', 'chat2', 'chat3']; // for test
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -31,7 +31,7 @@ export default function Chat() {
 	const { user, isLoading } = useUser();
 	const [message, setMessage] = useState<string>("");
 	const [received, setReceived] = useState<any[]>([]);
-	const [room, setRoom] = useState<string | null>(null); //currentRoom
+	const [channel, setChannel] = useState<string | null>(null); //current channel
 	const [userList, setUserList] = useState<string[]>([])
 	const dialogueRef = useRef<HTMLDivElement | null>(null);
 
@@ -60,30 +60,24 @@ export default function Chat() {
 			socket?.emit("sendMSG", {
 				sender: user.name,
 				message,
-				room,
+				channel,
 			});
 			dialogueCont.scrollTo(0, dialogueCont.scrollHeight) // scroll to last message
 			setMessage("");
 		}
 	}
-	function onDisconnect(e) {
-		socket?.emit("leaveRoom", { user: user.name, room }, (data) => {
-			console.log(data);
-		}); // FIXME: to replace after
-	}
 
-	function onChangeRoom(e) {
+	function onChangeChannel(e) {
 		const toJoin = e.currentTarget.innerText;
-		if (toJoin !== room) {
+		if (toJoin !== channel) {
 			document.querySelector('button.active')?.classList.remove('active')
 			e.currentTarget.classList.add('active')
 			setReceived([]);
-			setRoom(toJoin);
-			socket.emit('leaveRoom', { room, user: user.name })
-			socket.emit('joinRoom', { room: toJoin, user: user.name })
+			setChannel(toJoin);
+			socket.emit('leaveChannel', { channel, user: user.name })
+			socket.emit('joinChannel', { channel: toJoin, user: user.name })
 		}
 	}
-
 
 	return (
 		<Layout>
@@ -94,7 +88,7 @@ export default function Chat() {
 				<main>
 					<div className="chat d-flex justify-between">
 						<div className="chat-channels">
-							{roomList.map((el, index) => <button key={index} onClick={onChangeRoom}>{el}</button>)}
+							{chanList.map((el, index) => <button key={index} onClick={onChangeChannel}>{el}</button>)}
 						</div>
 						<div className="chat-display d-flex column justify-between">
 							<div className="chat-display-dialogue" ref={dialogueRef}>

@@ -43,30 +43,32 @@ export class EventsGateway
     this.logger.log(`Chat socket id:${client.id} disconnected`);
   }
 
-  @SubscribeMessage('joinRoom')
+  @SubscribeMessage('joinChannel')
   handleJoinRoom(client: Socket, data) {
-    const { room, user } = data;
-    client.join(room);
-    if (!this.rooms[room]) this.rooms[room] = [];
-    if (!this.rooms[room].find((el) => el === user))
-      this.rooms[room].push(user);
-    this.server.to(room).emit('userList', this.rooms[room]);
-    this.server.to(room).emit('recvMSG', {
-      sender: room,
+    const { channel, user } = data;
+    console.log(channel);
+    console.log(channel);
+    client.join(channel);
+    if (!this.rooms[channel]) this.rooms[channel] = [];
+    if (!this.rooms[channel].find((el) => el === user))
+      this.rooms[channel].push(user);
+    this.server.to(channel).emit('userList', this.rooms[channel]);
+    this.server.to(channel).emit('recvMSG', {
+      sender: channel,
       message: `${user} has joined.`,
     });
   }
 
   //FIXME: to disconnect on other browser
-  @SubscribeMessage('leaveRoom')
+  @SubscribeMessage('leaveChannel')
   handleLeaveRoom(client: Socket, data) {
-    const { room, user } = data;
-    client.leave(room);
+    const { channel, user } = data;
+    client.leave(channel);
 
-    this.rooms[room] = this.rooms[room]?.filter((el) => el != user);
-    this.server.to(room).emit('userList', this.rooms[room]);
-    this.server.to(room).emit('recvMSG', {
-      sender: room,
+    this.rooms[channel] = this.rooms[channel]?.filter((el) => el != user);
+    this.server.to(channel).emit('userList', this.rooms[channel]);
+    this.server.to(channel).emit('recvMSG', {
+      sender: channel,
       message: `${user} left`,
     });
   }
@@ -74,7 +76,7 @@ export class EventsGateway
   @SubscribeMessage('sendMSG')
   handleMessage(@MessageBody() data: any): void {
     this.server
-      .in(data.room)
+      .in(data.channel)
       .emit('recvMSG', { sender: data.sender, message: data.message });
   }
 }
