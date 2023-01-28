@@ -20,7 +20,7 @@ const navbarStyles = `
 	nav > ul > li:hover {
 		color: white;
 	}
-	.active {
+	nav .active {
 		color: white;
 	}`;
 

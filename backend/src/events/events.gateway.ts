@@ -46,8 +46,6 @@ export class EventsGateway
   @SubscribeMessage('joinChannel')
   handleJoinRoom(client: Socket, data) {
     const { channel, user } = data;
-    console.log(channel);
-    console.log(channel);
     client.join(channel);
     if (!this.rooms[channel]) this.rooms[channel] = [];
     if (!this.rooms[channel].find((el) => el === user))

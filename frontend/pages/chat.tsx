@@ -8,6 +8,8 @@ import { InputField } from "../components/inputField";
 import axios from "axios";
 import { io } from "socket.io-client";
 import { Socket } from "socket.io";
+import { ChannelList } from "../components/chat/channelList";
+import { UserList } from "../components/chat/userList";
 
 let socket: Socket | any;
 const chanList = ['chat1', 'chat2', 'chat3']; // for test
@@ -32,7 +34,7 @@ export default function Chat() {
 	const [message, setMessage] = useState<string>("");
 	const [received, setReceived] = useState<any[]>([]);
 	const [channel, setChannel] = useState<string | null>(null); //current channel
-	const [userList, setUserList] = useState<string[]>([])
+	const [userList, setUserList] = useState<string[] | null>(null)
 	const dialogueRef = useRef<HTMLDivElement | null>(null);
 
 	useEffect(() => {
@@ -87,9 +89,7 @@ export default function Chat() {
 			{user && (
 				<main>
 					<div className="chat d-flex justify-between">
-						<div className="chat-channels">
-							{chanList.map((el, index) => <button key={index} onClick={onChangeChannel}>{el}</button>)}
-						</div>
+						<ChannelList channelList={chanList} onChangeChannel={onChangeChannel} />
 						<div className="chat-display d-flex column justify-between">
 							<div className="chat-display-dialogue" ref={dialogueRef}>
 								{!received.length ? <div /> :
@@ -108,11 +108,7 @@ export default function Chat() {
 								onKeydown={onKeydown}
 							/>
 						</div>
-						<div className="chat-users">
-							<ul>
-								{userList?.map((el, index) => <li key={index}>{el}</li>)}
-							</ul>
-						</div>
+						{userList && <UserList userList={userList} />}
 					</div>
 				</main>
 			)}
@@ -135,28 +131,15 @@ export default function Chat() {
 					background-color: rgb(240, 240, 240);
 					border-radius: 8px;
 				}
-				.chat > div {
-				}
 				.chat-display {
 					width: 100%;
-					border: 1px rgb(200, 200, 200);
-					border-style: none solid none solid;
 					padding: 0rem 1rem;
-				}
-				.chat-channels,
-				.chat-users {
-					width: 20rem;
-					padding: 1rem;
-					/*background-color:rgb(200,200,200)*/
 				}
 				.chat-display-dialogue {
 					padding: 1rem 0;
 					overflow-y: auto;
 				}
-				.active {
-					border:2px solid black;
-					color:inherit;
-				}
+
 			`}</style>
 		</Layout>
 	);

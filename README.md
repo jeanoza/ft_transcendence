@@ -106,11 +106,11 @@ This is a boiler plate to use generally at my futur web application.
 
   - [ ] chat page
 
-    - [ ] left(channelList)
+    - [x] left(channelList)
 
     - [ ] center(dialogue pannel) + messageInput
 
-    - [ ] right(currentUserList)
+    - [x] right(currentUserList)
 
 - backend:
 
