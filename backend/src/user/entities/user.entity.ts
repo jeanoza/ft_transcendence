@@ -1,9 +1,12 @@
+import { Channel } from 'src/chat/entities/channel.entity';
 import { Note } from 'src/note/entities/note.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -51,4 +54,18 @@ export class User {
 
   @OneToMany(() => Note, (note) => note.author)
   notes: Note[];
+
+  @ManyToMany(() => Channel, (channel) => channel.members)
+  @JoinTable({
+    name: 'channelmembers',
+    joinColumn: {
+      name: 'userId',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'channelId',
+      referencedColumnName: 'id',
+    },
+  })
+  channels: Channel[];
 }
