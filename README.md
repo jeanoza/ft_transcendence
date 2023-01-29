@@ -90,6 +90,8 @@ This is a boiler plate to use generally at my futur web application.
 
 - frontend:
 
+  - [ ] userList(socket) have to be updated when user refresh page(or get userList by server after)
+
 - backend:
 
   - [x] validate local-auth : unique value validation to add for name
@@ -108,9 +110,9 @@ This is a boiler plate to use generally at my futur web application.
 
     - [x] left(channelList)
 
-    - [ ] center(dialogue pannel) + messageInput
+    - [x] center(dialogue pannel) + messageInput
 
-    - [x] right(currentUserList)
+    - [x] right(currenteUserList)
 
 - backend:
 

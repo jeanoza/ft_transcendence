@@ -1,4 +1,7 @@
+import { useEffect } from "react"
+
 export function UserList({ userList }: { userList: string[] }) {
+	console.log(userList)
 	return <ul>
 		{userList.map((el, index) => <li key={index}>{el}</li>)}
 		<style jsx>{`

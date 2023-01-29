@@ -4,13 +4,12 @@ import { Loader } from "../components/loader";
 import { Navbar } from "../components/navbar";
 import { Seo } from "../components/seo";
 import { useUser } from "../utils/hooks/swrHelper";
-import { InputField } from "../components/inputField";
 import axios from "axios";
 import { ChannelList } from "../components/chat/channelList";
 import { UserList } from "../components/chat/userList";
 import { useSocket } from "../utils/hooks/useSocket";
+import { ChatDisplay } from "../components/chat/chatDisplay";
 
-const chanList = ['chat1', 'chat2', 'chat3']; // for test
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -29,19 +28,17 @@ export function getServerSideProps({ req }: any) {
 }
 export default function Chat() {
 	const { user, isLoading } = useUser();
-	const [message, setMessage] = useState<string>("");
-	const [received, setReceived] = useState<any[]>([]);
+	const { socket } = useSocket('chat')
+	const [received, setReceived] = useState<{ sender: string, message: string }[]>([]);
 	const [channel, setChannel] = useState<string | null>(null); //current channel
 	const [userList, setUserList] = useState<string[] | null>(null)
-	const { socket } = useSocket('chat')
-	const dialogueRef = useRef<HTMLDivElement | null>(null);
 
 	useEffect(() => {
 		socket.on('userList', function (data) {
+			console.log(data);
 			setUserList(data);
 		})
 		socket.on("recvMSG", function (data) {
-			console.log('here')
 			setReceived((prev) => [...prev, data]);
 		});
 		return () => {
@@ -51,31 +48,6 @@ export default function Chat() {
 		}
 	}, []);
 
-	async function onKeydown(e) {
-		if (e.keyCode === 13) {
-			const dialogueCont: HTMLDivElement = dialogueRef.current as HTMLDivElement;
-			socket?.emit("sendMSG", {
-				sender: user.name,
-				message,
-				channel,
-			});
-			dialogueCont.scrollTo(0, dialogueCont.scrollHeight) // scroll to last message
-			setMessage("");
-		}
-	}
-
-	function onChangeChannel(e) {
-		const toJoin = e.currentTarget.innerText;
-		if (toJoin !== channel) {
-			document.querySelector('button.active')?.classList.remove('active')
-			e.currentTarget.classList.add('active')
-			setReceived([]);
-			setChannel(toJoin);
-			socket.emit('leaveChannel', { channel, user: user.name })
-			socket.emit('joinChannel', { channel: toJoin, user: user.name })
-		}
-	}
-
 	return (
 		<Layout>
 			<Navbar />
@@ -84,57 +56,18 @@ export default function Chat() {
 			{user && (
 				<main>
 					<div className="chat d-flex justify-between">
-						<ChannelList channelList={chanList} onChangeChannel={onChangeChannel} />
-						<div className="chat-display d-flex column justify-between">
-							<div className="chat-display-dialogue" ref={dialogueRef}>
-								{!received.length ? <div /> :
-									received.map((el, index) => (
-										<div key={index}>
-											<span className="sender">{el.sender}:</span>
-											<span>{el.message}</span>
-										</div>
-									))}
-							</div>
-							<InputField
-								type="text"
-								name="message"
-								state={message}
-								setState={setMessage}
-								onKeydown={onKeydown}
-							/>
-						</div>
+						<ChannelList channel={channel} setReceived={setReceived} setChannel={setChannel} />
+						<ChatDisplay received={received} channel={channel} />
 						{userList && <UserList userList={userList} />}
 					</div>
 				</main>
 			)}
 			<style jsx>{`
-				main {
-					/*width:80%;*/
-				}
-				ul {
-					display:flex;
-					flex-direction:column;
-				}
-				ul > li {
-				}
-				.sender {
-					font-weight: 600;
-					margin-right: 1rem;
-				}
 				.chat {
 					height: 100%;
 					background-color: rgb(240, 240, 240);
 					border-radius: 8px;
 				}
-				.chat-display {
-					width: 100%;
-					padding: 0rem 1rem;
-				}
-				.chat-display-dialogue {
-					padding: 1rem 0;
-					overflow-y: auto;
-				}
-
 			`}</style>
 		</Layout>
 	);
