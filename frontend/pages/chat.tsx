@@ -31,20 +31,14 @@ export default function Chat() {
 	const { socket } = useSocket('chat')
 	const [received, setReceived] = useState<{ sender: string, message: string }[]>([]);
 	const [channel, setChannel] = useState<string | null>(null); //current channel
-	const [userList, setUserList] = useState<string[] | null>(null)
 
 	useEffect(() => {
-		socket.on('userList', function (data) {
-			console.log(data);
-			setUserList(data);
-		})
 		socket.on("recvMSG", function (data) {
 			setReceived((prev) => [...prev, data]);
 		});
 		return () => {
 			//clean up socket event
 			socket.off('recvMSG')
-			socket.off('userList')
 		}
 	}, []);
 
@@ -58,7 +52,7 @@ export default function Chat() {
 					<div className="chat d-flex justify-between">
 						<ChannelList channel={channel} setReceived={setReceived} setChannel={setChannel} />
 						<ChatDisplay received={received} channel={channel} />
-						{userList && <UserList userList={userList} />}
+						<UserList />
 					</div>
 				</main>
 			)}

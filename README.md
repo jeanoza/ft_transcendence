@@ -40,6 +40,9 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] Chat page
 
+  - [ ] userList(socket) have to be updated when user refresh page
+        => it will be resolved when 'userList' event returns user list saved in db
+
   - [ ] Websocket/socketio connection with server
 
     - [ ] minimum
@@ -60,7 +63,7 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] put loggedIn guard to Note request
 
-  - [ ] Websocket/Socketio connection with client
+  - [x] Websocket/Socketio connection with client
 
     - [x] handle join room => to modify after
 
@@ -76,7 +79,7 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] Note table : id, title, content, userId(foreign key), ...etc
 
-  - [ ] Chat table
+  - [ ] Channel table : id, name, many to many(channel - user)
 
 - Docker:
 
@@ -89,8 +92,6 @@ This is a boiler plate to use generally at my futur web application.
 ## BUG to fix
 
 - frontend:
-
-  - [ ] userList(socket) have to be updated when user refresh page(or get userList by server after)
 
 - backend:
 

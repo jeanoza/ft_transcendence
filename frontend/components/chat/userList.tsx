@@ -1,10 +1,25 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react";
+import { useSocket } from "../../utils/hooks/useSocket"
 
-export function UserList({ userList }: { userList: string[] }) {
-	console.log(userList)
-	return <ul>
-		{userList.map((el, index) => <li key={index}>{el}</li>)}
-		<style jsx>{`
+export function UserList() {
+	const { socket } = useSocket('chat')
+	const [userList, setUserList] = useState<string[] | null>(null)
+
+	useEffect(() => {
+		socket.on('userList', function (data) {
+			setUserList(data);
+		})
+		return () => {
+			//clean up socket event
+			socket.off('userList')
+		}
+	}, []);
+
+	if (!userList) return null
+	return (
+		<ul>
+			{userList.map((el, index) => <li key={index}>{el}</li>)}
+			<style jsx>{`
 			ul {
 				display:flex;
 				flex-direction:column;
@@ -16,5 +31,6 @@ export function UserList({ userList }: { userList: string[] }) {
 				width:100%;
 			}
 		`}</style>
-	</ul>
+		</ul>
+	)
 }
