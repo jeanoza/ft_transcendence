@@ -6,13 +6,10 @@ import { Seo } from "../components/seo";
 import { useUser } from "../utils/hooks/swrHelper";
 import { InputField } from "../components/inputField";
 import axios from "axios";
-import { io } from "socket.io-client";
-import { Socket } from "socket.io";
 import { ChannelList } from "../components/chat/channelList";
 import { UserList } from "../components/chat/userList";
 import { useSocket } from "../utils/hooks/useSocket";
 
-//let socket: Socket | any;
 const chanList = ['chat1', 'chat2', 'chat3']; // for test
 
 export function getServerSideProps({ req }: any) {
@@ -40,15 +37,19 @@ export default function Chat() {
 	const dialogueRef = useRef<HTMLDivElement | null>(null);
 
 	useEffect(() => {
-		if (user) {
-			socket.on('userList', function (data) {
-				setUserList(data);
-			})
-			socket.on("recvMSG", function (data) {
-				setReceived((prev) => [...prev, data]);
-			});
+		socket.on('userList', function (data) {
+			setUserList(data);
+		})
+		socket.on("recvMSG", function (data) {
+			console.log('here')
+			setReceived((prev) => [...prev, data]);
+		});
+		return () => {
+			//clean up socket event
+			socket.off('recvMSG')
+			socket.off('userList')
 		}
-	}, [user]);
+	}, []);
 
 	async function onKeydown(e) {
 		if (e.keyCode === 13) {

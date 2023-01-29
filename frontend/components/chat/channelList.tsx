@@ -1,8 +1,4 @@
-import { useSocket } from "../../utils/hooks/useSocket";
-
-
 export function ChannelList({ channelList, onChangeChannel }: { channelList: string[], onChangeChannel: any }) {
-	const { socket } = useSocket('chat');
 	return <ul>
 		{channelList.map((el, index) => <li key={index}><button onClick={onChangeChannel}>{el}</button></li>)}
 		<style jsx>{`
