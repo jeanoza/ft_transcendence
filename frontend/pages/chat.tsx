@@ -10,7 +10,6 @@ import { UserList } from "../components/chat/userList";
 import { useSocket } from "../utils/hooks/useSocket";
 import { ChatDisplay } from "../components/chat/chatDisplay";
 
-
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
 	if (!accessToken) {
@@ -28,18 +27,23 @@ export function getServerSideProps({ req }: any) {
 }
 export default function Chat() {
 	const { user, isLoading } = useUser();
-	const { socket } = useSocket('chat')
-	const [received, setReceived] = useState<{ sender: string, message: string }[]>([]);
+	const { socket } = useSocket("chat");
+	const [received, setReceived] = useState<
+		{ sender: string; message: string }[]
+	>([]);
 	const [channel, setChannel] = useState<string | null>(null); //current channel
 
 	useEffect(() => {
+		socket.on("chat", function (data) {
+			console.log(data);
+		});
 		socket.on("recvMSG", function (data) {
 			setReceived((prev) => [...prev, data]);
 		});
 		return () => {
 			//clean up socket event
-			socket.off('recvMSG')
-		}
+			socket.off("recvMSG");
+		};
 	}, []);
 
 	return (
@@ -50,7 +54,11 @@ export default function Chat() {
 			{user && (
 				<main>
 					<div className="chat d-flex justify-between">
-						<ChannelList channel={channel} setReceived={setReceived} setChannel={setChannel} />
+						<ChannelList
+							channel={channel}
+							setReceived={setReceived}
+							setChannel={setChannel}
+						/>
 						<ChatDisplay received={received} channel={channel} />
 						<UserList />
 					</div>

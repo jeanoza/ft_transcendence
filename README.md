@@ -43,9 +43,11 @@ This is a boiler plate to use generally at my futur web application.
   - [ ] userList(socket) have to be updated when user refresh page
         => it will be resolved when 'userList' event returns user list saved in db
 
-  - [ ] Websocket/socketio connection with server
+  - [ ] Modal
 
-    - [ ] minimum
+    - [ ] Generic
+
+    - [ ] Join room (roomname, password) => if password? private : public
 
 - Backend:
 
@@ -79,7 +81,9 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] Note table : id, title, content, userId(foreign key), ...etc
 
-  - [ ] Channel table : id, name, many to many(channel - user)
+  - [x] Channel table
+
+  - [x] db table draw.io
 
 - Docker:
 
