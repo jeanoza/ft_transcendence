@@ -1,4 +1,3 @@
-import { IsString } from 'class-validator';
 import { User } from 'src/user/entities/user.entity';
 import {
   Column,
@@ -23,23 +22,23 @@ export class Note {
   @Column('text', { name: 'content' })
   content: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  @DeleteDateColumn()
+  @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: Date;
 
   // i put nullable this to keep note when user deleted
-  @Column('int', { name: 'authorId', nullable: true })
+  @Column('int', { name: 'author_id', nullable: true })
   authorId: number | null;
 
   @ManyToOne(() => User, (user) => user.notes, {
     onDelete: 'SET NULL',
     onUpdate: 'CASCADE',
   })
-  @JoinColumn({ name: 'authorId', referencedColumnName: 'id' })
+  @JoinColumn({ name: 'author_id', referencedColumnName: 'id' })
   author: User;
 }

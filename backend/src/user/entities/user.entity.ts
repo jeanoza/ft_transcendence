@@ -1,4 +1,6 @@
 import { Channel } from 'src/chat/entities/channel.entity';
+import { ChannelChat } from 'src/chat/entities/channelChat.entity';
+import { ChannelMember } from 'src/chat/entities/channelMember.entity';
 import { Note } from 'src/note/entities/note.entity';
 import {
   Column,
@@ -32,7 +34,7 @@ export class User {
   })
   password?: string;
 
-  @Column('varchar', { name: 'imageURL', length: 500, nullable: true })
+  @Column('varchar', { name: 'image_url', length: 500, nullable: true })
   imageURL: string;
 
   @Column('varchar', {
@@ -43,29 +45,35 @@ export class User {
   })
   login?: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  @DeleteDateColumn()
+  @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: Date;
 
   @OneToMany(() => Note, (note) => note.author)
   notes: Note[];
 
-  @ManyToMany(() => Channel, (channel) => channel.members)
-  @JoinTable({
-    name: 'channelmembers',
-    joinColumn: {
-      name: 'userId',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'channelId',
-      referencedColumnName: 'id',
-    },
-  })
-  channels: Channel[];
+  @OneToMany(() => ChannelMember, (channelMember) => channelMember.user)
+  channelMembers: ChannelMember[];
+
+  @OneToMany(() => ChannelChat, (channelChat) => channelChat.channel)
+  channelChats: ChannelChat[];
+
+  //@ManyToMany(() => Channel, (channel) => channel.members)
+  //@JoinTable({
+  //  name: 'channel_members',
+  //  joinColumn: {
+  //    name: 'user_id',
+  //    referencedColumnName: 'id',
+  //  },
+  //  inverseJoinColumn: {
+  //    name: 'channel_id',
+  //    referencedColumnName: 'id',
+  //  },
+  //})
+  //channels: Channel[];
 }

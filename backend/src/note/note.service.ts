@@ -14,7 +14,6 @@ import { Note } from './entities/note.entity';
 export class NoteService {
   @InjectRepository(Note)
   private noteRepository: Repository<Note>;
-  private userRepository: Repository<User>;
 
   async create(note: CreateNoteDto) {
     return await this.noteRepository.save(note).catch((e) => {

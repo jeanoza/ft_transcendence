@@ -12,6 +12,8 @@ import { EventsGateway } from './events/events.gateway';
 import { EventsModule } from './events/events.module';
 import { ChatModule } from './chat/chat.module';
 import { Channel } from './chat/entities/channel.entity';
+import { ChannelMember } from './chat/entities/channelMember.entity';
+import { ChannelChat } from './chat/entities/channelChat.entity';
 
 @Module({
   imports: [
@@ -26,7 +28,7 @@ import { Channel } from './chat/entities/channel.entity';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
       synchronize: true, // 'true' at the first time then 'false' to do not lose data
-      entities: [User, Note, Channel],
+      entities: [User, Note, Channel, ChannelMember, ChannelChat],
       logging: process.env.NODE_ENV !== 'production', // logging only on dev
       keepConnectionAlive: true, //hot-reloading disconnect db when code change
     }),

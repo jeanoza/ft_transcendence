@@ -1,15 +1,14 @@
-import { User } from 'src/user/entities/user.entity';
+import { ChannelMember } from './channelMember.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  JoinTable,
-  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ChannelChat } from './channelChat.entity';
 
 @Entity({ name: 'channels' })
 export class Channel {
@@ -32,15 +31,21 @@ export class Channel {
   })
   public: boolean;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  @DeleteDateColumn()
+  @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: Date;
 
-  @ManyToMany(() => User, (user) => user.channels)
-  members: User[];
+  @OneToMany(() => ChannelMember, (channelMember) => channelMember.channel)
+  channelMembers: ChannelMember[];
+
+  @OneToMany(() => ChannelChat, (channelChat) => channelChat.channel)
+  channelChats: ChannelChat[];
+
+  //@ManyToMany(() => User, (user) => user.channels)
+  //members: User[];
 }
