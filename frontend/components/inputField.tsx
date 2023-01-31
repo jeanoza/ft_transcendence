@@ -1,4 +1,4 @@
-import React, { SetStateAction } from "react";
+import React, { SetStateAction, useState } from "react";
 /**
  * Upgraded input component with beauty
  * @param props{size, type, name, state, setState}

@@ -14,6 +14,7 @@ export function ChannelList({
 	channel,
 	setReceived,
 	setChannel,
+	setModal
 }: {
 	channel: string | null;
 	setReceived: Dispatch<SetStateAction<{ sender: string; message: string }[]>>;
@@ -25,6 +26,7 @@ export function ChannelList({
 
 	useEffect(() => {
 		socket.on("channels", async (data) => {
+			console.log(data);
 			setChannels(data);
 		});
 		return () => {
@@ -32,27 +34,37 @@ export function ChannelList({
 		};
 	}, []);
 
-	function onChangeChannel(e: React.MouseEvent<HTMLButtonElement>) {
-		const toJoin = e.currentTarget.innerText;
-		if (toJoin !== channel) {
-			document.querySelector("button.active")?.classList.remove("active");
-			e.currentTarget.classList.add("active");
-			setReceived([]);
-			setChannel(toJoin);
-			socket.emit("leaveChannel", { channel, user: user.name });
-			socket.emit("joinChannel", { channel: toJoin, user: user.name });
-		}
+	function onClick() {
+		setModal(true);
+	}
+
+	//function onChangeChannel(e: React.MouseEvent<HTMLElement>) {
+	//	const toJoin = e.currentTarget.innerText;
+	//	if (toJoin !== channel) {
+	//		document.querySelector("button.active")?.classList.remove("active");
+	//		e.currentTarget.classList.add("active");
+	//		setReceived([]);
+	//		setChannel(toJoin);
+	//		//socket.emit("leaveChannel", { channel, user: user.name });
+	//		//socket.emit("joinChannel", { channel: toJoin, user: user.name });
+	//	}
+	//}
+
+	function onChangeChan() {
+
 	}
 
 	return (
 		<ul>
 			{channels.map((el, index) => (
 				<li key={index}>
-					<button onClick={onChangeChannel}>{el}</button>
+					<button id={el?.id} onClick={onChangeChan}>
+						{el?.name}
+					</button>
 				</li>
 			))}
 			<li>
-				<button>Join</button>
+				<button onClick={onClick}>Join</button>
 			</li>
 			<style jsx>{`
 				ul {

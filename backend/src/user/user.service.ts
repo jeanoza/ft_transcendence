@@ -35,10 +35,16 @@ export class UserService {
     return ret;
   }
 
+  async findOne(id: number) {
+    return await this.userRepository.findOne({
+      where: { id },
+    });
+  }
+
   async findByEmail(email: string) {
     return await this.userRepository.findOne({
       where: { email },
-      select: ['id', 'name', 'email', 'imageURL'],
+      select: ['id', 'name', 'email', 'imageURL'], //FIXME: here imageURL or image_url??
     });
   }
 
@@ -47,8 +53,6 @@ export class UserService {
       where: { name },
     });
   }
-
-  //findOne(id: number) {}
 
   //update(id: number, data: UpdateUserDto) {}
 

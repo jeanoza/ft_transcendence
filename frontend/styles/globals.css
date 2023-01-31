@@ -46,8 +46,12 @@ button:hover {
 /* #endregion */
 
 /* #region flex */
+
 .d-flex {
 	display: flex;
+}
+.d-flex.gap {
+	gap: 1rem;
 }
 .d-flex.column {
 	flex-direction: column;

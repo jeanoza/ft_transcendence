@@ -27,9 +27,9 @@ export class Channel {
   password?: string;
 
   @Column('boolean', {
-    name: 'public',
+    name: 'is_public',
   })
-  public: boolean;
+  isPublic: boolean;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

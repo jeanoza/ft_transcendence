@@ -9,6 +9,7 @@ import { ChannelList } from "../components/chat/channelList";
 import { UserList } from "../components/chat/userList";
 import { useSocket } from "../utils/hooks/useSocket";
 import { ChatDisplay } from "../components/chat/chatDisplay";
+import { Modal } from "../components/modal";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -28,10 +29,9 @@ export function getServerSideProps({ req }: any) {
 export default function Chat() {
 	const { user, isLoading } = useUser();
 	const { socket } = useSocket("chat");
-	const [received, setReceived] = useState<
-		{ sender: string; message: string }[]
-	>([]);
+	const [received, setReceived] = useState<{ sender: string; message: string }[]>([]);
 	const [channel, setChannel] = useState<string | null>(null); //current channel
+	const [modal, setModal] = useState<boolean>(false)
 
 	useEffect(() => {
 		socket.on("chat", function (data) {
@@ -58,12 +58,14 @@ export default function Chat() {
 							channel={channel}
 							setReceived={setReceived}
 							setChannel={setChannel}
+							setModal={setModal}
 						/>
 						<ChatDisplay received={received} channel={channel} />
 						<UserList />
 					</div>
 				</main>
 			)}
+			<Modal modal={modal} setModal={setModal} />
 			<style jsx>{`
 				.chat {
 					height: 100%;

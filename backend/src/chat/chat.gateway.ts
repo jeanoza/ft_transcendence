@@ -13,7 +13,6 @@ import {
 
 import { Server, Socket } from 'socket.io';
 import { ChannelService } from 'src/chat/channel.service';
-import { ChatService } from 'src/chat/chat.service';
 
 @WebSocketGateway({
   namespace: 'ws-chat',
@@ -38,9 +37,10 @@ export class ChatGateway
   //FIXME: ConnectedSocket or not?
   async handleConnection(@ConnectedSocket() client: Socket) {
     this.logger.log(`Chat socket id:${client.id} connected`);
-    const channels = await this.channelService.findAll();
-
-    this.server.emit('channels', channels);
+    this.server.emit(
+      'channels',
+      await this.channelService.findAllPublicChanList(),
+    );
   }
 
   //FIXME: ConnectedSocket or not?
@@ -49,8 +49,21 @@ export class ChatGateway
   }
 
   @SubscribeMessage('joinChannel')
-  handleJoinRoom(client: Socket, data) {
-    this.logger.log('joinchannel');
+  async handleJoinRoom(client: Socket, data) {
+    this.logger.log('join  channel');
+    this.logger.log(data);
+    try {
+      await this.channelService.join(data);
+      //client.join(data.channel.name);
+      //console.log(data.channel.name);
+      this.server
+        .to(data.channel.name)
+        .emit('channels', await this.channelService.findAllPublicChanList());
+      client.emit('joined');
+    } catch (e) {
+      console.log(e);
+      client.emit('error', e);
+    }
   }
 
   //FIXME: to disconnect on other browser

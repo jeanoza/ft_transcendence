@@ -8,7 +8,7 @@ export class CreateChannelDto {
   password?: string;
 
   @IsBoolean()
-  public: boolean;
+  isPublic: boolean;
 
   //createdAt?: Date;
   //updatedAt?: Date;
