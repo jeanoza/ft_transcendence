@@ -28,7 +28,7 @@ export function Navbar() {
 	const { user } = useUser();
 
 	return (
-		<nav>
+		<nav className="d-flex center justify-between">
 			<PageList />
 			{user && <Profile user={user} />}
 			<style jsx>{`

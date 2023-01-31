@@ -12,7 +12,7 @@ export function Profile({ user }: { user: IUser }) {
 		}
 	}
 	return (
-		<div className="profile">
+		<div className="profile d-flex justify-between">
 			<div
 				className="avatar"
 				style={{
@@ -25,14 +25,14 @@ export function Profile({ user }: { user: IUser }) {
 			<button onClick={onLogout}>Logout</button>
 			<style jsx>{`
 				.profile {
-					position: absolute;
+					/*position: absolute;
 					top: 0px;
-					right: 16px;
-					height: 100%;
+					right: 16px;*/
 					display: flex;
 					justify-content: space-between;
 					align-items: center;
-					gap:8px;
+					gap:1rem;
+					margin-right:1rem;
 				}
 				.avatar {
 					background-size: cover;
