@@ -29,26 +29,26 @@ export function getServerSideProps({ req }: any) {
 export default function Chat() {
 	const { user, isLoading } = useUser();
 	const { socket } = useSocket("chat");
-	const [received, setReceived] = useState<{ sender: string; message: string }[]>([]);
 	const [channel, setChannel] = useState<string | null>(null); //current channel
+	const [channels, setChannels] = useState<any>([]);
 	const [modal, setModal] = useState<boolean>(false)
 
 	useEffect(() => {
-		//socket.on("chat", function (data) {
-		//	console.log(data);
-		//});
-		if (user) {
-			console.log(user, 'in chat tsx')
-			socket.emit('chat', user.id)
-		}
-		socket.on("recvMSG", function (data) {
-			setReceived((prev) => [...prev, data]);
+		socket.on("channels", async (data) => {
+			setChannels(data);
 		});
 		return () => {
-			//clean up socket event
-			socket.off("recvMSG");
+			socket.off("channels");
 		};
 	}, []);
+
+	function onChangeChannel(e) {
+		const target = e.currentTarget;
+		//FIXME: this is a js method but another way with react?
+		document.querySelector('li.active')?.classList.remove('active')
+		target.classList.add('active')
+		setChannel(target.innerText)
+	}
 
 	return (
 		<Layout>
@@ -59,12 +59,11 @@ export default function Chat() {
 				<main>
 					<div className="chat d-flex justify-between">
 						<ChannelList
-							channel={channel}
-							setReceived={setReceived}
-							setChannel={setChannel}
+							channels={channels}
 							setModal={setModal}
+							onChangeChannel={onChangeChannel}
 						/>
-						<ChatDisplay received={received} channel={channel} />
+						<ChatDisplay channel={channel} />
 						<UserList />
 					</div>
 				</main>
@@ -72,7 +71,7 @@ export default function Chat() {
 			<Modal modal={modal} setModal={setModal} />
 			<style jsx>{`
 				main {
-					width:96%;
+					/*width:96%;*/
 				}
 				.chat {
 					height: 100%;

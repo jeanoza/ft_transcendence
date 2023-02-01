@@ -1,6 +1,7 @@
 import React, {
 	ButtonHTMLAttributes,
 	Dispatch,
+	MouseEventHandler,
 	SetStateAction,
 	useEffect,
 	useState,
@@ -11,46 +12,30 @@ import { useSocket } from "../../utils/hooks/useSocket";
 //const channelList = ["chat1", "chat2", "chat3"]; // for test
 
 export function ChannelList({
-	channel,
-	setReceived,
-	setChannel,
-	setModal
+	channels,
+	setModal,
+	onChangeChannel
 }: {
-	channel: string | null;
-	setReceived: Dispatch<SetStateAction<{ sender: string; message: string }[]>>;
-	setChannel: Dispatch<SetStateAction<string | null>>;
+	channels: any[];
 	setModal: Dispatch<SetStateAction<boolean>>;
+	onChangeChannel: MouseEventHandler<HTMLElement>
 }) {
 	const { user } = useUser();
 	const { socket } = useSocket("chat");
-	const [channels, setChannels] = useState([]);
 
 	useEffect(() => {
 		socket.emit('enterChatPage', user.id);
-		socket.on("channels", async (data) => {
-			console.log(data);
-			setChannels(data);
-		});
-		return () => {
-			socket.off("channels");
-		};
 	}, []);
 
 	function openModal() {
 		setModal(true);
 	}
-
-
-	function onChangeChan() {
-
-	}
-
 	return (
 		<div className="cont d-flex column gap">
 			<button onClick={openModal}>New Chat</button>
 			<ul className="d-flex column">
 				{channels.map((el) => (
-					<li id={el.id} key={el.id}>
+					<li id={el.id} key={el.id} onClick={onChangeChannel}>
 						{el.name}
 					</li>
 				))}
@@ -67,7 +52,6 @@ export function ChannelList({
 				li {
 					padding:0.5rem;
 					border-radius:8px;
-					margin-right:1rem;
 				}
 				li:hover {
 					font-weight:500;
@@ -76,14 +60,10 @@ export function ChannelList({
 				button {
 					background-color: white;
 					white-space:nowrap;
-					margin-right:8px;
 				}
-				button.active {
-					/* FIXME: to modify after*/
-					border-bottom: 1px solid black;
-					border-right: 1px solid black;
+				li.active {
 					color: #06c;
-					/*font-weight:600;*/
+					font-weight:500;
 				}
 			`}</style>
 		</div>

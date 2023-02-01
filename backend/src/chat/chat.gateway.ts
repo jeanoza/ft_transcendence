@@ -44,9 +44,11 @@ export class ChatGateway
     this.logger.log(`Chat socket id:${client.id} disconnected`);
   }
 
+  @SubscribeMessage('userList')
+  handleUserList(client: Socket, channelId: number) {}
+
   @SubscribeMessage('enterChatPage')
   async handleChannelList(client: Socket, userId: number) {
-    console.log(userId);
     try {
       client.emit(
         'channels',
@@ -64,7 +66,7 @@ export class ChatGateway
    * @param data
    */
   @SubscribeMessage('newChannel')
-  async handleJoinRoom(client: Socket, data) {
+  async handleRegister(client: Socket, data) {
     this.logger.log('newChannel');
     try {
       await this.channelService.register(data);
@@ -80,16 +82,24 @@ export class ChatGateway
   }
 
   //FIXME: to disconnect on other browser
+  @SubscribeMessage('joinChannel')
+  handlejoinChannel(client: Socket, data) {
+    const { channel, user } = data;
+    client.join(channel);
+    this.logger.log('joinChannel');
+  }
   @SubscribeMessage('leaveChannel')
-  handleLeaveRoom(client: Socket, data) {
+  handleLeaveChannel(client: Socket, data) {
     this.logger.log('leaveChannel');
   }
 
   @SubscribeMessage('sendMSG')
   handleMessage(@MessageBody() data: any): void {
     this.logger.log('sendMSG');
-    this.server
-      .in(data.channel)
-      .emit('recvMSG', { sender: data.sender, message: data.message });
+    this.server.in(data.channel).emit('recvMSG', {
+      sender: data.sender,
+      message: data.message,
+      channel: data.channel,
+    });
   }
 }

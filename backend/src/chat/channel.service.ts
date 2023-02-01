@@ -61,6 +61,8 @@ export class ChannelService {
     return channels;
   }
 
+  //async find
+
   //CRUD
   //create
   async create(data) {
@@ -84,7 +86,7 @@ export class ChannelService {
 
   async findByName(name: string) {
     return await this.channelRepository
-      .findOne({ where: { name }, select: ['name', 'password'] })
+      .findOne({ where: { name }, select: ['id', 'name', 'password'] })
       .catch((e) => {
         console.log(e);
         throw new NotFoundException();

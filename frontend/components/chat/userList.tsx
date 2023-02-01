@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSocket } from "../../utils/hooks/useSocket"
 
-export function UserList() {
+export function UserList(channelId) {
 	const { socket } = useSocket('chat')
 	const [userList, setUserList] = useState<string[] | null>(null)
 
