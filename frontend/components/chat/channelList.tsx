@@ -33,13 +33,13 @@ export function ChannelList({
 			<button onClick={openModal}>New Chat</button>
 			<ul className="">
 				{channels.map((el) => (
-					<li className="d-flex justify-between gap" id={el.id} key={el.id} onClick={onChangeChannel} title={el.name}>
+					<li className="d-flex center justify-between gap" id={el.id} key={el.id} onClick={onChangeChannel} title={el.name}>
 						<span>
 							{el.name}
 						</span>
 						<div className="d-flex btnCont">
-							<div>d</div>
-							<div>m</div>
+							<div>S</div>
+							<div>D</div>
 						</div>
 					</li>
 				))}
@@ -52,12 +52,11 @@ export function ChannelList({
 				ul {
 					gap:0.1rem;
 					overflow-y:auto;
-					max-width:120px;
+					width:160px;
 				}
 				li {
 					padding:0.5rem;
 					border-radius:8px;
-
 				}
 				li > span {
 					text-overflow:ellipsis;
@@ -74,11 +73,17 @@ export function ChannelList({
 					background-color: white;
 					white-space:nowrap;
 				}
+				.btnCont {
+					gap:0.5rem;
+				}
 				.btnCont > div{
-					width:1rem;
-					height:1rem;
+					width:1.5rem;
+					height:1.5rem;
 					border-radius:50%;
 					background-color:white;
+					text-align:center;
+					line-height:1.5rem;
+					font-weight:500;
 				}
 			`}</style>
 		</div>
