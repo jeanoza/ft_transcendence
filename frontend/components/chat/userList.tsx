@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSocket } from "../../utils/hooks/useSocket"
 
-export function UserList(channelId) {
+export function UserList({ channel }: { channel: string | null }) {
 	const { socket } = useSocket('chat')
 	const [userList, setUserList] = useState<string[] | null>(null)
 
@@ -13,7 +13,7 @@ export function UserList(channelId) {
 			//clean up socket event
 			socket.off('userList')
 		}
-	}, []);
+	}, [channel]);
 
 	if (!userList) return null
 	return (

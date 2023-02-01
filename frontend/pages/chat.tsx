@@ -43,11 +43,11 @@ export default function Chat() {
 	}, []);
 
 	function onChangeChannel(e) {
-		const target = e.currentTarget;
+		const target = e.currentTarget
 		//FIXME: this is a js method but another way with react?
 		document.querySelector('li.active')?.classList.remove('active')
 		target.classList.add('active')
-		setChannel(target.innerText)
+		setChannel(target.title)
 	}
 
 	return (
@@ -64,7 +64,7 @@ export default function Chat() {
 							onChangeChannel={onChangeChannel}
 						/>
 						<ChatDisplay channel={channel} />
-						<UserList />
+						<UserList channel={channel} />
 					</div>
 				</main>
 			)}

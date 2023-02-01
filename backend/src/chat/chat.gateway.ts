@@ -8,7 +8,6 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
-  WsResponse,
 } from '@nestjs/websockets';
 
 import { Server, Socket } from 'socket.io';
@@ -44,9 +43,6 @@ export class ChatGateway
     this.logger.log(`Chat socket id:${client.id} disconnected`);
   }
 
-  @SubscribeMessage('userList')
-  handleUserList(client: Socket, channelId: number) {}
-
   @SubscribeMessage('enterChatPage')
   async handleChannelList(client: Socket, userId: number) {
     try {
@@ -68,26 +64,31 @@ export class ChatGateway
   @SubscribeMessage('newChannel')
   async handleRegister(client: Socket, data) {
     this.logger.log('newChannel');
+    this.logger.log(data);
     try {
       await this.channelService.register(data);
       client.emit(
         'channels',
         await this.channelService.findAllByUserId(data.userId),
       );
-      client.emit('channelRegistered');
+      client.emit('channelRegistered', data.channel.name);
     } catch (e) {
       this.logger.log(e);
       client.emit('error', e);
     }
   }
 
-  //FIXME: to disconnect on other browser
   @SubscribeMessage('joinChannel')
-  handlejoinChannel(client: Socket, data) {
-    const { channel, user } = data;
+  async handlejoinChannel(client: Socket, data) {
+    const { channel } = data;
     client.join(channel);
+    client.emit(
+      'userList',
+      await this.channelService.findAllUserInChannel(channel),
+    );
     this.logger.log('joinChannel');
   }
+
   @SubscribeMessage('leaveChannel')
   handleLeaveChannel(client: Socket, data) {
     this.logger.log('leaveChannel');

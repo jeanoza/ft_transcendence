@@ -48,7 +48,7 @@ export class ChannelService {
   }
 
   async findAllByUserId(userId: number) {
-    const channels = await this.channelRepository
+    return await this.channelRepository
       .createQueryBuilder('channels')
       .innerJoinAndSelect(
         'channels.channelMembers',
@@ -58,10 +58,22 @@ export class ChannelService {
       )
       .select(['channels.id', 'channels.name', 'channels.isPublic'])
       .getMany();
-    return channels;
   }
 
-  //async find
+  async findAllUserInChannel(channelName: string) {
+    const { id: channelId } = await this.findByName(channelName);
+    const users = await this.userRepository
+      .createQueryBuilder('users')
+      .innerJoinAndSelect(
+        'users.channelMembers',
+        'channelMembers',
+        'channelMembers.channelId = :channelId',
+        { channelId },
+      )
+      .select(['users.name'])
+      .getMany();
+    return users.map((el) => el.name); //send only username
+  }
 
   //CRUD
   //create
@@ -74,15 +86,6 @@ export class ChannelService {
   async findAll() {
     return await this.channelRepository.createQueryBuilder('channel').getMany();
   }
-
-  //async findAllPublicChanList() {
-  //  const channels = await this.channelRepository
-  //    .createQueryBuilder('channel')
-  //    .select(['channel.name', 'channel.id'])
-  //    .where('channel.isPublic = :isPublic', { isPublic: true })
-  //    .getMany();
-  //  return channels;
-  //}
 
   async findByName(name: string) {
     return await this.channelRepository
