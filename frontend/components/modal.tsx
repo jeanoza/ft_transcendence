@@ -14,14 +14,13 @@ export function Modal({ modal, setModal }: { modal: boolean, setModal: any }) {
 		setModal(false);
 	}
 
-	//FIXME: see if better way??
+	//FIXME: see if better way => how to use callback with socketio in nest server??
 	useEffect(() => {
 		socket.on('channelRegistered', () => {
 			setName('');
 			setPassword('');
 			onClose();
 		})
-		console.log('here')
 		return () => { socket.off('channelRegistered') }
 	}, [])
 

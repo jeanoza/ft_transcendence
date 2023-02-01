@@ -4,6 +4,18 @@
 	padding: 0;
 	margin: 0;
 }
+/*
+https://stackoverflow.com/questions/9664325/style-the-scrollbar-with-css-in-google-chrome-webkit
+*/
+::-webkit-scrollbar {
+	width: 4px;
+	background: #aaa;
+}
+::-webkit-scrollbar-thumb {
+	background: rgb(100, 100, 100);
+	-webkit-border-radius: 4px;
+	-webkit-box-shadow: 0px 0.5px 1px rgb(0, 0, 0, 0.75);
+}
 
 html,
 body {

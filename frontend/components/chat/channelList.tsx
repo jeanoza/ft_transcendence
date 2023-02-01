@@ -46,9 +46,9 @@ export function ChannelList({
 	}
 
 	return (
-		<div className="cont">
+		<div className="cont d-flex column gap">
 			<button onClick={openModal}>New Chat</button>
-			<ul>
+			<ul className="d-flex column">
 				{channels.map((el) => (
 					<li id={el.id} key={el.id}>
 						{el.name}
@@ -61,21 +61,22 @@ export function ChannelList({
 					padding: 0.5rem;
 				}
 				ul {
-					padding:1rem 0;
-					display: flex;
-					flex-direction: column;
+					gap:0.1rem;
+					overflow-y:auto;
 				}
 				li {
 					padding:0.5rem;
-					/*margin:0.5rem 0;*/
-					margin-bottom:0.5rem;
-					width: 100%;
-					background-color:rgb(100,100,100);
 					border-radius:8px;
+					margin-right:1rem;
+				}
+				li:hover {
+					font-weight:500;
+					background-color:rgb(220,220,220);
 				}
 				button {
 					background-color: white;
 					white-space:nowrap;
+					margin-right:8px;
 				}
 				button.active {
 					/* FIXME: to modify after*/
