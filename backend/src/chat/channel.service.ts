@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   Injectable,
   Logger,
   NotFoundException,
@@ -19,43 +20,51 @@ export class ChannelService {
   @InjectRepository(User)
   private userRepository: Repository<User>;
 
-  async join(data) {
-    try {
-      //find a channel, if no channel => create with data received
-      let channel = await this.findByName(data.channel.name);
-      if (channel && channel.password !== data.channel.password) {
-        console.log(channel, data.channel.password);
-        throw new UnauthorizedException('wrong password');
-      }
-      if (!channel) channel = await this.create(data.channel);
+  /**
+   * create/register(if already exist) channel
+   * @param data
+   */
+  async register(data) {
+    //find a channel, if no channel => create with data received
+    let channel = await this.findByName(data.channel.name);
+    if (channel && channel.password !== data.channel.password)
+      throw new UnauthorizedException('wrong password');
+    if (!channel) channel = await this.create(data.channel);
 
-      //put relation between user and current channel then save
+    await this.registerMember(data.userId, channel.id);
+  }
 
-      let channelMember = await this.channelMemberRepository.findOne({
-        where: { userId: data.userId },
-      });
-      if (!channelMember) {
-        channelMember = new ChannelMember();
-        channelMember.userId = data.userId;
-        channelMember.channelId = channel.id;
-        await this.channelMemberRepository.save(channelMember);
-      }
-      console.log(channelMember);
-    } catch (e) {
-      //console.log(e);
-      throw e;
+  async registerMember(userId: number, channelId: number) {
+    let channelMember = await this.channelMemberRepository.findOne({
+      where: { userId, channelId },
+    });
+    if (!channelMember) {
+      channelMember = new ChannelMember();
+      channelMember.userId = userId;
+      channelMember.channelId = channelId;
+      await this.channelMemberRepository.save(channelMember);
     }
+    return channelMember;
+  }
+
+  async findAllByUserId(userId: number) {
+    const channels = await this.channelRepository
+      .createQueryBuilder('channels')
+      .innerJoinAndSelect(
+        'channels.channelMembers',
+        'channelMembers',
+        'channelMembers.userId = :userId',
+        { userId },
+      )
+      .select(['channels.id', 'channels.name', 'channels.isPublic'])
+      .getMany();
+    return channels;
   }
 
   //CRUD
   //create
   async create(data) {
-    //let isPublic = true;
-    //if (data.password.length) isPublic = false;
-    return await this.channelRepository.save(data).catch((e) => {
-      console.log(e);
-      throw new UnauthorizedException();
-    });
+    return await this.channelRepository.save(data);
   }
 
   //read
@@ -64,14 +73,14 @@ export class ChannelService {
     return await this.channelRepository.createQueryBuilder('channel').getMany();
   }
 
-  async findAllPublicChanList() {
-    const channels = await this.channelRepository
-      .createQueryBuilder('channel')
-      .select(['channel.name', 'channel.id'])
-      .where('channel.isPublic = :isPublic', { isPublic: true })
-      .getMany();
-    return channels;
-  }
+  //async findAllPublicChanList() {
+  //  const channels = await this.channelRepository
+  //    .createQueryBuilder('channel')
+  //    .select(['channel.name', 'channel.id'])
+  //    .where('channel.isPublic = :isPublic', { isPublic: true })
+  //    .getMany();
+  //  return channels;
+  //}
 
   async findByName(name: string) {
     return await this.channelRepository

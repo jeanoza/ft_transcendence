@@ -34,9 +34,13 @@ export default function Chat() {
 	const [modal, setModal] = useState<boolean>(false)
 
 	useEffect(() => {
-		socket.on("chat", function (data) {
-			console.log(data);
-		});
+		//socket.on("chat", function (data) {
+		//	console.log(data);
+		//});
+		if (user) {
+			console.log(user, 'in chat tsx')
+			socket.emit('chat', user.id)
+		}
 		socket.on("recvMSG", function (data) {
 			setReceived((prev) => [...prev, data]);
 		});
@@ -67,6 +71,9 @@ export default function Chat() {
 			)}
 			<Modal modal={modal} setModal={setModal} />
 			<style jsx>{`
+				main {
+					width:96%;
+				}
 				.chat {
 					height: 100%;
 					background-color: rgb(240, 240, 240);

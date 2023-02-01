@@ -16,12 +16,13 @@ export function Modal({ modal, setModal }: { modal: boolean, setModal: any }) {
 
 	//FIXME: see if better way??
 	useEffect(() => {
-		socket.on('joined', () => {
+		socket.on('channelRegistered', () => {
 			setName('');
 			setPassword('');
 			onClose();
 		})
-		return () => { socket.off('joined') }
+		console.log('here')
+		return () => { socket.off('channelRegistered') }
 	}, [])
 
 	function onClick() {
@@ -31,13 +32,17 @@ export function Modal({ modal, setModal }: { modal: boolean, setModal: any }) {
 			isPublic: password.length ? false : true
 		}
 		if (!name.length) return window.alert('Put channel name!')
-		socket.emit('joinChannel', { channel, userId: user.id })
+		socket.emit('newChannel', { channel, userId: user.id }, () => {
+			setName('');
+			setPassword('');
+			onClose();
+		})
 	}
 
 	if (!modal) return null;
 	return <div className="modal-background d-flex center">
 		<div className="modal-container">
-			<h3>Channel</h3>
+			<h3>New Chat</h3>
 			<div></div>
 			<InputField type="text" name="name" state={name} setState={setName} />
 			<InputField type="password" name="password" state={password} setState={setPassword} />
