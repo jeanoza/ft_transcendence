@@ -12,7 +12,7 @@ export function Profile({ user }: { user: IUser }) {
 		}
 	}
 	return (
-		<div className="profile d-flex justify-between">
+		<div className="profile d-flex center gap justify-between">
 			<div
 				className="avatar"
 				style={{
@@ -29,10 +29,6 @@ export function Profile({ user }: { user: IUser }) {
 					position: absolute;
 					top: 0.3rem;
 					right:1rem;
-					display: flex;
-					justify-content: space-between;
-					align-items: center;
-					gap:1rem;
 				}
 				.avatar {
 					background-size: cover;
