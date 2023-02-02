@@ -93,14 +93,22 @@ export class ChatGateway
   }
 
   @SubscribeMessage('joinChannel')
-  async handlejoinChannel(client: Socket, data) {
-    const { channel } = data;
-    client.join(channel);
-    client.emit(
-      'userList',
-      await this.channelService.findAllUserInChannel(channel),
-    );
-    this.logger.log('joinChannel');
+  async handlejoinChannel(client: Socket, { channelName }) {
+    try {
+      client.join(channelName);
+      client.emit(
+        'userList',
+        await this.channelService.findAllUserInChannel(channelName),
+      );
+      client.emit(
+        'getChannelChats',
+        await this.channelService.findAllChannelChat(channelName),
+      );
+      this.logger.log('joinChannel');
+    } catch (e) {
+      this.logger.log(e);
+      client.emit('error', e);
+    }
   }
 
   @SubscribeMessage('leaveChannel')
@@ -109,15 +117,22 @@ export class ChatGateway
   }
 
   @SubscribeMessage('sendMSG')
-  async handleMessage(@MessageBody() data: any): Promise<void> {
-    this.logger.log('sendMSG');
-    await this.channelService.saveChannelChat(data);
-
-    this.logger.log(data);
-    this.server.in(data.channel).emit('recvMSG', {
-      sender: data.sender,
-      message: data.message,
-      channel: data.channel,
-    });
+  async handleMessage(client: Socket, @MessageBody() data: any): Promise<void> {
+    this.logger.log('sendMSG', data);
+    try {
+      await this.channelService.saveChannelChat({
+        userName: data.sender,
+        content: data.message,
+        channelName: data.channel,
+      });
+      this.server.in(data.channel).emit('recvMSG', {
+        sender: data.sender,
+        message: data.message,
+        //channel: data.channel,
+      });
+    } catch (e) {
+      this.logger.log(e);
+      client.emit('error', e);
+    }
   }
 }

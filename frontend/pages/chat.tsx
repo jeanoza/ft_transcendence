@@ -34,11 +34,11 @@ export default function Chat() {
 	const { socket } = useSocket("chat");
 	const [channel, setChannel] = useState<string | null>(null); //current channel
 	const [channels, setChannels] = useState<any>([]);
-	const [modal, setModal] = useState<boolean>(false)
+	const [modal, setModal] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (user && !socketUpdated) {
-			socket.emit('chatSocket', user.id);
+			socket.emit("chatSocket", user.id);
 			socketUpdated = true;
 		}
 		socket.on("channels", async (data) => {
@@ -49,12 +49,12 @@ export default function Chat() {
 		};
 	}, []);
 
-	function onChangeChannel(e) {
-		const target = e.currentTarget
+	function onChangeChannel(e: React.MouseEvent<HTMLElement>) {
+		const target = e.currentTarget;
 		//FIXME: this is a js method but another way with react?
-		document.querySelector('li.active')?.classList.remove('active')
-		target.classList.add('active')
-		setChannel(target.title)
+		document.querySelector("li.active")?.classList.remove("active");
+		target?.classList?.add("active");
+		setChannel(target?.title);
 	}
 
 	return (
@@ -77,9 +77,6 @@ export default function Chat() {
 			)}
 			<Modal modal={modal} setModal={setModal} />
 			<style jsx>{`
-				main {
-					/*width:96%;*/
-				}
 				.chat {
 					height: 100%;
 					background-color: rgb(240, 240, 240);

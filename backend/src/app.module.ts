@@ -8,7 +8,6 @@ import { User } from './user/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { NoteModule } from './note/note.module';
 import { Note } from './note/entities/note.entity';
-import { EventsGateway } from './events/events.gateway';
 import { ChatModule } from './chat/chat.module';
 import { Channel } from './chat/entities/channel.entity';
 import { ChannelMember } from './chat/entities/channelMember.entity';
@@ -31,14 +30,12 @@ import { ChannelChat } from './chat/entities/channelChat.entity';
       logging: process.env.NODE_ENV !== 'production', // logging only on dev
       keepConnectionAlive: true, //hot-reloading disconnect db when code change
     }),
-    //TypeOrmModule.forFeature([User]),
     UserModule,
     AuthModule,
     NoteModule,
     ChatModule,
   ],
   controllers: [AppController],
-  //providers: [AppService, EventsGateway],
   providers: [AppService],
 })
 export class AppModule {}

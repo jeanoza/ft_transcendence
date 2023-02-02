@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { Channel } from './entities/channel.entity';
 import { ChannelMember } from './entities/channelMember.entity';
 import { User } from 'src/user/entities/user.entity';
+import { ChannelChat } from './entities/channelChat.entity';
 
 @Injectable()
 export class ChannelService {
@@ -15,6 +16,8 @@ export class ChannelService {
   private channelRepository: Repository<Channel>;
   @InjectRepository(ChannelMember)
   private channelMemberRepository: Repository<ChannelMember>;
+  @InjectRepository(ChannelChat)
+  private channelChatRepository: Repository<ChannelChat>;
   @InjectRepository(User)
   private userRepository: Repository<User>;
 
@@ -58,12 +61,47 @@ export class ChannelService {
       .getMany();
   }
 
-  async saveChannelChat({ sender, message, channel }) {
-    const user = await this.userRepository.findOne({ where: { name: sender } });
+  async findAllChannelChat(channelName) {
+    const { id: channelId } = await this.findByName(channelName);
+    const channelChat = await this.channelChatRepository
+      .createQueryBuilder('channelChats')
+      .innerJoin('channelChats.user', 'user')
+      .innerJoin(
+        'channelChats.channel',
+        'channel',
+        'channelChats.channelId = :channelId',
+        { channelId },
+      )
+      .select(['channelChats.content', 'user.name'])
+      .orderBy('channelChats.created_at', 'DESC')
+      .limit(5)
+      .getRawMany();
+    return channelChat
+      .map((el) => {
+        return {
+          sender: el.user_name,
+          message: el.channelChats_content,
+        };
+      })
+      .reverse();
+  }
+
+  async saveChannelChat({ userName, content, channelName }) {
     const channel = await this.channelRepository.findOne({
-      where: { name: channel },
+      where: { name: channelName },
     });
-    console.log(user);
+    if (!channel) throw new NotFoundException('No channel exist');
+
+    const user = await this.userRepository.findOne({
+      where: { name: userName },
+    });
+    if (!user) throw new NotFoundException('No user exist');
+
+    const channelChat = new ChannelChat();
+    channelChat.userId = user.id;
+    channelChat.channelId = channel.id;
+    channelChat.content = content;
+    await this.channelChatRepository.save(channelChat);
   }
 
   /**

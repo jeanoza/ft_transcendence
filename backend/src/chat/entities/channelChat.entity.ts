@@ -16,6 +16,9 @@ export class ChannelChat {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
+  @Column('text')
+  content: string;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
