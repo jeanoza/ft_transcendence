@@ -9,26 +9,13 @@ const navbarStyles = `
 		width:100%;
 		position:relative;
 	}
-	nav > ul {
-		display: flex;
-		justify-content: center;
-	}
-	nav > ul > li {
-		display: block;
-		padding: 16px;
-	}
-	nav > ul > li:hover {
-		color: white;
-	}
-	nav .active {
-		color: white;
-	}`;
+`;
 
 export function Navbar() {
 	const { user } = useUser();
 
 	return (
-		<nav className="d-flex center justify-between">
+		<nav className="d-flex center">
 			<PageList />
 			{user && <Profile user={user} />}
 			<style jsx>{`

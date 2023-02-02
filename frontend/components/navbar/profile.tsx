@@ -19,20 +19,20 @@ export function Profile({ user }: { user: IUser }) {
 					backgroundImage: `url(${user.imageURL ? user.imageURL : "/default_profile.png"})`,
 				}}
 			/>
-			<span>
-				{user.name} ({user.email})
-			</span>
+			<div className="user-info">
+				<span> {user.name}</span>
+				<span className="email">({user.email})</span>
+			</div>
 			<button onClick={onLogout}>Logout</button>
 			<style jsx>{`
 				.profile {
-					/*position: absolute;
-					top: 0px;
-					right: 16px;*/
+					position: absolute;
+					top: 0.3rem;
+					right:1rem;
 					display: flex;
 					justify-content: space-between;
 					align-items: center;
 					gap:1rem;
-					margin-right:1rem;
 				}
 				.avatar {
 					background-size: cover;
@@ -40,6 +40,11 @@ export function Profile({ user }: { user: IUser }) {
 					height: 3rem;
 					border-radius: 50%;
 					border: 1px solid white;
+				}
+				@media screen and (max-width: 1024px) {
+					.email {
+						display:none;
+					}
 				}
 			`}</style>
 		</div>
