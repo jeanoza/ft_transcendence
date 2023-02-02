@@ -60,6 +60,11 @@ export class ChannelService {
       .getMany();
   }
 
+  /**
+   * Find users in channel
+   * @param channelName
+   * @returns
+   */
   async findAllUserInChannel(channelName: string) {
     const { id: channelId } = await this.findByName(channelName);
     const users = await this.userRepository

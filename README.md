@@ -38,7 +38,17 @@ This is a boiler plate to use generally at my futur web application.
 
     - [x] redirect if no accessToken
 
-  - [x] Chat page
+  - [ ] chat page
+
+    - [x] left
+
+      - [x] channelList
+
+      - [ ] DM list
+
+    - [x] center(dialogue pannel) + messageInput
+
+    - [x] right(currenteUserList)
 
   - [x] Modal
 
@@ -65,6 +75,10 @@ This is a boiler plate to use generally at my futur web application.
   - [x] Websocket/Socketio connection with client
 
   - [ ] to implement swagger to make simple dto code
+
+  - SocketIO
+
+    - [ ] save ChannelChat in db
 
 - Database:
 
@@ -104,13 +118,7 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] auth page
 
-  - [ ] chat page
-
-    - [x] left(channelList)
-
-    - [x] center(dialogue pannel) + messageInput
-
-    - [x] right(currenteUserList)
+  - [ ]
 
 - backend:
 
