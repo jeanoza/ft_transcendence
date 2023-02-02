@@ -13,6 +13,14 @@ export function Layout({ children }: React.PropsWithChildren) {
 					min-width: 400px;
 					border-radius:8px;
 				}
+				@media screen and (max-width: 1024px) {
+					main {
+						width:100%;
+						height:calc(100vh - 48px);
+						margin:0 0;
+						padding:1rem;
+					}
+				}
 			`}</style>
 		</div>
 	);
