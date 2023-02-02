@@ -12,6 +12,7 @@ import {
 
 import { Server, Socket } from 'socket.io';
 import { ChannelService } from 'src/chat/channel.service';
+import { DMService } from './dm.service';
 
 @WebSocketGateway({
   namespace: 'ws-chat',
@@ -22,7 +23,10 @@ import { ChannelService } from 'src/chat/channel.service';
 export class ChatGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  constructor(private readonly channelService: ChannelService) {}
+  constructor(
+    private readonly channelService: ChannelService,
+    private readonly dmService: DMService,
+  ) {}
 
   @WebSocketServer()
   server: Server;
@@ -50,6 +54,16 @@ export class ChatGateway
         'channels',
         await this.channelService.findAllByUserId(userId),
       );
+    } catch (e) {
+      this.logger.log(e);
+      client.emit('error', e);
+    }
+  }
+
+  @SubscribeMessage('chatSocket')
+  async updateUserSocket(client: Socket, userId: number) {
+    try {
+      await this.dmService.updateUserSocket(client.id, userId);
     } catch (e) {
       this.logger.log(e);
       client.emit('error', e);

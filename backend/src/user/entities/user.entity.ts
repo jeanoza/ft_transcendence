@@ -34,6 +34,13 @@ export class User {
   })
   password?: string;
 
+  @Column('varchar', {
+    name: 'chatSocket',
+    length: 100,
+    nullable: true,
+  })
+  chatSocket?: string;
+
   @Column('varchar', { name: 'image_url', length: 500, nullable: true })
   imageURL: string;
 

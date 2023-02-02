@@ -6,11 +6,12 @@ import { User } from 'src/user/entities/user.entity';
 import { ChannelChat } from './entities/channelChat.entity';
 import { ChannelService } from './channel.service';
 import { ChatGateway } from './chat.gateway';
+import { DMService } from './dm.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Channel, ChannelMember, ChannelChat, User]),
   ],
-  providers: [ChannelService, ChatGateway],
+  providers: [DMService, ChannelService, ChatGateway],
 })
 export class ChatModule {}

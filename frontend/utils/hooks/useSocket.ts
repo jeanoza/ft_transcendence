@@ -1,4 +1,5 @@
 import { Socket, io } from "socket.io-client";
+import { useUser } from "./swrHelper";
 
 const socket: { [key: string]: Socket } = {};
 
