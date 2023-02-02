@@ -1,7 +1,5 @@
 import {
-  ForbiddenException,
   Injectable,
-  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -58,6 +56,14 @@ export class ChannelService {
       )
       .select(['channels.id', 'channels.name', 'channels.isPublic'])
       .getMany();
+  }
+
+  async saveChannelChat({ sender, message, channel }) {
+    const user = await this.userRepository.findOne({ where: { name: sender } });
+    const channel = await this.channelRepository.findOne({
+      where: { name: channel },
+    });
+    console.log(user);
   }
 
   /**

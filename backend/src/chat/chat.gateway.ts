@@ -109,8 +109,11 @@ export class ChatGateway
   }
 
   @SubscribeMessage('sendMSG')
-  handleMessage(@MessageBody() data: any): void {
+  async handleMessage(@MessageBody() data: any): Promise<void> {
     this.logger.log('sendMSG');
+    await this.channelService.saveChannelChat(data);
+
+    this.logger.log(data);
     this.server.in(data.channel).emit('recvMSG', {
       sender: data.sender,
       message: data.message,
