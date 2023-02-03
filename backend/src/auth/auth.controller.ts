@@ -14,13 +14,10 @@ import {
 import { UserService } from '../user/user.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { AuthService } from 'src/auth/auth.service';
-import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { LocalAuthGuard } from 'src/auth/guard/local-auth.guard';
 import { LoggedInGuard } from 'src/auth/guard/logged-in.guard';
 import { NoLoggedInGuard } from 'src/auth/guard/no-logged-in.guard';
 import { Auth42Guard } from 'src/auth/guard/auth42.guard';
-
-const MAX_AGE = 24 * 60 * 60 * 1000; // one day
 
 //FIXME: change after
 @Controller('api/auth')
@@ -38,9 +35,9 @@ export class AuthController {
   ) {
     const user = await this.userService.create(data);
 
-    res.cookie('accessToken', this.authService.login(user), {
+    res.cookie('accessToken', this.authService.getAccessToken(user.id), {
       httpOnly: true,
-      maxAge: MAX_AGE,
+      maxAge: process.env.JWT_MAX_AGE,
     });
 
     return { msg: 'created' };
@@ -49,20 +46,28 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   login(@Request() req, @Response({ passthrough: true }) res) {
-    res.cookie('accessToken', this.authService.login(req.user), {
+    console.log(req.user);
+    res.cookie('accessToken', this.authService.getAccessToken(req.user.id), {
       httpOnly: true,
-      maxAge: MAX_AGE,
+      maxAge: process.env.JWT_MAX_AGE,
     });
     return { msg: 'logged in' };
   }
 
   @UseGuards(Auth42Guard)
-  @Get('login42')
+  @Get('access42')
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  access42() {}
+
+  @UseGuards(Auth42Guard)
   @Redirect(process.env.CLIENT_URL, 301)
-  async loginWith42(@Response({ passthrough: true }) res) {
-    res.cookie('accessToken', this.authService.getAccessToken(), {
+  @Get('login42')
+  async loginWith42(@Request() req, @Response({ passthrough: true }) res) {
+    console.log('login42', req.user);
+
+    res.cookie('accessToken', this.authService.getAccessToken(req.user.id), {
       httpOnly: true,
-      maxAge: MAX_AGE,
+      maxAge: process.env.JWT_MAX_AGE,
     });
     return { msg: 'logged in by 42 auth' };
   }

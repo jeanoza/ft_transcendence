@@ -30,6 +30,7 @@ export class UserService {
       name: data.name,
       password: hashedPassword,
     });
+    console.log('ret', ret);
     if (!ret) throw new ForbiddenException('create failed');
 
     return ret;

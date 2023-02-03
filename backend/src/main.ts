@@ -11,8 +11,9 @@ async function bootstrap() {
 
   //app.useWebSocketAdapter(new WsAdapter(app));
 
+  console.log(process.env.CLIENT_URL);
   app.enableCors({
-    origin: [process.env.CLIENT_URL],
+    origin: process.env.CLIENT_URL,
     credentials: true,
   });
 

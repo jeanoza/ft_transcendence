@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { InputField } from "../inputField";
 
-export function AuthForm({ authUrl }: { authUrl: string }) {
+export function AuthForm() {
 	const [email, setEmail] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
 	const [name, setName] = useState<string>("");
@@ -35,19 +35,6 @@ export function AuthForm({ authUrl }: { authUrl: string }) {
 			window.alert(e?.response?.data?.message);
 		}
 	}
-	async function onAuth42(e) {
-		try {
-			const res = await axios.get("/auth/login42", {
-				headers: {
-					'Access-Control-Allow-Origin': '*',
-				}
-			});
-			console.log(res)
-		} catch (e) {
-			console.log(e);
-		}
-	}
-
 	return (
 		<form onSubmit={onSubmit}>
 			<InputField
@@ -85,10 +72,9 @@ export function AuthForm({ authUrl }: { authUrl: string }) {
 			</div>
 			<div>
 				<span>You want to authentificate with 42 ?</span>
-				<Link href={authUrl}>
+				<Link href="http://localhost:8888/api/auth/access42">
 					<span className="cursor-pointer">Click</span>
 				</Link>
-				{/*<span className="cursor-pointer" onClick={onAuth42}>Click</span>*/}
 			</div>
 			<div className="d-flex justify-end">
 				<button>{newAccount ? "Create Account" : "Sign In"} </button>

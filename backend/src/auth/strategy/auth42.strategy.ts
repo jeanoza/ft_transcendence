@@ -17,16 +17,17 @@ export class Auth42Strategy extends PassportStrategy(Strategy, 'auth42') {
 
   async validate(accessToken: string) {
     try {
-      console.log(accessToken);
       const res = await fetch('https://api.intra.42.fr/v2/me', {
         method: 'GET',
         headers: { Authorization: `Bearer ${accessToken}` },
       });
+
       const { login, image, email, displayname: name } = await res.json();
 
-      let userId = await this.authService.validateUser(email);
+      let user = await this.authService.validateUser(email);
 
-      if (!userId) {
+      // if no register user => save current user to db
+      if (!user) {
         const imageURL = image.versions.small;
         const data = {
           name,
@@ -34,10 +35,11 @@ export class Auth42Strategy extends PassportStrategy(Strategy, 'auth42') {
           email,
           imageURL,
         };
-        userId = await this.authService.addUser42(data);
+        user = await this.authService.addUser42(data);
       }
-      this.authService.login({ id: userId, name, email });
-      return true;
+
+      //this.authService.login({ id: userId, name, email });
+      return user;
     } catch (e) {
       throw e;
     }

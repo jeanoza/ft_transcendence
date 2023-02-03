@@ -10,6 +10,8 @@ import { LocalSerializer } from './strategy/local-serializer';
 import { Auth42Strategy } from './strategy/auth42.strategy';
 import { UserModule } from 'src/user/user.module';
 import { AuthController } from './auth.controller';
+import { Auth2faService } from './auth-2fa.service';
+import { Auth2faController } from './auth-2fa.controller';
 
 @Module({
   imports: [
@@ -17,7 +19,7 @@ import { AuthController } from './auth.controller';
     TypeOrmModule.forFeature([User]),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '1d' },
+      signOptions: { expiresIn: `${process.env.JWT_MAX_AGE}s` },
     }),
     UserModule,
   ],
@@ -27,8 +29,9 @@ import { AuthController } from './auth.controller';
     LocalStrategy,
     LocalSerializer,
     Auth42Strategy,
+    Auth2faService,
   ],
-  controllers: [AuthController],
+  controllers: [AuthController, Auth2faController],
   exports: [AuthService],
 })
 export class AuthModule {}
