@@ -1,7 +1,6 @@
 import { Seo } from "../components/seo";
 import { Navbar } from "../components/navbar";
 import { Layout } from "../components/layout";
-import axios from "axios";
 import { useAllNote, useUser } from "../utils/hooks/swrHelper";
 import { Loader } from "../components/loader";
 import React from "react";
@@ -11,7 +10,6 @@ import { useRouter } from "next/router";
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
 	if (!accessToken) {
-		delete axios.defaults.headers.common.Authorization;
 		return {
 			redirect: {
 				permanent: false,

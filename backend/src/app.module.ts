@@ -32,6 +32,7 @@ import { ChannelChat } from './chat/entities/channelChat.entity';
     AuthModule,
     NoteModule,
     ChatModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],

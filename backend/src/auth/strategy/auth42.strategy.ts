@@ -17,6 +17,7 @@ export class Auth42Strategy extends PassportStrategy(Strategy, 'auth42') {
 
   async validate(accessToken: string) {
     try {
+      console.log(accessToken);
       const res = await fetch('https://api.intra.42.fr/v2/me', {
         method: 'GET',
         headers: { Authorization: `Bearer ${accessToken}` },

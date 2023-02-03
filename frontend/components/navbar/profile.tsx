@@ -5,7 +5,7 @@ export function Profile({ user }: { user: IUser }) {
 	const router = useRouter();
 	async function onLogout(e: React.MouseEvent<HTMLButtonElement>) {
 		try {
-			await axios.get("user/logout");
+			await axios.get("auth/logout");
 			router.push("/");
 		} catch (err) {
 			throw err;

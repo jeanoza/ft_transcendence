@@ -4,7 +4,6 @@ import { Loader } from "../components/loader";
 import { Navbar } from "../components/navbar";
 import { Seo } from "../components/seo";
 import { useUser } from "../utils/hooks/swrHelper";
-import axios from "axios";
 import { ChannelList } from "../components/chat/channelList";
 import { UserList } from "../components/chat/userList";
 import { useSocket } from "../utils/hooks/useSocket";
@@ -14,7 +13,6 @@ import { Modal } from "../components/modal";
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
 	if (!accessToken) {
-		delete axios.defaults.headers.common.Authorization;
 		return {
 			redirect: {
 				permanent: false,
@@ -23,7 +21,6 @@ export function getServerSideProps({ req }: any) {
 			props: {},
 		};
 	}
-
 	return { props: {} };
 }
 

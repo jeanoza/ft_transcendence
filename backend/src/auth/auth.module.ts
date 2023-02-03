@@ -8,6 +8,8 @@ import { JwtStrategy } from './strategy/jwt.strategy';
 import { LocalStrategy } from './strategy/local.strategy';
 import { LocalSerializer } from './strategy/local-serializer';
 import { Auth42Strategy } from './strategy/auth42.strategy';
+import { UserModule } from 'src/user/user.module';
+import { AuthController } from './auth.controller';
 
 @Module({
   imports: [
@@ -17,6 +19,7 @@ import { Auth42Strategy } from './strategy/auth42.strategy';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1d' },
     }),
+    UserModule,
   ],
   providers: [
     AuthService,
@@ -25,6 +28,7 @@ import { Auth42Strategy } from './strategy/auth42.strategy';
     LocalSerializer,
     Auth42Strategy,
   ],
+  controllers: [AuthController],
   exports: [AuthService],
 })
 export class AuthModule {}

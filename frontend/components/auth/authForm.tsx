@@ -23,7 +23,7 @@ export function AuthForm({ authUrl }: { authUrl: string }) {
 		e.preventDefault();
 
 		let data: IUser = { email, password };
-		let url = "user";
+		let url = "auth";
 
 		if (newAccount) data = { name, ...data };
 		else url += "/login";
@@ -37,7 +37,7 @@ export function AuthForm({ authUrl }: { authUrl: string }) {
 	}
 	async function onAuth42(e) {
 		try {
-			const res = await axios.get("/user/auth", {
+			const res = await axios.get("/auth/login42", {
 				headers: {
 					'Access-Control-Allow-Origin': '*',
 				}
