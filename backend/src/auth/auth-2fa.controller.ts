@@ -3,10 +3,12 @@ import {
   Controller,
   Get,
   HttpCode,
+  Logger,
   Post,
   Req,
   Request,
   Res,
+  Response,
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
@@ -22,11 +24,14 @@ export class Auth2faController {
     private readonly userService: UserService,
     private readonly auth2faService: Auth2faService,
   ) {}
+  logger = new Logger('2fa.controller');
 
-  @Post('generate')
-  //@UseGuards(JwtAuthGuard) //FIXME: put gaurd after implement on frontend
-  async register(@Res() response: Response, @Body('user') user) {
-    const { otpauthUrl } = await this.auth2faService.generate2faSecret(user);
+  @Get('generate')
+  @UseGuards(JwtAuthGuard) //FIXME: put gaurd after implement on frontend
+  async register(@Req() request, @Res() response) {
+    const { otpauthUrl } = await this.auth2faService.generate2faSecret(
+      request.user,
+    );
     return this.auth2faService.pipeQrCodeStream(response, otpauthUrl);
   }
 
@@ -73,7 +78,7 @@ export class Auth2faController {
 
     response.cookie(
       'accessToken',
-      this.authService.getAccessToken(request.user.id, true),
+      this.authService.getAccessToken(request.user, true),
       { httpOnly: true, maxAge: process.env.JWT_MAX_AGE },
     );
   }

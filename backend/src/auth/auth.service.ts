@@ -12,16 +12,6 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  //#accessToken: string;
-
-  ///**
-  // * Getter
-  // * @returns accessToken
-  // */
-  //getAccessToken(): string {
-  //  return this.#accessToken;
-  //}
-
   /**
    * Add user identificated to database by 42 auth
    * @param user
@@ -72,14 +62,8 @@ export class AuthService {
    * @param userId
    * @returns
    */
-  getAccessToken(userId: number, is2faEnabled = false) {
-    const payload = { userId, is2faEnabled };
-    //const token = this.jwtService.sign(payload, {
-    //  secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET'),
-    //  expiresIn: `${this.configService.get(
-    //    'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
-    //  )}s`,
-    //});
+  getAccessToken(user: User, is2faEnabled = false) {
+    const payload = { id: user.id, email: user.email, is2faEnabled };
     return this.jwtService.sign(payload);
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { authenticator } from 'otplib';
 import { User } from '../user/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,6 +10,7 @@ export class Auth2faService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
+  logger = new Logger('auth2faService');
 
   async generate2faSecret(user: User) {
     const secret = authenticator.generateSecret();
@@ -31,6 +32,7 @@ export class Auth2faService {
     await this.userRepository.update(userId, { twoFactorSecret: secret });
   }
   async pipeQrCodeStream(stream: Response, otpauthUrl: string) {
+    this.logger.log(otpauthUrl);
     return toFileStream(stream, otpauthUrl);
   }
   async enable2fa(userId: number) {

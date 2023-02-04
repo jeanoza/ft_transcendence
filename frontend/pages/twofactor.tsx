@@ -4,7 +4,7 @@ import { Navbar } from "../components/navbar";
 import { Layout } from "../components/layout";
 import { Loader } from "../components/loader";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -21,32 +21,36 @@ export function getServerSideProps({ req }: any) {
 }
 export default function TwoFactor() {
 	const { user, isLoading } = useUser();
-	const [imageURL, setImageURL] = useState('');
+	const [imageSrc, setImageSrc] = useState<string | null>(null);
+	console.log(user);
 
 	async function generate2faQR() {
-		try {
-			const res = await axios.post('2fa/generate', { user })
-			setImageURL(res.data)
-
-		} catch (e) {
-			console.log(e);
-		}
+		await axios
+			.get("2fa/generate", {
+				responseType: "arraybuffer",
+			})
+			.then((res) => {
+				const base64 = btoa(
+					new Uint8Array(res.data).reduce(
+						(data, byte) => data + String.fromCharCode(byte),
+						""
+					)
+				);
+				setImageSrc(`data:;base64,${base64}`);
+			});
 	}
 
-	async function disable2fa() {
-
-	}
+	async function disable2fa() {}
 
 	async function enable2fa() {
-		axios.post('')
-
+		axios.post("");
 	}
 	return (
 		<Layout>
 			<Navbar />
 			<Seo title="Twofactor" />
 			{isLoading && <Loader />}
-			{user &&
+			{user && (
 				<main>
 					<h1 className="">Test page for test twofactor</h1>
 					<div className="d-flex gap">
@@ -54,13 +58,10 @@ export default function TwoFactor() {
 						<button onClick={enable2fa}>on</button>
 						<button onClick={disable2fa}>off</button>
 					</div>
-					<div>
-						<img src={imageURL} />
-					</div>
-					<div>
-					</div>
+					<div>{imageSrc && <img src={imageSrc} alt="QR code" />}</div>
+					<div></div>
 				</main>
-			}
+			)}
 		</Layout>
 	);
 }

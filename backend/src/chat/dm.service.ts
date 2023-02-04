@@ -14,7 +14,5 @@ export class DMService {
 
   async updateUserSocket(socketId: string, userId: number) {
     return await this.userRepository.update(userId, { chatSocket: socketId });
-    //const user = await this.userRepository.findOne({ where: { id: userId } });
-    //console.log(user);
   }
 }

@@ -35,7 +35,7 @@ export class AuthController {
   ) {
     const user = await this.userService.create(data);
 
-    res.cookie('accessToken', this.authService.getAccessToken(user.id), {
+    res.cookie('accessToken', this.authService.getAccessToken(user), {
       httpOnly: true,
       maxAge: process.env.JWT_MAX_AGE,
     });
@@ -46,8 +46,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   login(@Request() req, @Response({ passthrough: true }) res) {
-    console.log(req.user);
-    res.cookie('accessToken', this.authService.getAccessToken(req.user.id), {
+    res.cookie('accessToken', this.authService.getAccessToken(req.user), {
       httpOnly: true,
       maxAge: process.env.JWT_MAX_AGE,
     });
@@ -63,9 +62,7 @@ export class AuthController {
   @Redirect(process.env.CLIENT_URL, 301)
   @Get('login42')
   async loginWith42(@Request() req, @Response({ passthrough: true }) res) {
-    console.log('login42', req.user);
-
-    res.cookie('accessToken', this.authService.getAccessToken(req.user.id), {
+    res.cookie('accessToken', this.authService.getAccessToken(req.user), {
       httpOnly: true,
       maxAge: process.env.JWT_MAX_AGE,
     });
