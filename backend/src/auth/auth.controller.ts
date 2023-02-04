@@ -10,6 +10,7 @@ import {
   Request,
   Response,
   Redirect,
+  Req,
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
@@ -35,7 +36,7 @@ export class AuthController {
   ) {
     const user = await this.userService.create(data);
 
-    res.cookie('accessToken', this.authService.getAccessToken(user), {
+    res.cookie('accessToken', this.authService.getAccessToken(user.id), {
       httpOnly: true,
       maxAge: process.env.JWT_MAX_AGE,
     });
@@ -46,7 +47,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   login(@Request() req, @Response({ passthrough: true }) res) {
-    res.cookie('accessToken', this.authService.getAccessToken(req.user), {
+    res.cookie('accessToken', this.authService.getAccessToken(req.user.id), {
       httpOnly: true,
       maxAge: process.env.JWT_MAX_AGE,
     });
@@ -62,7 +63,7 @@ export class AuthController {
   @Redirect(process.env.CLIENT_URL, 301)
   @Get('login42')
   async loginWith42(@Request() req, @Response({ passthrough: true }) res) {
-    res.cookie('accessToken', this.authService.getAccessToken(req.user), {
+    res.cookie('accessToken', this.authService.getAccessToken(req.user.id), {
       httpOnly: true,
       maxAge: process.env.JWT_MAX_AGE,
     });
@@ -71,7 +72,7 @@ export class AuthController {
 
   @UseGuards(LoggedInGuard)
   @Get('logout')
-  async logout(@Response({ passthrough: true }) res) {
+  async logout(@Request() req, @Response({ passthrough: true }) res) {
     res.clearCookie('connect.sid', { httpOnly: true });
     res.clearCookie('accessToken', {
       httpOnly: true,

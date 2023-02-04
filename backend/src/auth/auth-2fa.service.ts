@@ -32,7 +32,6 @@ export class Auth2faService {
     await this.userRepository.update(userId, { twoFactorSecret: secret });
   }
   async pipeQrCodeStream(stream: Response, otpauthUrl: string) {
-    this.logger.log(otpauthUrl);
     return toFileStream(stream, otpauthUrl);
   }
   async enable2fa(userId: number) {
@@ -41,7 +40,6 @@ export class Auth2faService {
 
   async disable2fa(userId: number) {
     return await this.userRepository.update(userId, {
-      twoFactorSecret: null,
       twoFactorEnabled: false,
     });
   }

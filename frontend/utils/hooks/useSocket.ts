@@ -10,7 +10,6 @@ export function useSocket(type: string) {
 			console.log(`[${type}] socket connected: ${socket[type]?.id}`);
 		});
 		socket[type].on("error", function (e) {
-			//console.log(`[${type}] error`, e);
 			window.alert(e.message);
 		});
 		socket[type].on("disconnect", function () {

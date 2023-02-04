@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -11,6 +11,8 @@ export class AuthService {
     @InjectRepository(User) private userRepository: Repository<User>,
     private jwtService: JwtService,
   ) {}
+
+  logger = new Logger('AuthService');
 
   /**
    * Add user identificated to database by 42 auth
@@ -62,8 +64,8 @@ export class AuthService {
    * @param userId
    * @returns
    */
-  getAccessToken(user: User, is2faEnabled = false) {
-    const payload = { id: user.id, email: user.email, is2faEnabled };
+  getAccessToken(userId, is2faEnabled = false) {
+    const payload = { userId, is2faEnabled };
     return this.jwtService.sign(payload);
   }
 }

@@ -17,12 +17,6 @@ export class UserController {
 
   @Get()
   async getCurrentUser(@Request() req, @Response({ passthrough: true }) res) {
-    const user = await this.userService.findByEmail(req.user.email);
-    if (!user)
-      res.clearCookie('accessToken', {
-        httpOnly: true,
-        maxAge: 0,
-      });
-    return user;
+    return req.user;
   }
 }

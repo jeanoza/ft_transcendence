@@ -28,57 +28,59 @@ export class Auth2faController {
 
   @Get('generate')
   @UseGuards(JwtAuthGuard) //FIXME: put gaurd after implement on frontend
-  async register(@Req() request, @Res() response) {
+  async register(@Req() req, @Res() res) {
     const { otpauthUrl } = await this.auth2faService.generate2faSecret(
-      request.user,
+      req.user,
     );
-    return this.auth2faService.pipeQrCodeStream(response, otpauthUrl);
+    return this.auth2faService.pipeQrCodeStream(res, otpauthUrl);
   }
 
   @Post('enable')
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
-  async enable2fa(@Body('user') user, @Body('twoFactorCode') twoFactorCode) {
+  async enable2fa(@Req() req, @Body('twoFactorCode') twoFactorCode) {
+    //console.log('2fa.controller', req.user);
+    this.logger.log(req.user.id);
     const isCodeValid = this.auth2faService.validate2faCode(
       twoFactorCode,
-      user,
+      req.user,
     );
     if (!isCodeValid)
       throw new UnauthorizedException('Wrong authentication code');
-    await this.auth2faService.enable2fa(user.id);
+    await this.auth2faService.enable2fa(req.user.id);
   }
 
   @Post('disable')
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
-  async disable2fa(@Body('user') user, @Body('twoFactorCode') twoFactorCode) {
+  async disable2fa(@Req() req, @Body('twoFactorCode') twoFactorCode) {
     const isCodeValid = this.auth2faService.validate2faCode(
       twoFactorCode,
-      user,
+      req.user,
     );
     if (!isCodeValid)
       throw new UnauthorizedException('Wrong authentication code');
-    await this.auth2faService.disable2fa(user.id);
+    await this.auth2faService.disable2fa(req.user.id);
   }
 
   @Post('authenticate')
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
   async authenticate(
-    @Req() request,
-    @Res({ passthrough: true }) response,
+    @Req() req,
+    @Res({ passthrough: true }) res,
     @Body('twoFactorCode') twoFactorCode,
   ) {
     const isValid2faCode = this.auth2faService.validate2faCode(
       twoFactorCode,
-      request.user,
+      req.user,
     );
     if (!isValid2faCode)
       throw new UnauthorizedException('Wrong authentication code');
 
-    response.cookie(
+    res.cookie(
       'accessToken',
-      this.authService.getAccessToken(request.user, true),
+      this.authService.getAccessToken(req.user.id, true),
       { httpOnly: true, maxAge: process.env.JWT_MAX_AGE },
     );
   }

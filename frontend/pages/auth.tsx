@@ -4,7 +4,6 @@ import { Layout } from "../components/layout";
 import { NotAuthNavbar } from "../components/navbar";
 import { AuthForm } from "../components/auth/authForm";
 
-
 export default function Auth() {
 	return (
 		<Layout>
@@ -14,11 +13,6 @@ export default function Auth() {
 				<h1>Auth</h1>
 				<AuthForm />
 			</main>
-			<style jsx>{`
-				main {
-					flex-direction:column;
-				}
-			`}</style>
 		</Layout>
 	);
 }
