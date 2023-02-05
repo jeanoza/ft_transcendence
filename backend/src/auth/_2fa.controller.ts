@@ -29,7 +29,9 @@ export class _2faController {
 
   @Get()
   @UseGuards(Jwt2faGuard)
-  verifyAuthed() {}
+  verifyAuthed() {
+    return true;
+  }
 
   @Get('generate')
   @UseGuards(JwtAuthGuard) //FIXME: put gaurd after implement on frontend

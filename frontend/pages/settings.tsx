@@ -56,21 +56,6 @@ export default function Settings() {
 		}
 	}
 
-	async function onSubmit2faCode(e: any) {
-		if (e.code === "Enter") {
-			try {
-				const res = await axios.post("2fa/authenticate", {
-					_2faCode,
-				});
-				console.log(res);
-				set_2faCode("");
-			} catch (e: AxiosError | any) {
-				console.log(e.message);
-				//window.alert(e.message);
-			}
-		}
-	}
-
 	return (
 		<Layout>
 			<Navbar />
@@ -92,7 +77,6 @@ export default function Settings() {
 							name="code"
 							state={_2faCode}
 							setState={set_2faCode}
-							onKeydown={onSubmit2faCode}
 						/>
 					</div>
 				</main>

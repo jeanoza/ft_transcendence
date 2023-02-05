@@ -2,7 +2,6 @@ import { Seo } from "../components/seo";
 import { useUser } from "../utils/hooks/swrHelper";
 import { Layout } from "../components/layout";
 import { Loader } from "../components/loader";
-import { useEffect } from "react";
 import { Navbar } from "../components/navbar";
 
 export function getServerSideProps({ req }: any) {

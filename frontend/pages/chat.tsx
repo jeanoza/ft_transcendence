@@ -9,6 +9,7 @@ import { useSocket } from "../utils/hooks/useSocket";
 import { ChatDisplay } from "../components/chat/chatDisplay";
 import { Modal } from "../components/modal";
 import { Navbar } from "../components/navbar";
+import Router from "next/router";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
