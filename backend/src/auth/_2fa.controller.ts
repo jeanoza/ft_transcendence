@@ -16,6 +16,7 @@ import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { _2faService } from './_2fa.service';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
+import { Jwt2faGuard } from './guard/jwt-2fa.guard';
 
 @Controller('api/2fa')
 export class _2faController {
@@ -25,6 +26,10 @@ export class _2faController {
     private readonly _2faService: _2faService,
   ) {}
   logger = new Logger('2fa.controller');
+
+  @Get()
+  @UseGuards(Jwt2faGuard)
+  verifyAuthed() {}
 
   @Get('generate')
   @UseGuards(JwtAuthGuard) //FIXME: put gaurd after implement on frontend
@@ -37,8 +42,6 @@ export class _2faController {
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
   async enable2fa(@Req() req, @Body('_2faCode') _2faCode) {
-    //console.log('2fa.controller', req.user);
-    this.logger.log(req.user.id);
     const isCodeValid = this._2faService.validate2faCode(_2faCode, req.user);
     if (!isCodeValid)
       throw new UnauthorizedException('Wrong authentication code');

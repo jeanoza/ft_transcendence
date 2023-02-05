@@ -1,6 +1,6 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
@@ -19,6 +19,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       secretOrKey: process.env.JWT_SECRET,
     });
   }
+  logger = new Logger('jwt-2fa');
 
   private static extractJWT(req): string | null {
     if (
@@ -33,9 +34,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: any) {
     if (!payload) throw new UnauthorizedException();
-    const user = await this.userRepository.findOne({
+    return await this.userRepository.findOne({
       where: { id: payload.userId },
     });
-    return user;
   }
 }

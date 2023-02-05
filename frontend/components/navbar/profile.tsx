@@ -1,22 +1,27 @@
 import axios from "axios";
 import { useRouter } from "next/router";
+import { useUser } from "../../utils/hooks/swrHelper";
 
-export function Profile({ user }: { user: IUser }) {
+export function Profile() {
+	const { user } = useUser();
 	const router = useRouter();
 	async function onLogout(e: React.MouseEvent<HTMLButtonElement>) {
 		try {
 			await axios.get("auth/logout");
-			router.push("/");
+			router.push("auth");
 		} catch (err) {
 			throw err;
 		}
 	}
+	if (!user) return null;
 	return (
 		<div className="profile d-flex center gap justify-between">
 			<div
 				className="avatar"
 				style={{
-					backgroundImage: `url(${user.imageURL ? user.imageURL : "/default_profile.png"})`,
+					backgroundImage: `url(${
+						user.imageURL ? user.imageURL : "/default_profile.png"
+					})`,
 				}}
 			/>
 			<div className="user-info">
@@ -28,7 +33,7 @@ export function Profile({ user }: { user: IUser }) {
 				.profile {
 					position: absolute;
 					top: 0.3rem;
-					right:1rem;
+					right: 1rem;
 				}
 				.avatar {
 					background-size: cover;
@@ -39,7 +44,7 @@ export function Profile({ user }: { user: IUser }) {
 				}
 				@media screen and (max-width: 1024px) {
 					.email {
-						display:none;
+						display: none;
 					}
 				}
 			`}</style>

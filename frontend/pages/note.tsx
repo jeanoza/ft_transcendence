@@ -1,11 +1,11 @@
 import { Seo } from "../components/seo";
-import { Navbar } from "../components/navbar";
 import { Layout } from "../components/layout";
 import { useAllNote, useUser } from "../utils/hooks/swrHelper";
 import { Loader } from "../components/loader";
 import React from "react";
 import { NoteTable } from "../components/note/noteTable";
 import { useRouter } from "next/router";
+import { Navbar } from "../components/navbar";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -16,7 +16,7 @@ export function getServerSideProps({ req }: any) {
 				destination: "/auth",
 			},
 			props: {},
-		}
+		};
 	}
 	return { props: {} };
 }
@@ -28,7 +28,7 @@ export default function Note() {
 
 	function onClick(e: React.MouseEvent) {
 		e.preventDefault();
-		router.push("/note/create")
+		router.push("/note/create");
 	}
 
 	return (

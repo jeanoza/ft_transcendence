@@ -52,8 +52,8 @@ export class AuthService {
           (await bcrypt.compare(_password, user.password)))
       ) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { password, login, ...rest } = user;
-        return rest;
+        //const { password, login, ...rest } = user;
+        return await this.userRepository.findOne({ where: { id: user.id } });
       }
     }
     return null;
@@ -64,8 +64,8 @@ export class AuthService {
    * @param userId
    * @returns
    */
-  getAccessToken(userId, is2faEnabled = false) {
-    const payload = { userId, is2faEnabled };
+  getAccessToken(userId, is2faAuthed = false) {
+    const payload = { userId, is2faAuthed };
     return this.jwtService.sign(payload);
   }
 }

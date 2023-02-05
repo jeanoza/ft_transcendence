@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Layout } from "../components/layout";
 import { Loader } from "../components/loader";
-import { Navbar } from "../components/navbar";
 import { Seo } from "../components/seo";
 import { useUser } from "../utils/hooks/swrHelper";
 import { ChannelList } from "../components/chat/channelList";
@@ -9,6 +8,7 @@ import { UserList } from "../components/chat/userList";
 import { useSocket } from "../utils/hooks/useSocket";
 import { ChatDisplay } from "../components/chat/chatDisplay";
 import { Modal } from "../components/modal";
+import { Navbar } from "../components/navbar";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;

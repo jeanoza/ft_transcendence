@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Seo } from "../components/seo";
 import { Layout } from "../components/layout";
-import { NotAuthNavbar } from "../components/navbar";
 import { AuthForm } from "../components/auth/authForm";
+import { NotAuthNavbar } from "../components/navbar";
 
 export default function Auth() {
 	return (

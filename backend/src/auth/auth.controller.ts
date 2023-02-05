@@ -11,6 +11,7 @@ import {
   Response,
   Redirect,
   Req,
+  Logger,
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
@@ -19,6 +20,7 @@ import { LocalAuthGuard } from 'src/auth/guard/local-auth.guard';
 import { LoggedInGuard } from 'src/auth/guard/logged-in.guard';
 import { NoLoggedInGuard } from 'src/auth/guard/no-logged-in.guard';
 import { Auth42Guard } from 'src/auth/guard/auth42.guard';
+import { Jwt2faGuard } from './guard/jwt-2fa.guard';
 
 //FIXME: change after
 @Controller('api/auth')
@@ -27,6 +29,8 @@ export class AuthController {
     private readonly userService: UserService,
     private readonly authService: AuthService,
   ) {}
+
+  logger = new Logger('auth.controller');
 
   @UseGuards(NoLoggedInGuard)
   @Post()

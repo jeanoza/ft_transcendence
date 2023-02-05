@@ -12,12 +12,10 @@ const navbarStyles = `
 `;
 
 export function Navbar() {
-	const { user } = useUser();
-
 	return (
 		<nav className="d-flex center">
 			<PageList />
-			{user && <Profile user={user} />}
+			<Profile />
 			<style jsx>{`
 				${navbarStyles}
 			`}</style>

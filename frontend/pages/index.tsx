@@ -1,8 +1,9 @@
 import { Seo } from "../components/seo";
 import { useUser } from "../utils/hooks/swrHelper";
-import { Navbar } from "../components/navbar";
 import { Layout } from "../components/layout";
 import { Loader } from "../components/loader";
+import { useEffect } from "react";
+import { Navbar } from "../components/navbar";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -19,19 +20,20 @@ export function getServerSideProps({ req }: any) {
 }
 export default function Home() {
 	const { user, isLoading } = useUser();
+
 	return (
 		<Layout>
 			<Navbar />
 			<Seo title="Home" />
 			{isLoading && <Loader />}
-			{user &&
+			{user && (
 				<main>
 					<h1 className="">Home</h1>
 					<div>
 						<span>hello, {user?.name}</span>
 					</div>
 				</main>
-			}
+			)}
 		</Layout>
 	);
 }

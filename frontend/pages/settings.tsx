@@ -20,7 +20,7 @@ export function getServerSideProps({ req }: any) {
 	}
 	return { props: {} };
 }
-export default function _2fa() {
+export default function Settings() {
 	const { user, isLoading, revalid } = useUser();
 	const [imageSrc, setImageSrc] = useState<string | null>(null);
 	const [_2faCode, set_2faCode] = useState<string>("");
@@ -49,6 +49,8 @@ export default function _2fa() {
 				_2faCode,
 			});
 			revalid("user");
+
+			//revalid();
 		} catch (e: any) {
 			window.alert(e.response.data.message);
 		}
@@ -72,15 +74,13 @@ export default function _2fa() {
 	return (
 		<Layout>
 			<Navbar />
-			<Seo title="2fa" />
+			<Seo title="Settings" />
 			{isLoading && <Loader />}
 			{user && (
-				<main className="d-flex column center">
+				<main className="">
 					<h1 className="">Two Factor Auth</h1>
 					<div className="d-flex gap">
-						{/*{user._2faEnable && (*/}
 						<button onClick={generate2faQR}>Generate</button>
-						{/*)}*/}
 						<button onClick={switch2fa}>
 							{user._2faEnabled ? "off" : "on"}
 						</button>

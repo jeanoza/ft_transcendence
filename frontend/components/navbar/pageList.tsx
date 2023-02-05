@@ -1,7 +1,12 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-const elements = { home: "/", note: "/note", chat: "/chat" };
+const elements = {
+	home: "/",
+	note: "/note",
+	chat: "/chat",
+	settings: "/settings",
+};
 
 export function PageList() {
 	const router = useRouter();
@@ -14,7 +19,14 @@ export function PageList() {
 				return (
 					<li key={name}>
 						<Link href={path}>
-							<span className={`${router.pathname === path || (router.pathname !== "/" && router.pathname.includes(name)) ? "active" : ""}`}>
+							<span
+								className={`${
+									router.pathname === path ||
+									(router.pathname !== "/" && router.pathname.includes(name))
+										? "active"
+										: ""
+								}`}
+							>
 								{name}
 							</span>
 						</Link>
@@ -35,7 +47,6 @@ export function PageList() {
 				span {
 					text-transform: capitalize;
 				}
-				
 			`}</style>
 		</ul>
 	);

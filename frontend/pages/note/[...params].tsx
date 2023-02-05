@@ -14,7 +14,7 @@ export function getServerSideProps({ req }: any) {
 				destination: "/auth",
 			},
 			props: {},
-		}
+		};
 	}
 	return { props: {} };
 }

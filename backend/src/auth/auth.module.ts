@@ -12,6 +12,7 @@ import { UserModule } from 'src/user/user.module';
 import { AuthController } from './auth.controller';
 import { _2faService } from './_2fa.service';
 import { _2faController } from './_2fa.controller';
+import { Jwt2faStrategy } from './strategy/jwt-2fa.strategy';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { _2faController } from './_2fa.controller';
   providers: [
     AuthService,
     JwtStrategy,
+    Jwt2faStrategy,
     LocalStrategy,
     LocalSerializer,
     Auth42Strategy,
