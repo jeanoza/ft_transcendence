@@ -3,7 +3,7 @@ import { useUser } from "../utils/hooks/swrHelper";
 import { Layout } from "../components/layout";
 import { Loader } from "../components/loader";
 import axios, { AxiosError } from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { InputField } from "../components/inputField";
 import { Navbar } from "../components/navbar";
 import Router from "next/router";
