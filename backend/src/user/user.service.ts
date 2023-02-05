@@ -44,7 +44,7 @@ export class UserService {
   async findByEmail(email: string) {
     return await this.userRepository.findOne({
       where: { email },
-      select: ['id', 'name', 'email', 'imageURL', 'twoFactorEnabled'], //FIXME: here imageURL or image_url??
+      select: ['id', 'name', 'email', 'imageURL', '_2faEnabled'], //FIXME: here imageURL or image_url??
     });
   }
 

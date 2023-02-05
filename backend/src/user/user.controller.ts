@@ -17,6 +17,9 @@ export class UserController {
 
   @Get()
   async getCurrentUser(@Request() req, @Response({ passthrough: true }) res) {
+    console.log(req.user);
+    this.logger.log(req.user.name);
+    this.logger.log(req.user._2faEnabled);
     return req.user;
   }
 }

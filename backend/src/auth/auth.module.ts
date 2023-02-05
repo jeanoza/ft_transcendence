@@ -10,8 +10,8 @@ import { LocalSerializer } from './strategy/local-serializer';
 import { Auth42Strategy } from './strategy/auth42.strategy';
 import { UserModule } from 'src/user/user.module';
 import { AuthController } from './auth.controller';
-import { Auth2faService } from './auth-2fa.service';
-import { Auth2faController } from './auth-2fa.controller';
+import { _2faService } from './_2fa.service';
+import { _2faController } from './_2fa.controller';
 
 @Module({
   imports: [
@@ -29,9 +29,9 @@ import { Auth2faController } from './auth-2fa.controller';
     LocalStrategy,
     LocalSerializer,
     Auth42Strategy,
-    Auth2faService,
+    _2faService,
   ],
-  controllers: [AuthController, Auth2faController],
+  controllers: [AuthController, _2faController],
   exports: [AuthService],
 })
 export class AuthModule {}

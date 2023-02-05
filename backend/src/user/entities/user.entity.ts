@@ -20,11 +20,11 @@ export class User {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
-  @Column({ nullable: true, name: 'two_factor_secret' })
-  twoFactorSecret?: string;
+  @Column({ nullable: true, name: '_2fa_secret' })
+  _2faSecret?: string;
 
-  @Column({ default: false, name: 'two_factor_enabled' })
-  twoFactorEnabled: boolean;
+  @Column({ default: false, name: '_2fa_enabled' })
+  _2faEnabled: boolean;
 
   @Column('varchar', { name: 'name', unique: true, length: 30 })
   name: string;
