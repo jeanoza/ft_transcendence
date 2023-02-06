@@ -35,6 +35,13 @@ export class UserService {
     return ret;
   }
 
+  async findAll() {
+    return await this.userRepository
+      .createQueryBuilder('user')
+      .select(['user.id', 'user.name'])
+      .getMany();
+  }
+
   async findOne(id: number) {
     return await this.userRepository.findOne({
       where: { id },

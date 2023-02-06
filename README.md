@@ -56,6 +56,12 @@ This is a boiler plate to use generally at my futur web application.
 
     - [x] NewChannel Modal (name, password) => if password? private : public
 
+  - [ ] Modals
+
+    - [ ] Profile
+
+    - [ ] Settings(security)
+
 - Backend:
 
   - [x] connect Postgresql with typeorm

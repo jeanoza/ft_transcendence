@@ -31,7 +31,7 @@ export function InputField({
 				onChange={onChange}
 				value={state}
 				onKeyDown={onKeydown}
-			></input>
+			/>
 		</div>
 	);
 }
