@@ -44,7 +44,6 @@ export function Search() {
 	}
 	return (
 		<div className="search d-flex center justify-start gap">
-
 			<FontAwesomeIcon icon="magnifying-glass" />
 			<input value={name} onChange={onChange} placeholder="search" />
 			{filtered && <FontAwesomeIcon icon="xmark" onClick={() => setFiltered(null)} />}
@@ -59,6 +58,7 @@ export function Search() {
 				.search {
 					position: relative;
 					width:184px;
+					cursor:pointer;
 				}
 				input {
 					background-color:#424245;
@@ -85,7 +85,6 @@ export function Search() {
 				li:hover {
 					background-color:rgb(200,200,200);
 					color:white;
-					cursor:pointer;
 				}
 			`}</style>
 		</div>
