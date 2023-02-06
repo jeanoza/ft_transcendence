@@ -5,6 +5,9 @@ import {
   Request,
   Response,
   Logger,
+  Post,
+  Query,
+  Param,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
@@ -20,5 +23,10 @@ export class UserController {
   @Get()
   async getCurrentUser(@Request() req, @Response({ passthrough: true }) res) {
     return req.user;
+  }
+
+  @Get(':name')
+  async getAllUserByName(@Param('name') name) {
+    return await this.userService.findAllByName(name);
   }
 }

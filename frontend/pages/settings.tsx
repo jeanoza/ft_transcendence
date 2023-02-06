@@ -1,11 +1,9 @@
 import { Seo } from "../components/seo";
 import { use2fa, useUser } from "../utils/hooks/swrHelper";
 import { AuthLayout, Layout } from "../components/layout";
-import { Loader } from "../components/loader";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { useState } from "react";
 import { InputField } from "../components/inputField";
-import { Navbar } from "../components/navbar";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;

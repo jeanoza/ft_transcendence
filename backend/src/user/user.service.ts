@@ -54,6 +54,14 @@ export class UserService {
     });
   }
 
+  async findAllByName(name: string) {
+    return await this.userRepository
+      .createQueryBuilder('user')
+      .where('lower(user.name) like :name', { name: `%${name.toLowerCase()}%` })
+      .select(['user.id', 'user.name'])
+      .getMany();
+  }
+
   //update(id: number, data: UpdateUserDto) {}
 
   //remove(id: number) {}
