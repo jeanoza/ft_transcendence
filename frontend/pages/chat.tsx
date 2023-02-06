@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Layout } from "../components/layout";
-import { Loader } from "../components/loader";
+import { AuthLayout, Layout } from "../components/layout";
 import { Seo } from "../components/seo";
 import { useUser } from "../utils/hooks/swrHelper";
 import { ChannelList } from "../components/chat/channelList";
@@ -8,8 +7,6 @@ import { UserList } from "../components/chat/userList";
 import { useSocket } from "../utils/hooks/useSocket";
 import { ChatDisplay } from "../components/chat/chatDisplay";
 import { Modal } from "../components/modal";
-import { Navbar } from "../components/navbar";
-import Router from "next/router";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -28,7 +25,7 @@ export function getServerSideProps({ req }: any) {
 let socketUpdated = false; // to socket_id send only one time.
 
 export default function Chat() {
-	const { user, isLoading } = useUser();
+	const { user } = useUser();
 	const { socket } = useSocket("chat");
 	const [channel, setChannel] = useState<string | null>(null); //current channel
 	const [channels, setChannels] = useState<any>([]);
@@ -56,23 +53,19 @@ export default function Chat() {
 	}
 
 	return (
-		<Layout>
-			<Navbar />
+		<AuthLayout>
 			<Seo title="Chat" />
-			{isLoading && <Loader />}
-			{user && (
-				<main>
-					<div className="chat d-flex justify-between">
-						<ChannelList
-							channels={channels}
-							setModal={setModal}
-							onChangeChannel={onChangeChannel}
-						/>
-						<ChatDisplay channel={channel} />
-						<UserList channel={channel} />
-					</div>
-				</main>
-			)}
+			<main>
+				<div className="chat d-flex justify-between">
+					<ChannelList
+						channels={channels}
+						setModal={setModal}
+						onChangeChannel={onChangeChannel}
+					/>
+					<ChatDisplay channel={channel} />
+					<UserList channel={channel} />
+				</div>
+			</main>
 			<Modal modal={modal} setModal={setModal} />
 			<style jsx>{`
 				.chat {
@@ -81,6 +74,6 @@ export default function Chat() {
 					border-radius: 8px;
 				}
 			`}</style>
-		</Layout>
+		</AuthLayout>
 	);
 }

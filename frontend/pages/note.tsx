@@ -1,5 +1,5 @@
 import { Seo } from "../components/seo";
-import { Layout } from "../components/layout";
+import { AuthLayout, Layout } from "../components/layout";
 import { useAllNote, useUser } from "../utils/hooks/swrHelper";
 import { Loader } from "../components/loader";
 import React from "react";
@@ -32,19 +32,15 @@ export default function Note() {
 	}
 
 	return (
-		<Layout>
-			<Navbar />
+		<AuthLayout>
 			<Seo title="Note" />
-			{(isLoading || noteIsLoading) && <Loader />}
-			{user && (
-				<main>
-					<h1 className="">Note</h1>
-					<div className="d-flex justify-end">
-						<button onClick={onClick}>Add</button>
-					</div>
-					<NoteTable notes={notes} />
-				</main>
-			)}
-		</Layout>
+			<main>
+				<h1 className="">Note</h1>
+				<div className="d-flex justify-end">
+					<button onClick={onClick}>Add</button>
+				</div>
+				<NoteTable notes={notes} />
+			</main>
+		</AuthLayout>
 	);
 }

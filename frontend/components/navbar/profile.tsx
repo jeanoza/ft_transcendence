@@ -1,23 +1,11 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 import { useUser } from "../../utils/hooks/swrHelper";
 
 export function Profile() {
 	const { user } = useUser();
 	const router = useRouter();
 
-	useEffect(() => {
-		async function getAuth2fa() {
-			try {
-				await axios.get("2fa");
-				if (router.pathname === "/_2fa") router.push("/");
-			} catch (e) {
-				router.push("/_2fa");
-			}
-		}
-		if (user) getAuth2fa();
-	}, [user]);
 	async function onLogout(e: React.MouseEvent<HTMLButtonElement>) {
 		try {
 			await axios.get("auth/logout");
@@ -26,7 +14,6 @@ export function Profile() {
 			throw err;
 		}
 	}
-	if (!user) return null;
 	return (
 		<div className="profile d-flex center gap justify-between">
 			<div

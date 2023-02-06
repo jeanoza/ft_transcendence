@@ -5,7 +5,6 @@ import { Loader } from "../components/loader";
 import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import { InputField } from "../components/inputField";
-import { Navbar } from "../components/navbar";
 import Router from "next/router";
 
 export function getServerSideProps({ req }: any) {
@@ -22,7 +21,7 @@ export function getServerSideProps({ req }: any) {
 	return { props: {} };
 }
 export default function _2fa() {
-	const { user, isLoading } = useUser();
+	const { user } = useUser();
 	const [_2faCode, set_2faCode] = useState<string>("");
 
 	async function authenticate() {
@@ -40,32 +39,28 @@ export default function _2fa() {
 		if (e.code === "Enter") authenticate();
 	}
 	function onGoAuthPage() {
-		Router.push("/auth");
+		axios.get("auth/logout");
+		Router.push("auth");
 	}
 
 	return (
 		<Layout>
-			<Navbar />
-			<Seo title="2fa" />
-			{isLoading && <Loader />}
-			{user && (
-				<main className="d-flex column center">
-					<h1 className="">Two Factor Auth</h1>
-					<div>
-						<InputField
-							type="text"
-							name="code"
-							state={_2faCode}
-							setState={set_2faCode}
-							onKeydown={onSubmit2faByEnter}
-						/>
-					</div>
-					<div className="d-flex center gap">
-						<button onClick={authenticate}>Send</button>
-						<button onClick={onGoAuthPage}>Back to login</button>
-					</div>
-				</main>
-			)}
+			<main className="d-flex column center">
+				<h1 className="">Two Factor Auth</h1>
+				<div>
+					<InputField
+						type="text"
+						name="code"
+						state={_2faCode}
+						setState={set_2faCode}
+						onKeydown={onSubmit2faByEnter}
+					/>
+				</div>
+				<div className="d-flex center gap">
+					<button onClick={authenticate}>Send</button>
+					<button onClick={onGoAuthPage}>Back to login</button>
+				</div>
+			</main>
 		</Layout>
 	);
 }

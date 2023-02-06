@@ -25,7 +25,6 @@ export default function UpdateNote() {
 
 	return (
 		<Layout>
-			<Navbar />
 			<Seo title="Update" />
 			<main>
 				<h1>Update</h1>

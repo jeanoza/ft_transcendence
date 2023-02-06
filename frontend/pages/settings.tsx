@@ -1,6 +1,6 @@
 import { Seo } from "../components/seo";
-import { useUser } from "../utils/hooks/swrHelper";
-import { Layout } from "../components/layout";
+import { use2fa, useUser } from "../utils/hooks/swrHelper";
+import { AuthLayout, Layout } from "../components/layout";
 import { Loader } from "../components/loader";
 import axios, { AxiosError } from "axios";
 import { useState } from "react";
@@ -21,7 +21,7 @@ export function getServerSideProps({ req }: any) {
 	return { props: {} };
 }
 export default function Settings() {
-	const { user, isLoading, revalid } = useUser();
+	const { user, revalid } = useUser();
 	const [imageSrc, setImageSrc] = useState<string | null>(null);
 	const [_2faCode, set_2faCode] = useState<string>("");
 
@@ -37,6 +37,7 @@ export default function Settings() {
 				setImageSrc(`data:;base64,${base64}`);
 			};
 			reader.readAsDataURL(new Blob([res.data]));
+			revalid("user");
 		} catch (error) {
 			console.error(error);
 		}
@@ -49,38 +50,34 @@ export default function Settings() {
 				_2faCode,
 			});
 			revalid("user");
-
-			//revalid();
 		} catch (e: any) {
 			window.alert(e.response.data.message);
 		}
 	}
 
 	return (
-		<Layout>
-			<Navbar />
+		<AuthLayout>
 			<Seo title="Settings" />
-			{isLoading && <Loader />}
-			{user && (
-				<main className="">
-					<h1 className="">Two Factor Auth</h1>
-					<div className="d-flex gap">
-						<button onClick={generate2faQR}>Generate</button>
+			<main className="">
+				<h1 className="">Two Factor Auth</h1>
+				<div className="d-flex gap">
+					<button onClick={generate2faQR}>Generate</button>
+					{user?._2faSecret && (
 						<button onClick={switch2fa}>
-							{user._2faEnabled ? "off" : "on"}
+							{user?._2faEnabled ? "off" : "on"}
 						</button>
-					</div>
-					<div>{imageSrc && <img src={imageSrc} alt="QR code" />}</div>
-					<div>
-						<InputField
-							type="text"
-							name="code"
-							state={_2faCode}
-							setState={set_2faCode}
-						/>
-					</div>
-				</main>
-			)}
-		</Layout>
+					)}
+				</div>
+				<div>{imageSrc && <img src={imageSrc} alt="QR code" />}</div>
+				<div>
+					<InputField
+						type="text"
+						name="code"
+						state={_2faCode}
+						setState={set_2faCode}
+					/>
+				</div>
+			</main>
+		</AuthLayout>
 	);
 }

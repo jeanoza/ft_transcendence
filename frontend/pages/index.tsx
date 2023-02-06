@@ -1,8 +1,6 @@
 import { Seo } from "../components/seo";
 import { useUser } from "../utils/hooks/swrHelper";
-import { Layout } from "../components/layout";
-import { Loader } from "../components/loader";
-import { Navbar } from "../components/navbar";
+import { AuthLayout } from "../components/layout";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -18,21 +16,17 @@ export function getServerSideProps({ req }: any) {
 	return { props: {} };
 }
 export default function Home() {
-	const { user, isLoading } = useUser();
+	const { user } = useUser();
 
 	return (
-		<Layout>
-			<Navbar />
+		<AuthLayout>
 			<Seo title="Home" />
-			{isLoading && <Loader />}
-			{user && (
-				<main>
-					<h1 className="">Home</h1>
-					<div>
-						<span>hello, {user?.name}</span>
-					</div>
-				</main>
-			)}
-		</Layout>
+			<main>
+				<h1 className="">Home</h1>
+				<div>
+					<span>hello, {user?.name}</span>
+				</div>
+			</main>
+		</AuthLayout>
 	);
 }

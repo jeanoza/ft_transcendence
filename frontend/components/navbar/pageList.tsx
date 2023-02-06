@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 const elements = {
 	home: "/",
-	note: "/note",
+	//note: "/note",
 	chat: "/chat",
 	settings: "/settings",
 };
