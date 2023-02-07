@@ -84,12 +84,13 @@ export function Search() {
 				}
 				.user-list {
 					position: absolute;
-					top: 29px;
+					top: 30px;
 					left: 0;
 					right:0;
 					color:#424245;
 					background:white;
 					border:1px solid rgb(200,200,200);
+					border-top:none;
 					border-radius:0 0 8px 8px;
 				}
 				.cancelBtn {

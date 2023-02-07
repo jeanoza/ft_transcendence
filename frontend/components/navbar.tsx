@@ -1,4 +1,4 @@
-import { User } from "./navbar/user";
+import { Setting } from "./navbar/setting";
 import { PageList } from "./navbar/pageList";
 import { Search } from "./search";
 
@@ -7,7 +7,7 @@ export function Navbar() {
 		<nav className="d-flex center justify-between">
 			<Search />
 			<PageList />
-			<User />
+			<Setting />
 			<style jsx>{`
 				nav {
 					background-color: #424245;
