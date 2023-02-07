@@ -46,8 +46,8 @@ export function Search() {
 	async function handleOpenModal(id: number) {
 		setUserId(id);
 		setUserModal(true);
-
-
+		setName('')
+		setFiltered([])
 	}
 
 	function onChange(e: any) {

@@ -29,6 +29,7 @@ export class UserService {
       email: data.email,
       name: data.name,
       password: hashedPassword,
+      imageURL: '/default_profile.png',
     });
     if (!ret) throw new ForbiddenException('create failed');
 

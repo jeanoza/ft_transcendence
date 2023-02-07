@@ -31,8 +31,7 @@ export function User() {
 			<div
 				className="avatar"
 				style={{
-					backgroundImage: `url(${user.imageURL ? user.imageURL : "/default_profile.png"
-						})`,
+					backgroundImage: `url(${user.imageURL})`
 				}}
 			/>
 			<div className="user-info">
