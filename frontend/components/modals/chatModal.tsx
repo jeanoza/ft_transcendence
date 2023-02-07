@@ -1,18 +1,14 @@
 import { useEffect, useState } from "react"
-import { InputField } from "./inputField";
-import { useSocket } from "../utils/hooks/useSocket";
-import { useUser } from "../utils/hooks/swrHelper";
+import { InputField } from "../inputField";
+import { useSocket } from "../../utils/hooks/useSocket";
+import { useUser } from "../../utils/hooks/swrHelper";
 
-export function Modal({ modal, setModal }: { modal: boolean, setModal: any }) {
+export function ChatModal({ onClose }: { onClose: any }) {
 
 	const [name, setName] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
 	const { socket } = useSocket('chat');
 	const { user } = useUser();
-
-	function onClose() {
-		setModal(false);
-	}
 
 	//FIXME: see if better way => how to use callback with socketio in nest server??
 	useEffect(() => {
@@ -38,8 +34,7 @@ export function Modal({ modal, setModal }: { modal: boolean, setModal: any }) {
 		})
 	}
 
-	if (!modal) return null;
-	return <div className="modal-background d-flex center">
+	return <div className="modal-background">
 		<div className="modal-container">
 			<h3>New Chat</h3>
 			<div></div>
@@ -50,21 +45,5 @@ export function Modal({ modal, setModal }: { modal: boolean, setModal: any }) {
 				<button onClick={onClose}>Cancel</button>
 			</div>
 		</div>
-		<style jsx>{`
-			.modal-background {
-				width:100%;
-				height:100%;
-				background-color:rgb(100,100,100,0.5);
-				position:absolute;
-				top:0px;
-				left:0px;
-			}
-			.modal-container {
-				background-color:white;
-				padding:1rem;
-				width:300px;
-				border-radius:8px;
-			}
-		`}</style>
 	</div>
 }

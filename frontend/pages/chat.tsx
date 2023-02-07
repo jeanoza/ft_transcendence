@@ -6,7 +6,7 @@ import { ChannelList } from "../components/chat/channelList";
 import { UserList } from "../components/chat/userList";
 import { useSocket } from "../utils/hooks/useSocket";
 import { ChatDisplay } from "../components/chat/chatDisplay";
-import { Modal } from "../components/modal";
+import { ChatModal } from "../components/modals/chatModal";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -59,14 +59,14 @@ export default function Chat() {
 				<div className="chat d-flex justify-between">
 					<ChannelList
 						channels={channels}
-						setModal={setModal}
+						openModal={() => setModal(true)}
 						onChangeChannel={onChangeChannel}
 					/>
 					<ChatDisplay channel={channel} />
 					<UserList channel={channel} />
 				</div>
 			</main>
-			<Modal modal={modal} setModal={setModal} />
+			{modal && <ChatModal onClose={() => setModal(false)} />}
 			<style jsx>{`
 				.chat {
 					height: 100%;

@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { UserModal } from "./modals/userModal";
 
 
 
@@ -14,6 +15,8 @@ export function Search() {
 	const [name, setName] = useState<string>("");
 	const [users, setUsers] = useState<IUser[]>([]);
 	const [filtered, setFiltered] = useState<IUser[] | null>(null)
+	const [openUserModal, setUserModal] = useState<boolean>(false);
+	const [userId, setUserId] = useState<number | null>(null);
 
 	async function getUserList() {
 		try {
@@ -40,8 +43,11 @@ export function Search() {
 		} else setFiltered(null)
 	}, [name]);
 
-	function onOpenModal(id: number) {
-		console.log(id);
+	async function handleOpenModal(id: number) {
+		setUserId(id);
+		setUserModal(true);
+
+
 	}
 
 	function onChange(e: any) {
@@ -59,10 +65,11 @@ export function Search() {
 			{filtered && (
 				<ul className="user-list">
 					{filtered.map((el: any) => (
-						<li key={el.id} onClick={() => onOpenModal(el.id)}> {el?.name}</li>
+						<li key={el.id} onClick={() => handleOpenModal(el.id)}> {el?.name}</li>
 					))}
 				</ul>
 			)}
+			{openUserModal && <UserModal userId={userId} onClose={() => setUserModal(false)} />}
 			<style jsx>{`
 				.search {
 					position: relative;

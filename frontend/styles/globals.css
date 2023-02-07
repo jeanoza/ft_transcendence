@@ -131,3 +131,31 @@ button:hover {
 	border: 1px solid #06c;
 }
 /* #endregion */
+
+/* #region Modals */
+.modal-background {
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgb(100, 100, 100, 0.5);
+}
+
+.modal-container {
+	top: 50%;
+	left: 50%;
+	background-color: white;
+	position: absolute;
+	transform: translateX(-50%) translateY(-50%);
+	padding: 1rem;
+	border-radius: 8px;
+}
+/* #endregion */
+
+.avatar {
+	background-size: cover;
+	border-radius: 50%;
+	border: 1px solid white;
+}

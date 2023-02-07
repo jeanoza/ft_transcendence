@@ -30,8 +30,12 @@ export class UserController {
     return req.user;
   }
 
-  @Get(':name')
-  async getAllUserByName(@Param('name') name) {
-    return await this.userService.findAllByName(name);
+  //@Get(':name')
+  //async getAllUserByName(@Param('name') name) {
+  //  return await this.userService.findAllByName(name);
+  //}
+  @Get(':id')
+  async getUserById(@Param('id') id) {
+    return await this.userService.findOne(id);
   }
 }

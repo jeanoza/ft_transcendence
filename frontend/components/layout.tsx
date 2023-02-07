@@ -1,8 +1,6 @@
-import { useState } from "react";
 import { use2fa, useUser } from "../utils/hooks/swrHelper";
 import { Loader } from "./loader";
 import { Navbar } from "./navbar";
-import { UserModal } from "./modal/userModal";
 
 export function AuthLayout({ children }: React.PropsWithChildren) {
 	const { user, isLoading } = useUser();

@@ -31,9 +31,8 @@ export function User() {
 			<div
 				className="avatar"
 				style={{
-					backgroundImage: `url(${
-						user.imageURL ? user.imageURL : "/default_profile.png"
-					})`,
+					backgroundImage: `url(${user.imageURL ? user.imageURL : "/default_profile.png"
+						})`,
 				}}
 			/>
 			<div className="user-info">
@@ -57,19 +56,12 @@ export function User() {
 			)}
 			<style jsx>{`
 				.user {
-					/*position: absolute;*/
-					/*top: 0.3rem;*/
-					/*right: 1rem;*/
 					cursor: pointer;
 				}
 				.avatar {
-					background-size: cover;
 					width: 3rem;
 					height: 3rem;
-					border-radius: 50%;
-					border: 1px solid white;
 				}
-
 				.user-menu {
 					position: absolute;
 					top: 39px;
@@ -86,7 +78,6 @@ export function User() {
 				.user-menu li:hover {
 					background-color: rgb(200, 200, 200);
 				}
-
 				@media screen and (max-width: 1024px) {
 					.email {
 						display: none;

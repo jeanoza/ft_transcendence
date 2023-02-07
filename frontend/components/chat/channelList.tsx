@@ -11,11 +11,11 @@ import { useSocket } from "../../utils/hooks/useSocket";
 
 export function ChannelList({
 	channels,
-	setModal,
+	openModal,
 	onChangeChannel
 }: {
 	channels: any[];
-	setModal: Dispatch<SetStateAction<boolean>>;
+	openModal: any;
 	onChangeChannel: MouseEventHandler<HTMLElement>
 }) {
 	const { user } = useUser();
@@ -25,9 +25,6 @@ export function ChannelList({
 		socket.emit('enterChatPage', user.id);
 	}, []);
 
-	function openModal() {
-		setModal(true);
-	}
 	return (
 		<div className="cont d-flex column gap">
 			<button onClick={openModal}>New Chat</button>
