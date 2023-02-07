@@ -73,7 +73,7 @@ export function Search() {
 			<style jsx>{`
 				.search {
 					position: relative;
-					width:184px;
+					width:160px;
 					cursor:pointer;
 				}
 				input {

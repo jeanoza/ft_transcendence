@@ -52,7 +52,7 @@ export function Setting() {
 			<style jsx>{`
 				.setting {
 					position:relative;
-					width:184px;
+					width:160px;
 					cursor: pointer;
 				}
 				.user-resume {
@@ -62,6 +62,7 @@ export function Setting() {
 				.avatar {
 					width: 7rem;
 					height: 7rem;
+					border-radius:50%;
 				}
 				.user-menu {
 					position: absolute;
