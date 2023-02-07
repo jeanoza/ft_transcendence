@@ -3,7 +3,7 @@ import fetcher from "../fetcher";
 import Router from "next/router";
 
 export function useUser() {
-	const { data, error, mutate, isLoading } = useSWR("user", fetcher, {
+	const { data, error, mutate, isLoading } = useSWR("user/current", fetcher, {
 		onError: () => {
 			Router.push("/auth");
 		},
@@ -12,7 +12,7 @@ export function useUser() {
 			if (error?.response?.status === 404) return;
 
 			// Never retry for a specific key.
-			if (key === "user") return;
+			if (key === "user/current") return;
 
 			// Only retry up to 10 times.
 			if (retryCount >= 10) return;

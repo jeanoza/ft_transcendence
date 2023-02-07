@@ -1,13 +1,17 @@
 import { User } from "./navbar/user";
 import { PageList } from "./navbar/pageList";
 import { Search } from "./search";
+import { UserModal } from "./modal/userModal";
+import { useState } from "react";
 
 export function Navbar() {
+	const [modalOpen, setModalOpen] = useState<boolean>(true);
 	return (
 		<nav className="d-flex center justify-between">
 			<Search />
 			<PageList />
 			<User />
+			{modalOpen && <UserModal />}
 			<style jsx>{`
 				nav {
 					background-color: #424245;

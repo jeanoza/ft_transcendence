@@ -17,7 +17,7 @@ export function Search() {
 
 	async function getUserList() {
 		try {
-			const res = await axios.get(`/user/all`);
+			const res = await axios.get(`/user`);
 			setUsers(res.data);
 		} catch (e) {
 			console.log(e);
@@ -32,12 +32,17 @@ export function Search() {
 	useEffect(() => {
 		if (name.length > 2) {
 			const res: IUser[] = (users.filter((el: { id: number; name: string }) =>
-				el.name.toLowerCase().includes(name)
+				//search whatever his case(upper or lower)
+				el.name.toLowerCase().includes(name.toLowerCase())
 			));
 			if (JSON.stringify(res) != JSON.stringify(filtered))
 				setFiltered(res);
 		} else setFiltered(null)
 	}, [name]);
+
+	function onOpenModal(id: number) {
+		console.log(id);
+	}
 
 	function onChange(e: any) {
 		setName(e.target.value);
@@ -46,11 +51,15 @@ export function Search() {
 		<div className="search d-flex center justify-start gap">
 			<FontAwesomeIcon icon="magnifying-glass" />
 			<input value={name} onChange={onChange} placeholder="search" />
-			{filtered && <FontAwesomeIcon icon="xmark" onClick={() => setFiltered(null)} />}
+			{filtered &&
+				<div className="cancelBtn" onClick={() => setFiltered(null)}>
+					<FontAwesomeIcon icon="xmark" />
+				</div>
+			}
 			{filtered && (
 				<ul className="user-list">
 					{filtered.map((el: any) => (
-						<li key={el.id}>{el?.name}</li>
+						<li key={el.id} onClick={() => onOpenModal(el.id)}> {el?.name}</li>
 					))}
 				</ul>
 			)}
@@ -76,6 +85,11 @@ export function Search() {
 					border:1px solid rgb(200,200,200);
 					border-radius:0 0 8px 8px;
 				}
+				.cancelBtn {
+					position:absolute;
+					top:2px;
+					right:2px;
+				}
 				li {
 					padding:0.5rem;
 				}
@@ -87,6 +101,6 @@ export function Search() {
 					color:white;
 				}
 			`}</style>
-		</div>
+		</div >
 	);
 }
