@@ -58,7 +58,6 @@ button:hover {
 /* #endregion */
 
 /* #region flex */
-
 .d-flex {
 	display: flex;
 }
@@ -154,8 +153,40 @@ button:hover {
 }
 /* #endregion */
 
+/* #region avatar */
 .avatar {
+	position: relative;
 	background-size: cover;
 	border-radius: 50%;
 	border: 1px solid white;
+	width: 10rem;
+	height: 10rem;
+	border-radius: 1rem;
 }
+.user-info {
+	background-color: rgb(240, 240, 240);
+	min-width: 240px;
+	border-radius: 8px;
+	color: #424245;
+	padding: 1rem;
+	font-weight: 500;
+}
+.status {
+	position: absolute;
+	bottom: 0.5rem;
+	right: 0.5rem;
+	width: 1rem;
+	height: 1rem;
+	border: 1px solid white;
+	border-radius: 50%;
+}
+.status.online {
+	background-color: chartreuse;
+}
+.status.offline {
+	background-color: red;
+}
+.status.ingame {
+	background-color: orange;
+}
+/* #endregion */

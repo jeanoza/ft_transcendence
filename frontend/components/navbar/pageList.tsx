@@ -5,7 +5,7 @@ const elements = {
 	home: "/",
 	//note: "/note",
 	chat: "/chat",
-	settings: "/settings",
+	//settings: "/settings",
 };
 
 export function PageList() {
@@ -20,12 +20,11 @@ export function PageList() {
 					<li key={name}>
 						<Link href={path}>
 							<span
-								className={`${
-									router.pathname === path ||
+								className={`${router.pathname === path ||
 									(router.pathname !== "/" && router.pathname.includes(name))
-										? "active"
-										: ""
-								}`}
+									? "active"
+									: ""
+									}`}
 							>
 								{name}
 							</span>
