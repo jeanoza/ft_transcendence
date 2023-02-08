@@ -59,6 +59,34 @@ export function use2fa() {
 	};
 }
 
+export function useAllFriend() {
+	const { data, error, mutate, isLoading } = useSWR("friend", fetcher, {
+		onError: (e) => {
+			//Router.push("/auth");
+			console.log(e);
+		},
+		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+			// Never retry on 404.
+			if (error?.response?.status === 404) return;
+
+			// Never retry for a specific key.
+			if (key === "friend") return;
+
+			// Only retry up to 10 times.
+			if (retryCount >= 10) return;
+
+			// Retry after 5 seconds.
+			setTimeout(() => revalidate({ retryCount }), 5000);
+		},
+	});
+	return {
+		friends: data,
+		revalid: mutate,
+		isLoading,
+		error,
+	};
+}
+
 export function useAllNote() {
 	const { data, error, mutate, isLoading } = useSWR("note", fetcher, {
 		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {

@@ -13,6 +13,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Friend } from './friend.entity';
 
 //in postgresql do not put schema
 @Entity({ name: 'users' })
@@ -41,7 +42,7 @@ export class User {
   password?: string;
 
   @Column('varchar', {
-    name: 'chatSocket',
+    name: 'chat_socket',
     length: 100,
     nullable: true,
   })
@@ -73,20 +74,9 @@ export class User {
   @OneToMany(() => ChannelMember, (channelMember) => channelMember.user)
   channelMembers: ChannelMember[];
 
-  @OneToMany(() => ChannelChat, (channelChat) => channelChat.channel)
+  @OneToMany(() => ChannelChat, (channelChat) => channelChat.user)
   channelChats: ChannelChat[];
 
-  //@ManyToMany(() => Channel, (channel) => channel.members)
-  //@JoinTable({
-  //  name: 'channel_members',
-  //  joinColumn: {
-  //    name: 'user_id',
-  //    referencedColumnName: 'id',
-  //  },
-  //  inverseJoinColumn: {
-  //    name: 'channel_id',
-  //    referencedColumnName: 'id',
-  //  },
-  //})
-  //channels: Channel[];
+  @OneToMany(() => Friend, (friend) => friend.user)
+  friends: Friend[];
 }

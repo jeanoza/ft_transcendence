@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useUser } from "../../utils/hooks/swrHelper";
+import { useAllFriend, useUser } from "../../utils/hooks/swrHelper";
 
 export function UserModal({
 	userId,
@@ -10,8 +10,18 @@ export function UserModal({
 	onClose: any;
 }) {
 	const [userData, setUserData] = useState<any>(null);
+	const { friends } = useAllFriend();
+	console.log(friends);
 	const { user } = useUser();
 	useEffect(() => {
+		//async function getFriends() {
+		//	try {
+		//		const res = await axios.get("friend");
+		//		console.log(res);
+		//	} catch (e) {
+		//		console.log(e);
+		//	}
+		//}
 		async function getUserData() {
 			try {
 				const res = await axios.get(`user/${userId}`);
@@ -21,9 +31,19 @@ export function UserModal({
 			}
 		}
 		getUserData();
+		//getFriends();
 	}, []);
 	function handleClose(e: any) {
 		if (e.target.classList.contains("modal-background")) onClose();
+	}
+
+	async function addUser() {
+		try {
+			await axios.get(`friend/${userData.id}`);
+			window.alert(`${userData.name} is added`);
+		} catch (e: any) {
+			window.alert(e.response.data.message);
+		}
 	}
 	return (
 		<div className="modal-background" onClick={handleClose}>
@@ -41,7 +61,7 @@ export function UserModal({
 						{userData.id !== user.id && (
 							<div className="btn-cont d-flex center column gap">
 								<div className="d-flex center justify-between gap">
-									<button>Add</button>
+									<button onClick={addUser}>Add</button>
 									<button>Block</button>
 								</div>
 								<div className="d-flex center justify-between gap">

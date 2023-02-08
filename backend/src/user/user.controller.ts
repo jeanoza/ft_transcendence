@@ -3,10 +3,7 @@ import {
   Get,
   UseGuards,
   Request,
-  Response,
   Logger,
-  Post,
-  Query,
   Param,
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -15,7 +12,6 @@ import { Jwt2faGuard } from 'src/auth/guard/jwt-2fa.guard';
 
 @Controller('api/user')
 @UseGuards(JwtAuthGuard)
-//@UseGuards(Jwt2faGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
   logger = new Logger('user.controller');
@@ -34,8 +30,9 @@ export class UserController {
   //async getAllUserByName(@Param('name') name) {
   //  return await this.userService.findAllByName(name);
   //}
+
   @Get(':id')
-  async getUserById(@Param('id') id) {
+  async getUserById(@Param('id') id: number) {
     return await this.userService.findOne(id);
   }
 }

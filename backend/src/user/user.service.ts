@@ -1,6 +1,7 @@
 import {
   ForbiddenException,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -9,11 +10,16 @@ import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Friend } from './entities/friend.entity';
 
 @Injectable()
 export class UserService {
   @InjectRepository(User)
   private userRepository: Repository<User>;
+  @InjectRepository(Friend)
+  private friendRepository: Repository<Friend>;
+
+  logger = new Logger('user service');
 
   async create(data: CreateUserDto) {
     //user already exist case
@@ -70,7 +76,19 @@ export class UserService {
       .getMany();
   }
 
-  //update(id: number, data: UpdateUserDto) {}
+  //async addFriend(userId: number, friendId: number) {
+  //  let friend = await this.friendRepository.findOne({
+  //    where: { userId, friendId },
+  //  });
+  //  if (friend) throw new UnauthorizedException('already added');
 
-  //remove(id: number) {}
+  //  friend = new Friend();
+  //  friend.userId = userId;
+  //  friend.friendId = friendId;
+  //  const res = await this.friendRepository.save(friend);
+
+  //  this.logger.log(res);
+
+  //  return res;
+  //}
 }
