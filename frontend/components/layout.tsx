@@ -4,7 +4,7 @@ import { Navbar } from "./navbar";
 
 export function AuthLayout({ children }: React.PropsWithChildren) {
 	const { user, isLoading } = useUser();
-	const { is2faAuthed, isLoading: is2faLoading } = use2fa();
+	const { isLoading: is2faLoading } = use2fa();
 
 	if (isLoading || is2faLoading)
 		return (
@@ -12,11 +12,10 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 				<Loader />
 			</div>
 		);
-
 	return (
 		<div className="container">
 			<Navbar />
-			{user && is2faAuthed && children}
+			{user && children}
 			<style jsx global>{`
 				.container {
 					height: 100vh;

@@ -20,6 +20,7 @@ export function TwoFactorSetting() {
 				setImageSrc(`data:;base64,${base64}`);
 			};
 			reader.readAsDataURL(new Blob([res.data]));
+			revalid();
 		} catch (error) {
 			console.error(error);
 		}
@@ -31,22 +32,28 @@ export function TwoFactorSetting() {
 			await axios.post(path, {
 				_2faCode,
 			});
-			revalid("user");
+			revalid();
 		} catch (e: any) {
 			window.alert(e.response.data.message);
 		}
 	}
-	if (!user) return null
+
+	if (!user) return null;
 	return (
 		<div>
 			<h3>Two Factor</h3>
-			<div className="d-flex center">{imageSrc && <img src={imageSrc} alt="QR code" />}</div>
+			<div className="d-flex center">
+				{imageSrc && <img src={imageSrc} alt="QR code" />}
+			</div>
 			<div className="d-flex gap center">
 				<button onClick={generate2faQR}>Generate</button>
-				{user?._2faSecret && (
-					<button onClick={switch2fa}>
-						{user?._2faEnabled ? "off" : "on"}
-					</button>
+				{user._2faSecret && (
+					<div
+						onClick={switch2fa}
+						className={`twofactor ${user._2faEnabled ? "enabled" : ""}`}
+					>
+						<div></div>
+					</div>
 				)}
 			</div>
 			<div>
@@ -58,12 +65,31 @@ export function TwoFactorSetting() {
 				/>
 			</div>
 			<style jsx>{`
-				img{
-					width:128px;
+				img {
+					width: 128px;
 				}
 				h3 {
-					color:#424245;
-					margin-bottom:1rem;
+					color: #424245;
+					margin-bottom: 1rem;
+				}
+				.twofactor {
+					width: 4rem;
+					border-radius: 2rem;
+					background-color: rgb(200, 200, 200);
+				}
+				.twofactor.enabled {
+					background-color: #06c;
+				}
+				.twofactor > div {
+					width: 2rem;
+					height: 2rem;
+					background-color: white;
+					border-radius: 50%;
+				}
+				.twofactor.enabled > div {
+					/*left: unset;
+					right: 0;*/
+					transform: translateX(2rem);
 				}
 			`}</style>
 		</div>

@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
-import e from 'express';
+import { Jwt2faGuard } from 'src/auth/guard/jwt-2fa.guard';
 
 @Controller('api/user')
 @UseGuards(JwtAuthGuard)

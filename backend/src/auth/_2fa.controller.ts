@@ -29,7 +29,7 @@ export class _2faController {
 
   @Get()
   @UseGuards(Jwt2faGuard)
-  verifyAuthed() {
+  verifyAuthed(@Req() req) {
     return true;
   }
 
@@ -42,22 +42,39 @@ export class _2faController {
 
   @Post('enable')
   @HttpCode(200)
-  @UseGuards(JwtAuthGuard)
-  async enable2fa(@Req() req, @Body('_2faCode') _2faCode) {
+  @UseGuards(Jwt2faGuard)
+  async enable2fa(
+    @Req() req,
+    @Res({ passthrough: true }) res,
+    @Body('_2faCode') _2faCode,
+  ) {
     const isCodeValid = this._2faService.validate2faCode(_2faCode, req.user);
     if (!isCodeValid)
       throw new UnauthorizedException('Wrong authentication code');
     await this._2faService.enable2fa(req.user.id);
+    res.cookie(
+      'accessToken',
+      this.authService.getAccessToken(req.user.id, true),
+      { httpOnly: true, maxAge: process.env.JWT_MAX_AGE },
+    );
   }
 
   @Post('disable')
   @HttpCode(200)
-  @UseGuards(JwtAuthGuard)
-  async disable2fa(@Req() req, @Body('_2faCode') _2faCode) {
+  @UseGuards(Jwt2faGuard)
+  async disable2fa(
+    @Req() req,
+    @Res({ passthrough: true }) res,
+    @Body('_2faCode') _2faCode,
+  ) {
     const isCodeValid = this._2faService.validate2faCode(_2faCode, req.user);
     if (!isCodeValid)
       throw new UnauthorizedException('Wrong authentication code');
     await this._2faService.disable2fa(req.user.id);
+    res.cookie('accessToken', this.authService.getAccessToken(req.user.id), {
+      httpOnly: true,
+      maxAge: process.env.JWT_MAX_AGE,
+    });
   }
 
   @Post('authenticate')

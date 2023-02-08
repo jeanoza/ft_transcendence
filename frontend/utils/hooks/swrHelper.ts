@@ -4,7 +4,7 @@ import Router from "next/router";
 
 export function useUser() {
 	const { data, error, mutate, isLoading } = useSWR("user/current", fetcher, {
-		onError: () => {
+		onError: (e) => {
 			Router.push("/auth");
 		},
 		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
