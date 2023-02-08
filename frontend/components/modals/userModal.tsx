@@ -33,7 +33,7 @@ export function UserModal({ userId, onClose }: { userId: number | null, onClose:
 						<div className="status offline"></div>
 					</div>
 					{userData.id !== user.id &&
-						<div className="d-flex center column gap">
+						<div className="btn-cont d-flex center column gap">
 							<div className="d-flex center justify-between gap">
 								<button>Add</button>
 								<button>Block</button>
@@ -69,6 +69,9 @@ export function UserModal({ userId, onClose }: { userId: number | null, onClose:
 			</div>
 		)}
 		<style jsx>{`
+			.btn-cont > .d-flex {
+				width:100%;
+			}
 			.row {
 				margin-bottom: 1rem;
 			}
