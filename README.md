@@ -24,8 +24,6 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] 42 auth via cookie
 
-  - [ ] to see how to protect AuthUrl in authForm instead of use Link href
-
   - [x] Note page implement
 
     - [x] All note(/note)
@@ -52,15 +50,17 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] Modal
 
-    - [ ] Generic
-
     - [x] NewChannel Modal (name, password) => if password? private : public
 
-  - [ ] Modals
+    - [ ] Edit Modal
 
-    - [ ] Profile
+      - [x] two factor
 
-    - [ ] Settings(security)
+      - [ ] change avatar photo
+
+    - [ ] Match History => after
+
+    - [ ] Friends : 2 columns ( friend list, blokced list)
 
 - Backend:
 
@@ -82,9 +82,25 @@ This is a boiler plate to use generally at my futur web application.
 
   - [ ] to implement swagger to make simple dto code
 
+  - [ ] update entities
+
+    - [ ] User
+
+    - [ ] Friend list
+
+    - [ ] Blocked list
+
+  - [ ] Controller and services
+
+    - [ ] user
+
+    - [ ] friend
+
+    - [ ] Blocked
+
   - SocketIO
 
-    - [ ] save ChannelChat in db
+    - [x] save ChannelChat in db
 
 - Database:
 
@@ -96,7 +112,13 @@ This is a boiler plate to use generally at my futur web application.
 
   - [x] Channel table
 
-  - [x] db table draw.io
+  - [ ] db table draw.io => to update with recent db
+
+  - [ ] Friends table
+
+  - [ ] Blocked list
+
+  - [ ] User table update
 
 - Docker:
 
