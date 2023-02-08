@@ -7,6 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Friend } from './entities/friend.entity';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class FriendService {
@@ -18,14 +19,12 @@ export class FriendService {
   logger = new Logger('friend service');
 
   async getAllFriend(userId: number) {
-    //const res = await this.friendRepository
-    //  .createQueryBuilder('friends')
-    //  .innerJoin('friends.user', 'user', 'friends.userId = :userId', {
-    //    userId,
-    //  })
-    //  .getMany();
-
-    const res = await await this.userRepository.find({ where: { userId } });
+    const res = await this.friendRepository
+      .createQueryBuilder('friends')
+      .innerJoinAndSelect('friends.user', 'user', 'friends.userId = :userId', {
+        userId,
+      })
+      .getMany();
 
     console.log(res);
 
