@@ -34,18 +34,6 @@ export function Profile() {
 				</div>
 			</div>
 			<style jsx>{`
-			.avatar {
-				width: 10rem;
-				height: 10rem;
-				border-radius:1rem;
-			}
-			.user-info {
-				min-width:240px;
-				background-color:rgb(240,240,240);
-				border-radius:8px;
-				padding:1rem;
-				font-weight:500;
-			}
 			h3 {
 				margin-bottom:1rem;
 			}
