@@ -11,6 +11,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Friend } from './friend.entity';
+import { Blocked } from './blocked.entity';
 
 //in postgresql do not put schema
 @Entity({ name: 'users' })
@@ -82,4 +83,10 @@ export class User {
 
   @OneToMany(() => Friend, (friend) => friend.userB)
   friendsAsB: Friend[];
+
+  @OneToMany(() => Blocked, (blocked) => blocked.userA)
+  blockedsAsA: Blocked[];
+
+  @OneToMany(() => Blocked, (blocked) => blocked.userB)
+  blockedsAsB: Blocked[];
 }

@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { _2faService } from './_2fa.service';
-import { UserService } from 'src/user/user.service';
+import { UserService } from 'src/user/services/user.service';
 import { AuthService } from './auth.service';
 import { Jwt2faGuard } from './guard/jwt-2fa.guard';
 

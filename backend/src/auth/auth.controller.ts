@@ -13,7 +13,7 @@ import {
   Req,
   Logger,
 } from '@nestjs/common';
-import { UserService } from '../user/user.service';
+import { UserService } from '../user/services/user.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { LocalAuthGuard } from 'src/auth/guard/local-auth.guard';
