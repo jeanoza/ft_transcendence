@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { UserModal } from "./modals/userModal";
+import { FriendsModal } from "./modals/friendsModal";
 
 interface IUser {
 	id: number;
@@ -62,13 +63,12 @@ export function Search() {
 				<ul className="user-list">
 					{filtered.map((el: any) => (
 						<li key={el.id} onClick={() => handleOpenModal(el.id)}>
-							{" "}
 							{el?.name}
 						</li>
 					))}
 				</ul>
 			)}
-			{openUserModal && (
+			{openUserModal && userId && (
 				<UserModal userId={userId} onClose={() => setUserModal(false)} />
 			)}
 			<style jsx>{`

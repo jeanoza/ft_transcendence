@@ -55,6 +55,37 @@ export function useUserById(userId: number) {
 	};
 }
 
+export function useFriend(userId: number) {
+	const { data, error, mutate, isLoading } = useSWR(
+		`friend/${userId}`,
+		fetcher,
+		{
+			onError: (e) => {
+				console.log("isFriend", e);
+			},
+			onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+				// Never retry on 404.
+				if (error?.response?.status === 404) return;
+
+				// Never retry for a specific key.
+				if (key === `user/${userId}`) return;
+
+				// Only retry up to 10 times.
+				if (retryCount >= 10) return;
+
+				// Retry after 5 seconds.
+				setTimeout(() => revalidate({ retryCount }), 5000);
+			},
+		}
+	);
+	return {
+		friend: data,
+		revalid: mutate,
+		isLoading,
+		error,
+	};
+}
+
 export function use2fa() {
 	const { data, error, mutate, isLoading } = useSWR("2fa", fetcher, {
 		//onSuccess: () => {
@@ -88,7 +119,6 @@ export function use2fa() {
 export function useAllFriend() {
 	const { data, error, mutate, isLoading } = useSWR("friend", fetcher, {
 		onError: (e) => {
-			//Router.push("/auth");
 			console.log("userAllFriend", e);
 		},
 		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {

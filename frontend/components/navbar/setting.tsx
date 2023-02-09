@@ -4,11 +4,14 @@ import React, { useState } from "react";
 import { useUser } from "../../utils/hooks/swrHelper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import EditModal from "../modals/editModal";
+import { FriendsModal } from "../modals/friendsModal";
+import { Avatar } from "../avatar";
 
 export function Setting() {
 	const { user } = useUser();
 	const [dropdown, setDropdown] = useState<boolean>(false);
 	const [openEditModal, setEditModal] = useState<boolean>(false);
+	const [openFriendsModal, setFriendsModal] = useState<boolean>(false);
 	const router = useRouter();
 
 	async function onLogout(e: React.MouseEvent<HTMLSpanElement>) {
@@ -30,21 +33,14 @@ export function Setting() {
 			{dropdown && (
 				<div className="user-menu">
 					<div className="user-resume d-flex column center gap">
-						<div
-							className="avatar"
-							style={{
-								backgroundImage: `url(${user.imageURL})`
-							}}
-						>
-							<div className="status ingame"></div>
-						</div>
+						<Avatar url={user.imageURL} status={user.status} />
 						<h3>{user.name}</h3>
 						<span>{user.email}</span>
 					</div>
 					<ul>
 						<li onClick={() => setEditModal(true)}>Edit</li>
 						<li>Match History</li>
-						<li>Friends</li>
+						<li onClick={() => setFriendsModal(true)}>Friends</li>
 						<li onClick={onLogout}>Logout</li>
 					</ul>
 				</div>
@@ -58,11 +54,6 @@ export function Setting() {
 				.user-resume {
 					padding:1rem;
 					cursor:auto;
-				}
-				.avatar {
-					width: 7rem;
-					height: 7rem;
-					border-radius:50%;
 				}
 				.user-menu {
 					position: absolute;
@@ -88,6 +79,7 @@ export function Setting() {
 				}
 			`}</style>
 			{openEditModal && <EditModal onClose={() => setEditModal(false)} />}
+			{openFriendsModal && <FriendsModal onClose={() => setFriendsModal(false)} />}
 		</div>
 	);
 }

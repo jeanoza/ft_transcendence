@@ -1,4 +1,5 @@
 import { useUser } from "../../../utils/hooks/swrHelper";
+import { Avatar } from "../../avatar";
 
 export function Profile() {
 	const { user } = useUser();
@@ -6,10 +7,7 @@ export function Profile() {
 	return (
 		<div className="d-flex column gap">
 			<div className="d-flex center gap justify-between">
-				<div className="avatar"
-					style={{
-						backgroundImage: `url(${user.imageURL})`
-					}}></div>
+				<Avatar size="lg" url={user.imageURL} status={user.status} />
 				<div>
 					<button>Edit</button>
 				</div>
@@ -45,7 +43,6 @@ export function Profile() {
 				min-width:240px;
 				background-color:rgb(240,240,240);
 				border-radius:8px;
-				color:#424245;
 				padding:1rem;
 				font-weight:500;
 			}

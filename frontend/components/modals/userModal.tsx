@@ -1,5 +1,6 @@
 import axios from "axios";
-import { useAllFriend, useUser, useUserById } from "../../utils/hooks/swrHelper";
+import { useAllFriend, useFriend, useUser, useUserById } from "../../utils/hooks/swrHelper";
+import { Avatar } from "../avatar";
 
 export function UserModal({
 	userId,
@@ -10,38 +11,46 @@ export function UserModal({
 }) {
 	const { user } = useUser();
 	const { userData } = useUserById(userId);
-
-	console.log(userData);
+	const { friend, revalid } = useFriend(userId);
 
 	function handleClose(e: any) {
 		if (e.target.classList.contains("modal-background")) onClose();
 	}
 
-	async function addUser() {
+	async function addFriend() {
 		try {
 			await axios.post(`friend`, { userId });
 			window.alert(`${userData.name} is added`);
+			revalid();
 		} catch (e: any) {
 			window.alert(e.response.data.message);
 		}
 	}
+	async function deleteFriend() {
+		try {
+			await axios.delete(`friend/${userId}`,);
+			window.alert(`${userData.name} is deleted`);
+			revalid();
+		} catch (e: any) {
+			window.alert(e.response.data.message);
+		}
+
+	}
+	if (!user) return null;
 	return (
 		<div className="modal-background" onClick={handleClose}>
 			{userData && (
 				<div className="modal-container">
 					<div className="row d-flex justify-between gap">
-						<div
-							className="avatar"
-							style={{
-								backgroundImage: `url(${userData.imageURL})`,
-							}}
-						>
-							<div className="status offline"></div>
-						</div>
+						<Avatar url={userData.imageURL} status={userData.status} size="lg" />
 						{userData.id !== user.id && (
 							<div className="btn-cont d-flex center column gap">
 								<div className="d-flex center justify-between gap">
-									<button onClick={addUser}>Add</button>
+									{
+										userData.id !== friend?.id
+											? <button onClick={addFriend}>Add</button>
+											: <button onClick={deleteFriend}>Delete</button>
+									}
 									<button>Block</button>
 								</div>
 								<div className="d-flex center justify-between gap">

@@ -4,7 +4,6 @@ import { TwoFactorSetting } from "./edit/twoFactorSetting";
 
 
 export default function EditModal({ onClose }: { onClose: any }) {
-	const { user } = useUser();
 	function handleClose(e: any) {
 		if (e.target.classList.contains('modal-background')) onClose();
 	}

@@ -13,6 +13,15 @@ export class FriendService {
 
   logger = new Logger('friend service');
 
+  selectOption = [
+    'userB.id as id',
+    'userB.name as name',
+    'userB.status as status',
+    'userB.email as email',
+    'userB.chat_socket as chat_socket',
+    'userB.image_url as image_url',
+  ];
+
   async getAllFriend(userAId: number) {
     const friends = await this.friendRepository
       .createQueryBuilder('friends')
@@ -20,14 +29,23 @@ export class FriendService {
         userAId,
       })
       .innerJoin('friends.userB', 'userB')
-      .select([
-        'userB.id as id',
-        'userB.name as name',
-        'userB.status as status',
-        'userB.chat_socket as chat_socket',
-      ])
+      .select(this.selectOption)
       .getRawMany();
     return friends;
+  }
+
+  async getFriend(userAId: number, userBId: number) {
+    const friend = await this.friendRepository
+      .createQueryBuilder('friends')
+      .innerJoin('friends.userA', 'userA', 'friends.userAId = :userAId', {
+        userAId,
+      })
+      .innerJoin('friends.userB', 'userB', 'friends.userBId = :userBId', {
+        userBId,
+      })
+      .select(this.selectOption)
+      .getRawOne();
+    return friend;
   }
 
   async addFriend(userAId: number, userBId: number) {
@@ -35,13 +53,29 @@ export class FriendService {
       where: { userAId, userBId },
     });
 
+    this.logger.log(userAId, userBId);
     if (friend) throw new UnauthorizedException('already added');
 
     friend = new Friend();
     friend.userAId = userAId;
     friend.userBId = userBId;
+    console.log(friend);
     const res = await this.friendRepository.save(friend);
 
     return res;
+  }
+  async deleteFriend(userAId: number, userBId: number) {
+    const friend = await this.getFriend(userAId, userBId);
+    if (!friend) throw new UnauthorizedException('no relation between users');
+    await this.friendRepository
+      .createQueryBuilder('friends')
+      .delete()
+      .where('friends.user_a_id = :userAId', {
+        userAId,
+      })
+      .andWhere('friends.user_b_id = :userBId', {
+        userBId,
+      })
+      .execute();
   }
 }
