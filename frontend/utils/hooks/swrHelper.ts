@@ -2,117 +2,6 @@ import useSWR from "swr";
 import fetcher from "../fetcher";
 import Router from "next/router";
 
-export function useUser() {
-	const { data, error, mutate, isLoading } = useSWR("user/current", fetcher, {
-		onError: (e) => {
-			Router.push("/auth");
-		},
-		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-			// Never retry on 404.
-			if (error?.response?.status === 404) return;
-
-			// Never retry for a specific key.
-			if (key === "user/current") return;
-
-			// Only retry up to 10 times.
-			if (retryCount >= 10) return;
-
-			// Retry after 5 seconds.
-			setTimeout(() => revalidate({ retryCount }), 5000);
-		},
-	});
-	return {
-		user: data,
-		revalid: mutate,
-		isLoading,
-		error,
-	};
-}
-export function useUserById(userId: number) {
-	const { data, error, mutate, isLoading } = useSWR(`user/${userId}`, fetcher, {
-		onError: (e) => {
-			console.log("userId", e);
-		},
-		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-			// Never retry on 404.
-			if (error?.response?.status === 404) return;
-
-			// Never retry for a specific key.
-			if (key === `user/${userId}`) return;
-
-			// Only retry up to 10 times.
-			if (retryCount >= 10) return;
-
-			// Retry after 5 seconds.
-			setTimeout(() => revalidate({ retryCount }), 5000);
-		},
-	});
-	return {
-		userData: data,
-		revalid: mutate,
-		isLoading,
-		error,
-	};
-}
-
-export function useUsers() {
-	const { data, error, mutate, isLoading } = useSWR(`user`, fetcher, {
-		onError: (e) => {
-			console.log("useUsers", e);
-		},
-		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-			// Never retry on 404.
-			if (error?.response?.status === 404) return;
-
-			// Never retry for a specific key.
-			if (key === `user`) return;
-
-			// Only retry up to 10 times.
-			if (retryCount >= 10) return;
-
-			// Retry after 5 seconds.
-			setTimeout(() => revalidate({ retryCount }), 5000);
-		},
-	});
-	return {
-		users: data,
-		revalid: mutate,
-		isLoading,
-		error,
-	};
-}
-
-export function useFriend(userId: number) {
-	const { data, error, mutate, isLoading } = useSWR(
-		`friend/${userId}`,
-		fetcher,
-		{
-			onError: (e) => {
-				console.log("isFriend", e);
-			},
-			onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-				// Never retry on 404.
-				if (error?.response?.status === 404) return;
-
-				// Never retry for a specific key.
-				if (key === `user/${userId}`) return;
-
-				// Only retry up to 10 times.
-				if (retryCount >= 10) return;
-
-				// Retry after 5 seconds.
-				setTimeout(() => revalidate({ retryCount }), 5000);
-			},
-		}
-	);
-	return {
-		friend: data,
-		revalid: mutate,
-		isLoading,
-		error,
-	};
-}
-
 export function use2fa() {
 	const { data, error, mutate, isLoading } = useSWR("2fa", fetcher, {
 		//onSuccess: () => {
@@ -143,6 +32,118 @@ export function use2fa() {
 	};
 }
 
+export function useUser() {
+	const { data, error, mutate, isLoading } = useSWR("user/current", fetcher, {
+		onError: (e) => {
+			Router.push("/auth");
+		},
+		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+			// Never retry on 404.
+			if (error?.response?.status === 404) return;
+
+			// Never retry for a specific key.
+			if (key === "user/current") return;
+
+			// Only retry up to 10 times.
+			if (retryCount >= 10) return;
+
+			// Retry after 5 seconds.
+			setTimeout(() => revalidate({ retryCount }), 5000);
+		},
+	});
+	return {
+		user: data,
+		revalid: mutate,
+		isLoading,
+		error,
+	};
+}
+
+export function useUserById(userId: number) {
+	const { data, error, mutate, isLoading } = useSWR(`user/${userId}`, fetcher, {
+		onError: (e) => {
+			console.log("userId", e);
+		},
+		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+			// Never retry on 404.
+			if (error?.response?.status === 404) return;
+
+			// Never retry for a specific key.
+			if (key === `user/${userId}`) return;
+
+			// Only retry up to 10 times.
+			if (retryCount >= 10) return;
+
+			// Retry after 5 seconds.
+			setTimeout(() => revalidate({ retryCount }), 5000);
+		},
+	});
+	return {
+		userData: data,
+		revalid: mutate,
+		isLoading,
+		error,
+	};
+}
+
+export function useAllUser() {
+	const { data, error, mutate, isLoading } = useSWR(`user`, fetcher, {
+		onError: (e) => {
+			console.log("useAllUser", e);
+		},
+		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+			// Never retry on 404.
+			if (error?.response?.status === 404) return;
+
+			// Never retry for a specific key.
+			if (key === `user`) return;
+
+			// Only retry up to 10 times.
+			if (retryCount >= 10) return;
+
+			// Retry after 5 seconds.
+			setTimeout(() => revalidate({ retryCount }), 5000);
+		},
+	});
+	return {
+		users: data,
+		revalid: mutate,
+		isLoading,
+		error,
+	};
+}
+
+export function useFriend(userId: number) {
+	const { data, error, mutate, isLoading } = useSWR(
+		`friend/${userId}`,
+		fetcher,
+		{
+			onError: (e) => {
+				console.log("useFriend", e);
+			},
+			onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+				// Never retry on 404.
+				if (error?.response?.status === 404) return;
+
+				// Never retry for a specific key.
+				if (key === `friend/${userId}`) return;
+
+				// Only retry up to 10 times.
+				if (retryCount >= 10) return;
+
+				// Retry after 5 seconds.
+				setTimeout(() => revalidate({ retryCount }), 5000);
+			},
+		}
+	);
+	return {
+		friend: data,
+		revalid: mutate,
+		isLoading,
+		error,
+	};
+}
+
 export function useAllFriend() {
 	const { data, error, mutate, isLoading } = useSWR("friend", fetcher, {
 		onError: (e) => {
@@ -164,6 +165,64 @@ export function useAllFriend() {
 	});
 	return {
 		friends: data,
+		revalid: mutate,
+		isLoading,
+		error,
+	};
+}
+
+export function useBlocked(userId: number) {
+	const { data, error, mutate, isLoading } = useSWR(
+		`blocked/${userId}`,
+		fetcher,
+		{
+			onError: (e) => {
+				console.log("useBlocked", e);
+			},
+			onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+				// Never retry on 404.
+				if (error?.response?.status === 404) return;
+
+				// Never retry for a specific key.
+				if (key === `blocked/${userId}`) return;
+
+				// Only retry up to 10 times.
+				if (retryCount >= 10) return;
+
+				// Retry after 5 seconds.
+				setTimeout(() => revalidate({ retryCount }), 5000);
+			},
+		}
+	);
+	return {
+		blocked: data,
+		revalid: mutate,
+		isLoading,
+		error,
+	};
+}
+
+export function useAllBlocked() {
+	const { data, error, mutate, isLoading } = useSWR("blocked", fetcher, {
+		onError: (e) => {
+			console.log("userAllBlocked", e);
+		},
+		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+			// Never retry on 404.
+			if (error?.response?.status === 404) return;
+
+			// Never retry for a specific key.
+			if (key === "blocked") return;
+
+			// Only retry up to 10 times.
+			if (retryCount >= 10) return;
+
+			// Retry after 5 seconds.
+			setTimeout(() => revalidate({ retryCount }), 5000);
+		},
+	});
+	return {
+		blockeds: data,
 		revalid: mutate,
 		isLoading,
 		error,

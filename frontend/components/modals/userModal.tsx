@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useAllFriend, useFriend, useUser, useUserById } from "../../utils/hooks/swrHelper";
+import { useAllFriend, useBlocked, useFriend, useUser, useUserById } from "../../utils/hooks/swrHelper";
 import { Avatar } from "../avatar";
 
 export function UserModal({
@@ -12,6 +12,7 @@ export function UserModal({
 	const { user } = useUser();
 	const { userData } = useUserById(userId);
 	const { friend, revalid } = useFriend(userId);
+	const { blocked, revalid: blockedRevalid } = useBlocked(userId);
 
 	function handleClose(e: any) {
 		if (e.target.classList.contains("modal-background")) onClose();
@@ -34,8 +35,28 @@ export function UserModal({
 		} catch (e: any) {
 			window.alert(e.response.data.message);
 		}
-
 	}
+
+	async function addBlocked() {
+		try {
+			await axios.post(`blocked`, { userId });
+			window.alert(`${userData.name} is blocked`);
+			blockedRevalid();
+		} catch (e: any) {
+			window.alert(e.response.data.message);
+		}
+	}
+	async function deleteBlocked() {
+		try {
+			await axios.delete(`blocked/${userId}`,);
+			window.alert(`${userData.name} is unblocked`);
+			blockedRevalid();
+		} catch (e: any) {
+			window.alert(e.response.data.message);
+		}
+	}
+
+
 	if (!user) return null;
 	return (
 		<div className="modal-background" onClick={handleClose}>
@@ -51,7 +72,11 @@ export function UserModal({
 											? <button onClick={addFriend}>Add</button>
 											: <button onClick={deleteFriend}>Delete</button>
 									}
-									<button>Block</button>
+									{
+										userData.id !== blocked?.id
+											? <button onClick={addBlocked}>Block</button>
+											: <button onClick={deleteBlocked}>Unblock</button>
+									}
 								</div>
 								<div className="d-flex center justify-between gap">
 									<button>DM</button>

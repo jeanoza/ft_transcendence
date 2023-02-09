@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { UserModal } from "./modals/userModal";
 import { FriendsModal } from "./modals/friendsModal";
-import { useUsers } from "../utils/hooks/swrHelper";
+import { useAllUser } from "../utils/hooks/swrHelper";
 
 interface IUser {
 	id: number;
@@ -11,7 +11,7 @@ interface IUser {
 }
 
 export function Search() {
-	const { users } = useUsers();
+	const { users } = useAllUser();
 	const [name, setName] = useState<string>("");
 	const [filtered, setFiltered] = useState<IUser[] | null>(null);
 	const [openUserModal, setUserModal] = useState<boolean>(false);
