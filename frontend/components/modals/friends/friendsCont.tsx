@@ -15,18 +15,38 @@ export function FriendsCont() {
 			window.alert(e.response.data.message);
 		}
 	}
+
+	async function blockFriend(e: any) {
+		const { id } = e.currentTarget
+		try {
+			await axios.post(`blocked`, { userId: id });
+			window.alert(`user is blocked`);
+		} catch (e: any) {
+			window.alert(e.response.data.message);
+		}
+	}
 	return <div className="item-cont">
 		<ul className="d-flex column">
 			{friends.map((el: any) =>
 				<li key={el.id} className="d-flex center justify-between gap" >
 					<Avatar url={el.image_url} size="sm" />
-					{el.name}
-					<div id={el.id} onClick={deleteFriend}>
-						<FontAwesomeIcon icon="user-minus" />
+					<span className="username">
+						{el.name}
+					</span>
+					<div className="d-flex gap">
+						<div id={el.id} onClick={deleteFriend}>
+							<FontAwesomeIcon icon="user-minus" />
+						</div>
+						<div id={el.id} onClick={blockFriend}>
+							<FontAwesomeIcon icon="ban" />
+						</div>
 					</div>
 				</li>)}
 		</ul>
 		<style jsx>{`
+			.username {
+				width:96px;
+			}
 			ul {
 				gap:0.5rem;
 			}

@@ -50,8 +50,7 @@ export class BlockedService {
       where: { userAId, userBId },
     });
 
-    this.logger.log(userAId, userBId);
-    if (blocked) throw new UnauthorizedException('already added');
+    if (blocked) throw new UnauthorizedException('already blocked');
 
     blocked = new Blocked();
     blocked.userAId = userAId;
@@ -63,7 +62,8 @@ export class BlockedService {
   }
   async deleteBlocked(userAId: number, userBId: number) {
     const blocked = await this.getBlocked(userAId, userBId);
-    if (!blocked) throw new UnauthorizedException('no relation between users');
+    if (!blocked)
+      throw new UnauthorizedException('no relation between users(block)');
     await this.blockedRepository
       .createQueryBuilder('blockeds')
       .delete()

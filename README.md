@@ -82,21 +82,21 @@ This is a boiler plate to use generally at my futur web application.
 
   - [ ] to implement swagger to make simple dto code
 
-  - [ ] update entities
+  - [x] update entities
 
-    - [ ] User
+    - [x] User
 
-    - [ ] Friend list
+    - [x] Friend list
 
-    - [ ] Blocked list
+    - [x] Blocked list
 
-  - [ ] Controller and services
+  - [x] Controller and services
 
-    - [ ] user
+    - [x] user
 
-    - [ ] friend
+    - [x] friend
 
-    - [ ] Blocked
+    - [x] Blocked
 
   - SocketIO
 
@@ -114,11 +114,11 @@ This is a boiler plate to use generally at my futur web application.
 
   - [ ] db table draw.io => to update with recent db
 
-  - [ ] Friends table
+  - [x] Friends table
 
-  - [ ] Blocked list
+  - [x] Blocked list
 
-  - [ ] User table update
+  - [x] User table update
 
 - Docker:
 
@@ -145,8 +145,6 @@ This is a boiler plate to use generally at my futur web application.
   - [x] navbar
 
   - [x] auth page
-
-  - [ ]
 
 - backend:
 

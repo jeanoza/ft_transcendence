@@ -151,6 +151,7 @@ button:hover {
 	padding: 1rem;
 	border-radius: 8px;
 	color: #424245;
+	cursor: auto;
 }
 .item-cont {
 	padding: 1rem 0rem;

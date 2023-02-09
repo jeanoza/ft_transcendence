@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useAllFriend, useBlocked, useFriend, useUser, useUserById } from "../../utils/hooks/swrHelper";
 import { Avatar } from "../avatar";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function UserModal({
 	userId,
@@ -37,7 +38,7 @@ export function UserModal({
 		}
 	}
 
-	async function addBlocked() {
+	async function blockUser() {
 		try {
 			await axios.post(`blocked`, { userId });
 			window.alert(`${userData.name} is blocked`);
@@ -46,7 +47,7 @@ export function UserModal({
 			window.alert(e.response.data.message);
 		}
 	}
-	async function deleteBlocked() {
+	async function unblockUser() {
 		try {
 			await axios.delete(`blocked/${userId}`,);
 			window.alert(`${userData.name} is unblocked`);
@@ -66,21 +67,49 @@ export function UserModal({
 						<Avatar url={userData.imageURL} status={userData.status} size="lg" />
 						{userData.id !== user.id && (
 							<div className="btn-cont d-flex center column gap">
-								<div className="d-flex center justify-between gap">
+								{/*<div className="d-flex center gap">
 									{
 										userData.id !== friend?.id
-											? <button onClick={addFriend}>Add</button>
-											: <button onClick={deleteFriend}>Delete</button>
+											? <div className="btn d-flex center" onClick={addFriend}>
+												<FontAwesomeIcon className="svg-icon" icon="user-plus" />
+											</div>
+											: <div className="btn d-flex center" onClick={deleteFriend}>
+												<FontAwesomeIcon icon="user-minus" />
+											</div>
 									}
 									{
 										userData.id !== blocked?.id
-											? <button onClick={addBlocked}>Block</button>
-											: <button onClick={deleteBlocked}>Unblock</button>
+											? <div className="btn d-flex center" onClick={blockUser}>
+												<FontAwesomeIcon icon="ban" />
+											</div>
+											: <div className="btn d-flex center" onClick={unblockUser}>
+												<FontAwesomeIcon icon="lock-open" />
+											</div>
 									}
 								</div>
-								<div className="d-flex center justify-between gap">
-									<button>DM</button>
-									<button>Play</button>
+								<div className="d-flex center gap">
+									<div className="btn d-flex center">
+										<FontAwesomeIcon icon="location-arrow" />
+									</div>
+									<div className="btn d-flex center">
+										<FontAwesomeIcon icon="gamepad" />
+									</div>
+								</div>*/}
+								<div className="d-flex center gap">
+									{
+										userData.id !== friend?.id
+											? <button className="btn" onClick={addFriend}>Add</button>
+											: <button className="btn" onClick={deleteFriend}>Delete</button>
+									}
+									{
+										userData.id !== blocked?.id
+											? <button className="btn" onClick={blockUser}>Block</button>
+											: <button className="btn" onClick={unblockUser}>Unblock </button>
+									}
+								</div>
+								<div className="d-flex center gap">
+									<button className="btn">DM</button>
+									<button className="btn">Play</button>
 								</div>
 							</div>
 						)}
@@ -105,8 +134,24 @@ export function UserModal({
 				</div>
 			)}
 			<style jsx>{`
-				.btn-cont > .d-flex {
-					width: 100%;
+				/*.btn-cont {
+					width:10rem;
+				}
+				.btn-cont .d-flex {
+					font-size:1.2rem;
+				}
+				.btn {
+					width:2.6rem;
+					height:2.6rem;
+					border-radius:50%;
+					background-color:rgb(220,220,220)
+				}
+				.btn:hover {
+					color:white;
+					background-color:#424245;
+				}*/
+				.btn {
+					width:7rem;
 				}
 				.row {
 					margin-bottom: 1rem;

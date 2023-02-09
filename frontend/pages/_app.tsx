@@ -3,9 +3,9 @@ import type { AppProps } from "next/app";
 import axios from "axios";
 import { SWRConfig } from "swr";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faMagnifyingGlass, faXmark, faGear, faTrash, faUserMinus } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faXmark, faGear, faTrash, faUserMinus, faBan, faRotateLeft, faHandshakeSimple, faLockOpen, faUserPlus, faLocationArrow, faGamepad } from "@fortawesome/free-solid-svg-icons";
 
-library.add(faMagnifyingGlass, faXmark, faGear, faTrash, faUserMinus)
+library.add(faMagnifyingGlass, faXmark, faGear, faTrash, faUserMinus, faBan, faRotateLeft, faHandshakeSimple, faLockOpen, faUserPlus, faLocationArrow, faGamepad)
 
 axios.defaults.baseURL =
 	process.env.NODE_ENV === "development"

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useAllFriend, useFriend, useUser, useUserById } from "../../utils/hooks/swrHelper";
-import { useState } from "react";
+import React, { useState } from "react";
 import { FriendsCont } from "./friends/friendsCont";
 import { BlockedsCont } from "./friends/blockedsCont";
 
@@ -16,9 +16,15 @@ export function FriendsModal({
 
 
 
-	function handleClick() {
-		setFriendsTab(prev => !prev);
-		setBlockedTab(prev => !prev);
+	function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
+		const { name } = e.currentTarget;
+		if (name === "friends") {
+			setFriendsTab(true);
+			setBlockedTab(false);
+		} else if (name === "blockeds") {
+			setFriendsTab(false);
+			setBlockedTab(true);
+		}
 	}
 
 	function handleClose(e: any) {
@@ -31,13 +37,17 @@ export function FriendsModal({
 		<div className="modal-background" onClick={handleClose}>
 			<div className="modal-container">
 				<div className="header d-flex center justify-between gap">
-					<button onClick={handleClick}>Friends</button>
-					<button onClick={handleClick}>Blocked</button>
+					<button className={isFriendsTab ? "active" : ""} name="friends" onClick={handleClick}>Friends</button>
+					<button className={isBlockedsTab ? "active" : ""} name="blockeds" onClick={handleClick}>Blockeds</button>
 				</div>
 				{friends && isFriendsTab && <FriendsCont />}
 				{isBlockedsTab && <BlockedsCont />}
 			</div>
 			<style jsx>{`
+				button.active {
+					background-color:#424245;
+					color:white;
+				}
 				.modal-container {
 					height:400px;
 				}
