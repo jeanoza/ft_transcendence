@@ -4,11 +4,7 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user.entity';
@@ -24,16 +20,23 @@ export class Friend {
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: Date;
 
-  @Column('int', { primary: true, name: 'user_id' })
-  userId: number;
+  @Column('int', { primary: true, name: 'user_a_id' })
+  userAId: number;
 
-  @Column('int', { primary: true, name: 'friend_id' })
-  friendId: number;
+  @Column('int', { primary: true, name: 'user_b_id' })
+  userBId: number;
 
-  @ManyToOne(() => User, (user) => user.friends, {
+  @ManyToOne(() => User, (user) => user.friendsAsA, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
-  user: User;
+  @JoinColumn({ name: 'user_a_id' })
+  userA: User;
+
+  @ManyToOne(() => User, (user) => user.friendsAsB, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn({ name: 'user_b_id' })
+  userB: User;
 }

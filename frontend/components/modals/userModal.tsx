@@ -1,45 +1,25 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useAllFriend, useUser } from "../../utils/hooks/swrHelper";
+import { useAllFriend, useUser, useUserById } from "../../utils/hooks/swrHelper";
 
 export function UserModal({
 	userId,
 	onClose,
 }: {
-	userId: number | null;
+	userId: number
 	onClose: any;
 }) {
-	const [userData, setUserData] = useState<any>(null);
-	const { friends } = useAllFriend();
-	console.log(friends);
 	const { user } = useUser();
-	useEffect(() => {
-		//async function getFriends() {
-		//	try {
-		//		const res = await axios.get("friend");
-		//		console.log(res);
-		//	} catch (e) {
-		//		console.log(e);
-		//	}
-		//}
-		async function getUserData() {
-			try {
-				const res = await axios.get(`user/${userId}`);
-				setUserData(res.data);
-			} catch (e) {
-				console.log(e);
-			}
-		}
-		getUserData();
-		//getFriends();
-	}, []);
+	const { userData } = useUserById(userId);
+
+	console.log(userData);
+
 	function handleClose(e: any) {
 		if (e.target.classList.contains("modal-background")) onClose();
 	}
 
 	async function addUser() {
 		try {
-			await axios.get(`friend/${userData.id}`);
+			await axios.post(`friend`, { userId });
 			window.alert(`${userData.name} is added`);
 		} catch (e: any) {
 			window.alert(e.response.data.message);

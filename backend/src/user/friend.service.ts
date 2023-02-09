@@ -1,9 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  Logger,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Friend } from './entities/friend.entity';
@@ -18,28 +13,33 @@ export class FriendService {
 
   logger = new Logger('friend service');
 
-  async getAllFriend(userId: number) {
-    const res = await this.friendRepository
+  async getAllFriend(userAId: number) {
+    const friends = await this.friendRepository
       .createQueryBuilder('friends')
-      .innerJoinAndSelect('friends.user', 'user', 'friends.userId = :userId', {
-        userId,
+      .innerJoin('friends.userA', 'userA', 'friends.userAId = :userAId', {
+        userAId,
       })
-      .getMany();
-
-    console.log(res);
-
-    return { msg: 'not yet' };
+      .innerJoin('friends.userB', 'userB')
+      .select([
+        'userB.id as id',
+        'userB.name as name',
+        'userB.status as status',
+        'userB.chat_socket as chat_socket',
+      ])
+      .getRawMany();
+    return friends;
   }
 
-  async addFriend(userId: number, friendId: number) {
+  async addFriend(userAId: number, userBId: number) {
     let friend = await this.friendRepository.findOne({
-      where: { userId, friendId },
+      where: { userAId, userBId },
     });
-    if (friend) throw new ForbiddenException('already added');
+
+    if (friend) throw new UnauthorizedException('already added');
 
     friend = new Friend();
-    friend.userId = userId;
-    friend.friendId = friendId;
+    friend.userAId = userAId;
+    friend.userBId = userBId;
     const res = await this.friendRepository.save(friend);
 
     return res;

@@ -1,4 +1,3 @@
-import { Channel } from 'src/chat/entities/channel.entity';
 import { ChannelChat } from 'src/chat/entities/channelChat.entity';
 import { ChannelMember } from 'src/chat/entities/channelMember.entity';
 import { Note } from 'src/note/entities/note.entity';
@@ -7,8 +6,6 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  JoinTable,
-  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -48,7 +45,10 @@ export class User {
   })
   chatSocket?: string;
 
-  @Column('varchar', { name: 'image_url', length: 500, nullable: true })
+  @Column('int', { name: 'status', nullable: true })
+  status?: number;
+
+  @Column('varchar', { name: 'image_url', length: 500 })
   imageURL: string;
 
   @Column('varchar', {
@@ -77,6 +77,9 @@ export class User {
   @OneToMany(() => ChannelChat, (channelChat) => channelChat.user)
   channelChats: ChannelChat[];
 
-  @OneToMany(() => Friend, (friend) => friend.user)
-  friends: Friend[];
+  @OneToMany(() => Friend, (friend) => friend.userA)
+  friendsAsA: Friend[];
+
+  @OneToMany(() => Friend, (friend) => friend.userB)
+  friendsAsB: Friend[];
 }
