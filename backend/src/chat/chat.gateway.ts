@@ -78,7 +78,6 @@ export class ChatGateway
   @SubscribeMessage('newChannel')
   async handleRegister(client: Socket, data) {
     this.logger.log('newChannel');
-    this.logger.log(data);
     try {
       await this.channelService.register(data);
       client.emit(

@@ -55,9 +55,8 @@ export class BlockedService {
     blocked = new Blocked();
     blocked.userAId = userAId;
     blocked.userBId = userBId;
-    console.log(blocked);
-    const res = await this.blockedRepository.save(blocked);
 
+    const res = await this.blockedRepository.save(blocked);
     return res;
   }
   async deleteBlocked(userAId: number, userBId: number) {

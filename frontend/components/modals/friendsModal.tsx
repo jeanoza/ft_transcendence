@@ -30,7 +30,6 @@ export function FriendsModal({
 	function handleClose(e: any) {
 		if (e.target.classList.contains("modal-background")) onClose();
 	}
-	console.log(friends);
 
 	if (!user) return null;
 	return (

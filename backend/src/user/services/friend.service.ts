@@ -50,7 +50,6 @@ export class FriendService {
       where: { userAId, userBId },
     });
 
-    this.logger.log(userAId, userBId);
     if (friend) throw new UnauthorizedException('already added');
 
     friend = new Friend();
