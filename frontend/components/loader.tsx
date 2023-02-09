@@ -12,7 +12,7 @@ export function Loader() {
 					display:flex;
 					justify-content:center;
 					align-items:center;
-					background-color:rgba(20,20,20,0.4);
+					background-color:var(--modal-bg-color);
 					overflow-y:fit;
 				}
 				.lds-default {
@@ -25,7 +25,7 @@ export function Loader() {
 					position: absolute;
 					width: 6px;
 					height: 6px;
-					background: white;
+					background: var(--gray-dark);
 					border-radius: 50%;
 					animation: lds-default 1.2s linear infinite;
 				}

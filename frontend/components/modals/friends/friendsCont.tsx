@@ -54,7 +54,7 @@ export function FriendsCont() {
 				padding-right:1rem;
 			}
 			li:hover {
-				background-color:rgb(240,240,240);
+				background-color:var(--gray-light-1);
 				border-radius:8px;
 			}
 		`}</style>

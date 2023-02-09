@@ -70,7 +70,7 @@ export function Search() {
 					cursor: pointer;
 				}
 				input {
-					background-color: #424245;
+					background-color: var(--gray-dark);
 					color: white;
 					border: none;
 					outline: none;
@@ -80,9 +80,9 @@ export function Search() {
 					top: 30px;
 					left: 0;
 					right: 0;
-					color: #424245;
+					color: var(--gray-dark);
 					background: white;
-					border: 1px solid rgb(200, 200, 200);
+					border: 1px solid var(--border-color);
 					border-top: none;
 					border-radius: 0 0 8px 8px;
 				}
@@ -98,7 +98,7 @@ export function Search() {
 					border-radius: 0 0 8px 8px;
 				}
 				li:hover {
-					background-color: rgb(200, 200, 200);
+					background-color: var(--border-color);
 					color: white;
 				}
 			`}</style>

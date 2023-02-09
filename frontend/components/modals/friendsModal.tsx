@@ -45,7 +45,7 @@ export function FriendsModal({
 			</div>
 			<style jsx>{`
 				button.active {
-					background-color:#424245;
+					background-color:var(--gray-dark);
 					color:white;
 				}
 				.modal-container {
@@ -53,7 +53,7 @@ export function FriendsModal({
 				}
 				.header {
 					padding-bottom:1rem;
-					border-bottom:1px solid rgb(200,200,200);
+					border-bottom:1px solid var(--border-color);
 				}
 			`}</style>
 		</div >

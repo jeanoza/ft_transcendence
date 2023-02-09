@@ -43,7 +43,7 @@ export function ChannelList({
 			</ul>
 			<style jsx>{`
 				.cont {
-					border-right: 1px solid rgb(200, 200, 200);
+					border-right: 1px solid var(--border-color);
 					padding: 0.5rem;
 				}
 				ul {
@@ -60,11 +60,11 @@ export function ChannelList({
 					overflow:hidden;
 				}
 				li:hover {
-					background-color:rgb(220,220,220);
+					background-color:var(--gray-light-2);
 				}
 				li.active span{
-					color: #06c;
-					font-weight:500;
+					color: var(--accent);
+					font-weight:500;	
 				}
 				button {
 					background-color: white;

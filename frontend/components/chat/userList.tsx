@@ -24,7 +24,7 @@ export function UserList({ channel }: { channel: string | null }) {
 				display:flex;
 				flex-direction:column;
 				padding: 1rem;
-				border-left:1px solid rgb(200,200,200);
+				border-left:1px solid var(--border-color);
 			}
 			li {
 				min-width:80px;

@@ -70,7 +70,7 @@ export default function Chat() {
 			<style jsx>{`
 				.chat {
 					height: 100%;
-					background-color: rgb(240, 240, 240);
+					background-color: var(--gray-light-1);
 					border-radius: 8px;
 				}
 			`}</style>

@@ -144,11 +144,11 @@ export function UserModal({
 					width:2.6rem;
 					height:2.6rem;
 					border-radius:50%;
-					background-color:rgb(220,220,220)
+					background-color:var(--gray-light-2)
 				}
 				.btn:hover {
 					color:white;
-					background-color:#424245;
+					background-color:var(--gray-dark);
 				}*/
 				.btn {
 					width:7rem;

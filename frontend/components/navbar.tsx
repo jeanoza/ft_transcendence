@@ -10,8 +10,8 @@ export function Navbar() {
 			<Setting />
 			<style jsx>{`
 				nav {
-					background-color: #424245;
-					color: rgba(200, 200, 200, 0.92);
+					background-color: var(--gray-dark);
+					color: var(--nav-font-color);
 					width: 100%;
 					position: relative;
 					padding: 0px 2rem;

@@ -69,16 +69,16 @@ export function TwoFactorSetting() {
 					width: 128px;
 				}
 				h3 {
-					color: #424245;
+					color: var(--gray-dark);
 					margin-bottom: 1rem;
 				}
 				.twofactor {
 					width: 4rem;
 					border-radius: 2rem;
-					background-color: rgb(200, 200, 200);
+					background-color: var(--border-color);
 				}
 				.twofactor.enabled {
-					background-color: #06c;
+					background-color: var(--accent);
 				}
 				.twofactor > div {
 					width: 2rem;

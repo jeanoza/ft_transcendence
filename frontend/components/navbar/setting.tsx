@@ -60,9 +60,9 @@ export function Setting() {
 					top: 30px;
 					left: 0;
 					right:0;
-					color:#424245;
+					color:var(--gray-dark);
 					background:white;
-					border:1px solid rgb(200,200,200);
+					border:1px solid var(--border-color);
 					border-top:none;
 					border-radius:0 0 8px 8px;
 				}
@@ -74,7 +74,7 @@ export function Setting() {
 					border-radius:0 0 8px 8px;
 				}
 				li:hover {
-					background-color:rgb(200,200,200);
+					background-color:var(--border-color);
 					color:white;
 				}
 			`}</style>
