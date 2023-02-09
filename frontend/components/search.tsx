@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { UserModal } from "./modals/userModal";
 import { FriendsModal } from "./modals/friendsModal";
+import { useUsers } from "../utils/hooks/swrHelper";
 
 interface IUser {
 	id: number;
@@ -10,25 +11,11 @@ interface IUser {
 }
 
 export function Search() {
+	const { users } = useUsers();
 	const [name, setName] = useState<string>("");
-	const [users, setUsers] = useState<IUser[]>([]);
 	const [filtered, setFiltered] = useState<IUser[] | null>(null);
 	const [openUserModal, setUserModal] = useState<boolean>(false);
 	const [userId, setUserId] = useState<number | null>(null);
-
-	async function getUserList() {
-		try {
-			const res = await axios.get(`/user`);
-			setUsers(res.data);
-		} catch (e) {
-			console.log(e);
-		}
-	}
-
-	useEffect(() => {
-		// Get all user list from server
-		getUserList();
-	}, []);
 
 	useEffect(() => {
 		if (name.length > 2) {
@@ -39,6 +26,11 @@ export function Search() {
 			if (JSON.stringify(res) != JSON.stringify(filtered)) setFiltered(res);
 		} else setFiltered(null);
 	}, [name]);
+
+	function handleCancelBtn() {
+		setFiltered(null);
+		setName("");
+	}
 
 	async function handleOpenModal(id: number) {
 		setUserId(id);
@@ -55,7 +47,7 @@ export function Search() {
 			<FontAwesomeIcon icon="magnifying-glass" />
 			<input value={name} onChange={onChange} placeholder="search" />
 			{filtered && (
-				<div className="cancelBtn" onClick={() => setFiltered(null)}>
+				<div className="cancelBtn" onClick={handleCancelBtn}>
 					<FontAwesomeIcon icon="xmark" />
 				</div>
 			)}

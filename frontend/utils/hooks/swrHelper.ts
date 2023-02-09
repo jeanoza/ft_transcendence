@@ -55,6 +55,33 @@ export function useUserById(userId: number) {
 	};
 }
 
+export function useUsers() {
+	const { data, error, mutate, isLoading } = useSWR(`user`, fetcher, {
+		onError: (e) => {
+			console.log("useUsers", e);
+		},
+		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+			// Never retry on 404.
+			if (error?.response?.status === 404) return;
+
+			// Never retry for a specific key.
+			if (key === `user`) return;
+
+			// Only retry up to 10 times.
+			if (retryCount >= 10) return;
+
+			// Retry after 5 seconds.
+			setTimeout(() => revalidate({ retryCount }), 5000);
+		},
+	});
+	return {
+		users: data,
+		revalid: mutate,
+		isLoading,
+		error,
+	};
+}
+
 export function useFriend(userId: number) {
 	const { data, error, mutate, isLoading } = useSWR(
 		`friend/${userId}`,
