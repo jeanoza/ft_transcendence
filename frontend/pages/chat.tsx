@@ -22,7 +22,7 @@ export function getServerSideProps({ req }: any) {
 	return { props: {} };
 }
 
-let socketUpdated = false; // to socket_id send only one time.
+//let socketUpdated = false; // to socket_id send only one time.
 
 export default function Chat() {
 	const { user } = useUser();
@@ -32,17 +32,13 @@ export default function Chat() {
 	const [modal, setModal] = useState<boolean>(false);
 
 	useEffect(() => {
-		if (user && !socketUpdated) {
-			socket.emit("chatSocket", user.id);
-			socketUpdated = true;
-		}
 		socket.on("channels", async (data) => {
 			setChannels(data);
 		});
 		return () => {
 			socket.off("channels");
 		};
-	}, []);
+	}, [user]);
 
 	function onChangeChannel(e: React.MouseEvent<HTMLElement>) {
 		const target = e.currentTarget;

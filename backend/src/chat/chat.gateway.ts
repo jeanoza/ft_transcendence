@@ -12,6 +12,7 @@ import {
 
 import { Server, Socket } from 'socket.io';
 import { ChannelService } from 'src/chat/channel.service';
+import { UserService } from 'src/user/services/user.service';
 import { DMService } from './dm.service';
 
 @WebSocketGateway({
@@ -26,10 +27,12 @@ export class ChatGateway
   constructor(
     private readonly channelService: ChannelService,
     private readonly dmService: DMService,
+    private readonly userService: UserService,
   ) {}
 
   @WebSocketServer()
   server: Server;
+  //connected = new Set();
 
   private logger: Logger = new Logger('ChatGateway');
 
@@ -40,10 +43,13 @@ export class ChatGateway
   //FIXME: ConnectedSocket or not?
   async handleConnection(@ConnectedSocket() client: Socket) {
     this.logger.log(`Chat socket id:${client.id} connected`);
+    this.server.emit('come', client.id);
   }
 
   //FIXME: ConnectedSocket or not?
-  handleDisconnect(@ConnectedSocket() client: Socket) {
+  async handleDisconnect(@ConnectedSocket() client: Socket) {
+    await this.userService.handleDisconnectSocket(client.id);
+    this.server.emit('quit', { disconnected: client.id });
     this.logger.log(`Chat socket id:${client.id} disconnected`);
   }
 
@@ -54,16 +60,6 @@ export class ChatGateway
         'channels',
         await this.channelService.findAllByUserId(userId),
       );
-    } catch (e) {
-      this.logger.log(e);
-      client.emit('error', e);
-    }
-  }
-
-  @SubscribeMessage('chatSocket')
-  async updateUserSocket(client: Socket, userId: number) {
-    try {
-      await this.dmService.updateUserSocket(client.id, userId);
     } catch (e) {
       this.logger.log(e);
       client.emit('error', e);

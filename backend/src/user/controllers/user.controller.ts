@@ -5,6 +5,9 @@ import {
   Request,
   Logger,
   Param,
+  Post,
+  Patch,
+  Body,
 } from '@nestjs/common';
 import { UserService } from '../services/user.service';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
@@ -22,8 +25,6 @@ export class UserController {
 
   @Get('current')
   async getCurrentUser(@Request() req) {
-    this.logger.log(req.user.name, req.user.status);
-    if (req.user.status === null) this.userService.updateStatus(req.user.id, 1);
     return req.user;
   }
 
@@ -35,5 +36,10 @@ export class UserController {
   @Get(':id')
   async getUserById(@Param('id') id: number) {
     return await this.userService.findOne(id);
+  }
+
+  @Patch(':id')
+  async update(@Param('id') id: number, @Body() data) {
+    return await this.userService.update(id, data);
   }
 }

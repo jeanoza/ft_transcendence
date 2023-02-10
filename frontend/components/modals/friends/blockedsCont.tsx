@@ -6,13 +6,14 @@ import { Avatar } from "../../avatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function BlockedsCont() {
-	const { blockeds } = useAllBlocked();
+	const { blockeds, revalid } = useAllBlocked();
 
 	async function unblock(e: any) {
 		const { id } = e.currentTarget;
 		try {
 			await axios.delete(`blocked/${id}`);
 			window.alert(`user is unblocked`);
+			revalid(blockeds);
 		} catch (e: any) {
 			window.alert(e.response.data.message);
 		}

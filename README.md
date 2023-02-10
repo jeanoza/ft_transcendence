@@ -51,7 +51,7 @@ make fclean
 
   - [ ] Match History => after
 
-  - [ ]
+  - [ ] use socket with a gateway which contains only connect/disconnect event(or use chat gateway??)
 
 - Backend:
 
@@ -83,13 +83,9 @@ make fclean
 
 - frontend:
 
-  - [x] navbar
-
-  - [x] auth page
+  - [ ] General component to use dropdown(menu list) - using children props
 
 - backend:
-
-  - [x] see refactoring - user.service, entities
 
 ## Useful commands
 

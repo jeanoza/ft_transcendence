@@ -2,9 +2,12 @@ import axios from "axios";
 import { useAllFriend } from "../../../utils/hooks/swrHelper";
 import { Avatar } from "../../avatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Loader } from "../../loader";
+import { useEffect } from "react";
+import { useSocket } from "../../../utils/hooks/useSocket";
 
 export function FriendsCont() {
-	const { friends } = useAllFriend();
+	const { friends, revalid, isLoading } = useAllFriend();
 
 	async function deleteFriend(e: any) {
 		const { id } = e.currentTarget;
@@ -25,10 +28,13 @@ export function FriendsCont() {
 			window.alert(e.response.data.message);
 		}
 	}
+
+	if (!friends) return <Loader />;
+
 	return (
 		<div className="item-cont">
 			<ul className="d-flex column">
-				{friends.map((el: any) => (
+				{friends?.map((el: any) => (
 					<li key={el.id} className="d-flex center justify-between gap">
 						<Avatar url={el.image_url} size="sm" status={el.status} />
 						<span className="username">{el.name}</span>

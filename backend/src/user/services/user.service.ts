@@ -9,14 +9,12 @@ import { User } from '../entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { Friend } from '../entities/friend.entity';
+import { UpdateUserDto } from '../dto/update-user.dto';
 
 @Injectable()
 export class UserService {
   @InjectRepository(User)
   private userRepository: Repository<User>;
-  @InjectRepository(Friend)
-  private friendRepository: Repository<Friend>;
 
   logger = new Logger('user service');
 
@@ -75,7 +73,18 @@ export class UserService {
       .getMany();
   }
 
+  async handleDisconnectSocket(chatSocket: string) {
+    const user = await this.userRepository.findOne({
+      where: { chatSocket },
+    });
+    if (user) return await this.update(user.id, { status: null });
+  }
+
   async updateStatus(id: number, status: number | null) {
     return await this.userRepository.update(id, { status });
+  }
+
+  async update(id: number, data) {
+    return await this.userRepository.update(id, data);
   }
 }

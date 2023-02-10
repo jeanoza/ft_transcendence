@@ -29,7 +29,7 @@ export function UserModal({
 		try {
 			await axios.post(`friend`, { userId });
 			window.alert(`${userData.name} is added`);
-			revalid();
+			revalid(friend);
 		} catch (e: any) {
 			window.alert(e.response.data.message);
 		}
@@ -38,7 +38,7 @@ export function UserModal({
 		try {
 			await axios.delete(`friend/${userId}`);
 			window.alert(`${userData.name} is deleted`);
-			revalid();
+			revalid(friend, false);
 		} catch (e: any) {
 			window.alert(e.response.data.message);
 		}

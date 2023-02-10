@@ -147,7 +147,7 @@ export function useFriend(userId: number) {
 export function useAllFriend() {
 	const { data, error, mutate, isLoading } = useSWR("friend", fetcher, {
 		onError: (e) => {
-			console.log("userAllFriend", e);
+			console.log("useAllFriend", e);
 		},
 		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
 			// Never retry on 404.

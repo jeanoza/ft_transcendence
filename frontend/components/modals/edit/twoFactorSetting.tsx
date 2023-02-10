@@ -20,7 +20,7 @@ export function TwoFactorSetting() {
 				setImageSrc(`data:;base64,${base64}`);
 			};
 			reader.readAsDataURL(new Blob([res.data]));
-			revalid();
+			revalid(user);
 		} catch (error) {
 			console.error(error);
 		}
@@ -32,7 +32,7 @@ export function TwoFactorSetting() {
 			await axios.post(path, {
 				_2faCode,
 			});
-			revalid();
+			revalid(user);
 		} catch (e: any) {
 			window.alert(e.response.data.message);
 		}

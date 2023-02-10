@@ -17,13 +17,13 @@ export function Setting() {
 	async function onLogout(e: React.MouseEvent<HTMLSpanElement>) {
 		try {
 			await axios.get("auth/logout");
-			router.push("/");
+			router.reload();
 		} catch (err) {
 			throw err;
 		}
 	}
 	function onToggle(e: any) {
-		setDropdown(prev => !prev)
+		setDropdown((prev) => !prev);
 	}
 	return (
 		<div className="setting d-flex center gap justify-end">
@@ -47,42 +47,44 @@ export function Setting() {
 			)}
 			<style jsx>{`
 				.icon {
-					padding:1rem;
+					padding: 1rem;
 				}
 				.setting {
-					position:relative;
-					width:160px;
+					position: relative;
+					width: 160px;
 					cursor: pointer;
 				}
 				.user-resume {
-					padding:1rem;
-					cursor:auto;
+					padding: 1rem;
+					cursor: auto;
 				}
 				.user-menu {
 					position: absolute;
 					top: 42px;
 					left: 0;
-					right:0;
-					color:var(--gray-dark);
-					background:white;
-					border:1px solid var(--border-color);
-					border-top:none;
-					border-radius:0 0 8px 8px;
+					right: 0;
+					color: var(--gray-dark);
+					background: white;
+					border: 1px solid var(--border-color);
+					border-top: none;
+					border-radius: 0 0 8px 8px;
 				}
 				li {
-					padding:0.5rem;
-					text-align:center;
+					padding: 0.5rem;
+					text-align: center;
 				}
 				li:last-child {
-					border-radius:0 0 8px 8px;
+					border-radius: 0 0 8px 8px;
 				}
 				li:hover {
-					background-color:var(--border-color);
-					color:white;
+					background-color: var(--border-color);
+					color: white;
 				}
 			`}</style>
 			{openEditModal && <EditModal onClose={() => setEditModal(false)} />}
-			{openFriendsModal && <FriendsModal onClose={() => setFriendsModal(false)} />}
+			{openFriendsModal && (
+				<FriendsModal onClose={() => setFriendsModal(false)} />
+			)}
 		</div>
 	);
 }

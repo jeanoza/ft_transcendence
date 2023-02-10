@@ -7,11 +7,21 @@ import { ChannelChat } from './entities/channelChat.entity';
 import { ChannelService } from './channel.service';
 import { ChatGateway } from './chat.gateway';
 import { DMService } from './dm.service';
+import { UserService } from 'src/user/services/user.service';
+import { Friend } from 'src/user/entities/friend.entity';
+import { Blocked } from 'src/user/entities/blocked.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Channel, ChannelMember, ChannelChat, User]),
+    TypeOrmModule.forFeature([
+      Channel,
+      ChannelMember,
+      ChannelChat,
+      User,
+      Friend,
+      Blocked,
+    ]),
   ],
-  providers: [DMService, ChannelService, ChatGateway],
+  providers: [DMService, ChannelService, UserService, ChatGateway],
 })
 export class ChatModule {}
