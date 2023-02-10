@@ -1,4 +1,3 @@
-
 // todo: to implement blocked list
 
 import axios from "axios";
@@ -10,41 +9,42 @@ export function BlockedsCont() {
 	const { blockeds } = useAllBlocked();
 
 	async function unblock(e: any) {
-		const { id } = e.currentTarget
+		const { id } = e.currentTarget;
 		try {
-			await axios.delete(`blocked/${id}`,);
+			await axios.delete(`blocked/${id}`);
 			window.alert(`user is unblocked`);
 		} catch (e: any) {
 			window.alert(e.response.data.message);
 		}
 	}
-	return <div className="item-cont">
-		<ul className="d-flex column">
-			{blockeds?.map((el: any) =>
-				<li key={el.id} className="d-flex center justify-between gap" >
-					<Avatar url={el.image_url} size="sm" />
-					<span className="username">
-						{el.name}
-					</span>
-					<div id={el.id} onClick={unblock}>
-						<FontAwesomeIcon icon="lock-open" />
-					</div>
-				</li>)}
-		</ul>
-		<style jsx>{`
-			.username {
-				width:120px;
-			}
-			ul {
-				gap:0.5rem;
-			}
-			li {
-				padding-right:1rem;
-			}
-			li:hover {
-				background-color:var(--gray-light-1);
-				border-radius:8px;
-			}
-		`}</style>
-	</div>
+	return (
+		<div className="item-cont">
+			<ul className="d-flex column">
+				{blockeds?.map((el: any) => (
+					<li key={el.id} className="d-flex center justify-between gap">
+						<Avatar url={el.image_url} size="sm" status={el.status} />
+						<span className="username">{el.name}</span>
+						<div id={el.id} onClick={unblock}>
+							<FontAwesomeIcon icon="lock-open" />
+						</div>
+					</li>
+				))}
+			</ul>
+			<style jsx>{`
+				.username {
+					width: 120px;
+				}
+				ul {
+					gap: 0.5rem;
+				}
+				li {
+					padding-right: 1rem;
+				}
+				li:hover {
+					background-color: var(--gray-light-1);
+					border-radius: 8px;
+				}
+			`}</style>
+		</div>
+	);
 }

@@ -67,6 +67,9 @@ button:hover {
 	color: var(--accent);
 }
 
+svg {
+	cursor: pointer;
+}
 .cursor-pointer {
 	text-decoration: underline;
 	color: var(--accent);

@@ -29,28 +29,6 @@ make fclean
 
 - Frontend:
 
-  - [x] login btn => change dynamically ('login' -> 'Hello USER_NAME')
-
-  - [x] auth page for sign-up/sign-in
-
-  - [x] request to server
-
-  - [x] auth(via cookie)
-
-  - [x] 42 auth via cookie
-
-  - [x] Note page implement
-
-    - [x] All note(/note)
-
-    - [x] Create note(/note/create)
-
-    - [x] note(/note/:id)
-
-    - [x] divide FormField => InputField(FormField), TextareaField
-
-    - [x] redirect if no accessToken
-
   - [ ] chat page
 
     - [x] left
@@ -63,9 +41,7 @@ make fclean
 
     - [x] right(currenteUserList)
 
-  - [x] Modal
-
-    - [x] NewChannel Modal (name, password) => if password? private : public
+  - [ ] Modal
 
     - [ ] Edit Modal
 
@@ -73,71 +49,17 @@ make fclean
 
       - [ ] change avatar photo
 
-    - [ ] Match History => after
+  - [ ] Match History => after
 
-    - [x] Friends : with 2 tabs
-
-      - [x] friend list
-
-      - [x] blokced list
+  - [ ]
 
 - Backend:
 
-  - [x] connect Postgresql with typeorm
-
-  - [x] assemble .env => gitignore but how to partager with collaborator??
-
-  - [x] 42 auth(passport && jwt => send cookie on server side)
-
-  - [x] create User then send cookie for auth(No redirection but send cookie with access token in response)
-
-  - [x] add Note module, entity, service and controller
-
-  - [x] verify bug in Note CRUD
-
-  - [x] put loggedIn guard to Note request
-
-  - [x] Websocket/Socketio connection with client
-
   - [ ] to implement swagger to make simple dto code
-
-  - [x] update entities
-
-    - [x] User
-
-    - [x] Friend list
-
-    - [x] Blocked list
-
-  - [x] Controller and services
-
-    - [x] user
-
-    - [x] friend
-
-    - [x] Blocked
-
-  - SocketIO
-
-    - [x] save ChannelChat in db
 
 - Database:
 
-  - [x] config PostgreSQL and connect with nestJS server
-
-  - [x] User table
-
-  - [x] Note table : id, title, content, userId(foreign key), ...etc
-
-  - [x] Channel table
-
   - [ ] db table draw.io => to update with recent db
-
-  - [x] Friends table
-
-  - [x] Blocked list
-
-  - [x] User table update
 
 - Docker:
 
