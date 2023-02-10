@@ -51,7 +51,7 @@ export function Search() {
 					<FontAwesomeIcon icon="xmark" />
 				</div>
 			)}
-			{filtered && (
+			{filtered && filtered.length && (
 				<ul className="user-list">
 					{filtered.map((el: any) => (
 						<li key={el.id} onClick={() => handleOpenModal(el.id)}>

@@ -1,5 +1,20 @@
 This is a boiler plate to use generally at my futur web application.
 
+## Get start
+
+```bash
+# start frontend/backend server
+make up
+#or with commend docker manually
+docker-compose up --build
+
+# stop server
+make clean
+
+# reset all db and docker containers, images, volumes, networks
+make fclean
+```
+
 ## Stacks
 
 - Frontend: React JS, Next JS
@@ -60,7 +75,11 @@ This is a boiler plate to use generally at my futur web application.
 
     - [ ] Match History => after
 
-    - [ ] Friends : 2 columns ( friend list, blokced list)
+    - [x] Friends : with 2 tabs
+
+      - [x] friend list
+
+      - [x] blokced list
 
 - Backend:
 

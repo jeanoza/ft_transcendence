@@ -26,9 +26,9 @@ export function Setting() {
 		setDropdown(prev => !prev)
 	}
 	return (
-		<div className="setting d-flex center gap justify-end" >
-			<div>
-				<FontAwesomeIcon icon="gear" onClick={onToggle} />
+		<div className="setting d-flex center gap justify-end">
+			<div className="icon" onClick={onToggle}>
+				<FontAwesomeIcon icon="gear" />
 			</div>
 			{dropdown && (
 				<div className="user-menu">
@@ -46,6 +46,9 @@ export function Setting() {
 				</div>
 			)}
 			<style jsx>{`
+				.icon {
+					padding:1rem;
+				}
 				.setting {
 					position:relative;
 					width:160px;
@@ -57,7 +60,7 @@ export function Setting() {
 				}
 				.user-menu {
 					position: absolute;
-					top: 30px;
+					top: 42px;
 					left: 0;
 					right:0;
 					color:var(--gray-dark);
