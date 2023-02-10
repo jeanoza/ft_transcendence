@@ -1,5 +1,11 @@
 import axios from "axios";
-import { useAllFriend, useBlocked, useFriend, useUser, useUserById } from "../../utils/hooks/swrHelper";
+import {
+	useAllFriend,
+	useBlocked,
+	useFriend,
+	useUser,
+	useUserById,
+} from "../../utils/hooks/swrHelper";
 import { Avatar } from "../avatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -7,7 +13,7 @@ export function UserModal({
 	userId,
 	onClose,
 }: {
-	userId: number
+	userId: number;
 	onClose: any;
 }) {
 	const { user } = useUser();
@@ -30,7 +36,7 @@ export function UserModal({
 	}
 	async function deleteFriend() {
 		try {
-			await axios.delete(`friend/${userId}`,);
+			await axios.delete(`friend/${userId}`);
 			window.alert(`${userData.name} is deleted`);
 			revalid();
 		} catch (e: any) {
@@ -49,7 +55,7 @@ export function UserModal({
 	}
 	async function unblockUser() {
 		try {
-			await axios.delete(`blocked/${userId}`,);
+			await axios.delete(`blocked/${userId}`);
 			window.alert(`${userData.name} is unblocked`);
 			blockedRevalid();
 		} catch (e: any) {
@@ -57,14 +63,17 @@ export function UserModal({
 		}
 	}
 
-
 	if (!user) return null;
 	return (
 		<div className="modal-background" onClick={handleClose}>
 			{userData && (
 				<div className="modal-container">
 					<div className="row d-flex justify-between gap">
-						<Avatar url={userData.imageURL} status={userData.status} size="lg" />
+						<Avatar
+							url={userData.imageURL}
+							status={userData.status}
+							size="lg"
+						/>
 						{userData.id !== user.id && (
 							<div className="btn-cont d-flex center column gap">
 								{/*<div className="d-flex center gap">
@@ -96,16 +105,24 @@ export function UserModal({
 									</div>
 								</div>*/}
 								<div className="d-flex center gap">
-									{
-										userData.id !== friend?.id
-											? <button className="btn" onClick={addFriend}>Add</button>
-											: <button className="btn" onClick={deleteFriend}>Delete</button>
-									}
-									{
-										userData.id !== blocked?.id
-											? <button className="btn" onClick={blockUser}>Block</button>
-											: <button className="btn" onClick={unblockUser}>Unblock </button>
-									}
+									{userData.id !== friend?.id ? (
+										<button className="btn" onClick={addFriend}>
+											Add
+										</button>
+									) : (
+										<button className="btn" onClick={deleteFriend}>
+											Delete
+										</button>
+									)}
+									{userData.id !== blocked?.id ? (
+										<button className="btn" onClick={blockUser}>
+											Block
+										</button>
+									) : (
+										<button className="btn" onClick={unblockUser}>
+											Unblock{" "}
+										</button>
+									)}
 								</div>
 								<div className="d-flex center gap">
 									<button className="btn">DM</button>
@@ -151,7 +168,7 @@ export function UserModal({
 					background-color:var(--gray-dark);
 				}*/
 				.btn {
-					width:7rem;
+					width: 7rem;
 				}
 				.row {
 					margin-bottom: 1rem;

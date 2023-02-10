@@ -21,7 +21,6 @@ export function getServerSideProps({ req }: any) {
 	return { props: {} };
 }
 export default function _2fa() {
-	const { user } = useUser();
 	const [_2faCode, set_2faCode] = useState<string>("");
 
 	async function authenticate() {

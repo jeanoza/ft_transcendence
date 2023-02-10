@@ -22,6 +22,8 @@ export class UserController {
 
   @Get('current')
   async getCurrentUser(@Request() req) {
+    this.logger.log(req.user.name, req.user.status);
+    if (req.user.status === null) this.userService.updateStatus(req.user.id, 1);
     return req.user;
   }
 

@@ -1,10 +1,21 @@
-const STATUS = ['offline', 'online', 'ingame']
+//status 0 | null ? => offline
+const STATUS = ["offline", "online", "ingame"];
 
-export function Avatar({ url, status, size }: { url: string, status?: number, size?: string }) {
+export function Avatar({
+	url,
+	status,
+	size,
+}: {
+	url: string;
+	status?: number;
+	size?: string;
+}) {
 	return (
-		<div className={`avatar ${size ? size : ''}`} style={{ backgroundImage: `url(${url})` }
-		}>
-			<div className={`status ${status ? STATUS[status] : 'offline'}`} />
+		<div
+			className={`avatar ${size ? size : ""}`}
+			style={{ backgroundImage: `url(${url})` }}
+		>
+			<div className={`status ${status ? STATUS[status] : "offline"}`} />
 			<style jsx>{`
 				.avatar {
 					position: relative;
@@ -23,9 +34,9 @@ export function Avatar({ url, status, size }: { url: string, status?: number, si
 					width: 3rem;
 					height: 3rem;
 				}
-				.avatar.sm > .status{
-					bottom:0;
-					right:0;
+				.avatar.sm > .status {
+					bottom: 0;
+					right: 0;
 				}
 				.status {
 					position: absolute;
@@ -45,7 +56,7 @@ export function Avatar({ url, status, size }: { url: string, status?: number, si
 				.status.ingame {
 					background-color: orange;
 				}
-		`}</style>
-		</div >
-	)
+			`}</style>
+		</div>
+	);
 }

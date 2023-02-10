@@ -74,4 +74,8 @@ export class UserService {
       .select(['user.id', 'user.name'])
       .getMany();
   }
+
+  async updateStatus(id: number, status: number | null) {
+    return await this.userRepository.update(id, { status });
+  }
 }

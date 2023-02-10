@@ -21,6 +21,7 @@ import { LoggedInGuard } from 'src/auth/guard/logged-in.guard';
 import { NoLoggedInGuard } from 'src/auth/guard/no-logged-in.guard';
 import { Auth42Guard } from 'src/auth/guard/auth42.guard';
 import { Jwt2faGuard } from './guard/jwt-2fa.guard';
+import { JwtAuthGuard } from './guard/jwt-auth.guard';
 
 //FIXME: change after
 @Controller('api/auth')
@@ -75,8 +76,10 @@ export class AuthController {
   }
 
   @UseGuards(LoggedInGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('logout')
   async logout(@Request() req, @Response({ passthrough: true }) res) {
+    await this.userService.updateStatus(req.user.id, null);
     res.clearCookie('connect.sid', { httpOnly: true });
     res.clearCookie('accessToken', {
       httpOnly: true,
