@@ -15,6 +15,7 @@ export function Navbar() {
 					width: 100%;
 					position: relative;
 					padding: 0px 2rem;
+					padding-right:1rem;
 				}
 			`}</style>
 		</nav>
