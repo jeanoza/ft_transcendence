@@ -53,6 +53,7 @@ export function FriendsModal({
 				.header {
 					padding-bottom:1rem;
 					border-bottom:1px solid var(--border-color);
+					margin-bottom:1rem;
 				}
 			`}</style>
 		</div >

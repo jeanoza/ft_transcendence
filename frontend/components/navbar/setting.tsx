@@ -59,6 +59,7 @@ export function Setting() {
 					cursor: auto;
 				}
 				.user-menu {
+					z-index:1;
 					position: absolute;
 					top: 42px;
 					left: 0;

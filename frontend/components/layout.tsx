@@ -16,47 +16,25 @@ enum STATUS {
 	ingame,
 }
 
+let userConnected = false;
+
 export function AuthLayout({ children }: React.PropsWithChildren) {
 	const { user, revalid, isLoading } = useUser();
-	const { friends, revalid: revalidFriends } = useAllFriend();
-	const { users, revalid: revalidUsers } = useAllUser();
-	const { blockeds, revalid: revalidBlockeds } = useAllBlocked();
 	const { socket } = useSocket("chat");
 	const { isLoading: is2faLoading } = use2fa();
 
 	useEffect(() => {
-		socket.on("come", async function () {
-			setTimeout(() => {
-				revalidFriends(friends);
-				revalidUsers(users);
-				revalidBlockeds(blockeds);
-			}, 200);
-		});
-		return () => {
-			socket.off("come");
-		};
-	}, [friends, users, blockeds]);
-
-	useEffect(() => {
 		//update chat socket
-		if (user) {
-			socket.on("connect", async function () {
-				await axios.patch(`user/${user.id}`, {
-					status: STATUS.online,
-					chatSocket: socket.id,
-				});
+		if (user && !userConnected) {
+			socket.emit('connectUser', user.id);
+			userConnected = true;
+			socket.on('connected', function () {
 				revalid(user);
-			});
-			socket.on("quit", function (data) {
-				revalidFriends(friends);
-				revalidUsers(users);
-				revalidBlockeds(blockeds);
-			});
+			})
+			return () => {
+				socket.off("connected");
+			};
 		}
-		return () => {
-			socket.off("connect");
-			socket.off("quit");
-		};
 	}, [user]);
 
 	if (isLoading || is2faLoading)

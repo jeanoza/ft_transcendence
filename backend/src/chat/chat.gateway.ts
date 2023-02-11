@@ -43,14 +43,27 @@ export class ChatGateway
   //FIXME: ConnectedSocket or not?
   async handleConnection(@ConnectedSocket() client: Socket) {
     this.logger.log(`Chat socket id:${client.id} connected`);
-    this.server.emit('come', client.id);
   }
 
   //FIXME: ConnectedSocket or not?
   async handleDisconnect(@ConnectedSocket() client: Socket) {
     await this.userService.handleDisconnectSocket(client.id);
-    this.server.emit('quit', { disconnected: client.id });
+    //this.server.emit('quit', { disconnected: client.id });
     this.logger.log(`Chat socket id:${client.id} disconnected`);
+  }
+
+  @SubscribeMessage('connectUser')
+  async handleConnectUser(client: Socket, userId: number) {
+    try {
+      await this.userService.update(userId, {
+        status: 1,
+        chatSocket: client.id,
+      });
+      client.emit('connected');
+    } catch (e) {
+      console.log(e);
+      client.emit('error', e);
+    }
   }
 
   @SubscribeMessage('enterChatPage')

@@ -22,7 +22,7 @@ export function BlockedsCont() {
 		<div className="item-cont">
 			<ul className="d-flex column">
 				{blockeds?.map((el: any) => (
-					<li key={el.id} className="d-flex center justify-between gap">
+					<li key={el.id} className="d-flex center gap p-2">
 						<Avatar url={el.image_url} size="sm" status={el.status} />
 						<span className="username">{el.name}</span>
 						<div id={el.id} onClick={unblock}>
@@ -34,16 +34,6 @@ export function BlockedsCont() {
 			<style jsx>{`
 				.username {
 					width: 120px;
-				}
-				ul {
-					gap: 0.5rem;
-				}
-				li {
-					padding-right: 1rem;
-				}
-				li:hover {
-					background-color: var(--gray-light-1);
-					border-radius: 8px;
 				}
 			`}</style>
 		</div>

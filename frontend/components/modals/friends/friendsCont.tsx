@@ -3,8 +3,6 @@ import { useAllFriend } from "../../../utils/hooks/swrHelper";
 import { Avatar } from "../../avatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Loader } from "../../loader";
-import { useEffect } from "react";
-import { useSocket } from "../../../utils/hooks/useSocket";
 
 export function FriendsCont() {
 	const { friends, revalid, isLoading } = useAllFriend();
@@ -35,7 +33,7 @@ export function FriendsCont() {
 		<div className="item-cont">
 			<ul className="d-flex column">
 				{friends?.map((el: any) => (
-					<li key={el.id} className="d-flex center justify-between gap">
+					<li key={el.id} className="d-flex center justify-between gap p-2">
 						<Avatar url={el.image_url} size="sm" status={el.status} />
 						<span className="username">{el.name}</span>
 						<div className="d-flex gap">
@@ -52,16 +50,6 @@ export function FriendsCont() {
 			<style jsx>{`
 				.username {
 					width: 96px;
-				}
-				ul {
-					gap: 0.5rem;
-				}
-				li {
-					padding-right: 1rem;
-				}
-				li:hover {
-					background-color: var(--gray-light-1);
-					border-radius: 8px;
 				}
 			`}</style>
 		</div>
