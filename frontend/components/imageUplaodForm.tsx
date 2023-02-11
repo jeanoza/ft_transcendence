@@ -39,7 +39,7 @@ export function ImageUploadForm() {
 	return (
 		<form onSubmit={handleSubmit}>
 			<div className="field">
-				<label>Upload</label>
+				<label>image</label>
 				<input type="file" onChange={handleImageChange} />
 			</div>
 			<button type="submit" disabled={loading}>
