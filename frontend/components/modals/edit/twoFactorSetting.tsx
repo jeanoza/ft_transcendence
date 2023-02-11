@@ -40,7 +40,7 @@ export function TwoFactorSetting() {
 
 	if (!user) return null;
 	return (
-		<div>
+		<div className="twofactor-cont">
 			<h3>Two Factor</h3>
 			<div className="d-flex center">
 				{imageSrc && <img src={imageSrc} alt="QR code" />}
@@ -72,6 +72,9 @@ export function TwoFactorSetting() {
 					color: var(--gray-dark);
 					margin-bottom: 1rem;
 				}
+				.twofactor-cont {
+					width:14rem;
+				}
 				.twofactor {
 					width: 4rem;
 					border-radius: 2rem;
@@ -85,10 +88,9 @@ export function TwoFactorSetting() {
 					height: 2rem;
 					background-color: white;
 					border-radius: 50%;
+					transition:all 0.2s linear;
 				}
 				.twofactor.enabled > div {
-					/*left: unset;
-					right: 0;*/
 					transform: translateX(2rem);
 				}
 			`}</style>

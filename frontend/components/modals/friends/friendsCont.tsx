@@ -5,13 +5,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Loader } from "../../loader";
 
 export function FriendsCont() {
-	const { friends } = useAllFriend();
+	const { friends, revalid } = useAllFriend();
 
 	async function deleteFriend(e: any) {
 		const { id } = e.currentTarget;
 		try {
 			await axios.delete(`friend/${id}`);
 			window.alert(`user is deleted`);
+			revalid();
 		} catch (e: any) {
 			window.alert(e.response.data.message);
 		}
