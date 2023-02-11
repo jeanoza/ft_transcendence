@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { HTMLInputTypeAttribute, useState } from "react";
 import { Loader } from "./loader";
 import { useUser } from "../utils/hooks/swrHelper";
 import axios from "axios";
@@ -8,7 +8,7 @@ export function ImageUploadForm() {
 	const [image, setImage] = useState<any>(null);
 	const [loading, setLoading] = useState(false);
 
-	const handleImageChange = (e) => {
+	const handleImageChange = (e: React.ChangeEvent<any>) => {
 		const selectedFile = e.target.files[0];
 
 		if (selectedFile && selectedFile.type.startsWith("image/")) {
@@ -18,7 +18,7 @@ export function ImageUploadForm() {
 		}
 	};
 
-	const handleSubmit = async (e) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setLoading(true);
 
