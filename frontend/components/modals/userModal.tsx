@@ -29,7 +29,7 @@ export function UserModal({
 		try {
 			await axios.post(`friend`, { userId });
 			window.alert(`${userData.name} is added`);
-			revalidFriend(friend);
+			revalidFriend();
 		} catch (e: any) {
 			window.alert(e.response.data.message);
 		}
@@ -38,7 +38,7 @@ export function UserModal({
 		try {
 			await axios.delete(`friend/${userId}`);
 			window.alert(`${userData.name} is deleted`);
-			revalidFriend(friend);
+			revalidFriend();
 		} catch (e: any) {
 			window.alert(e.response.data.message);
 		}
@@ -76,34 +76,6 @@ export function UserModal({
 						/>
 						{userData.id !== user.id && (
 							<div className="btn-cont d-flex center column gap">
-								{/*<div className="d-flex center gap">
-									{
-										userData.id !== friend?.id
-											? <div className="btn d-flex center" onClick={addFriend}>
-												<FontAwesomeIcon className="svg-icon" icon="user-plus" />
-											</div>
-											: <div className="btn d-flex center" onClick={deleteFriend}>
-												<FontAwesomeIcon icon="user-minus" />
-											</div>
-									}
-									{
-										userData.id !== blocked?.id
-											? <div className="btn d-flex center" onClick={blockUser}>
-												<FontAwesomeIcon icon="ban" />
-											</div>
-											: <div className="btn d-flex center" onClick={unblockUser}>
-												<FontAwesomeIcon icon="lock-open" />
-											</div>
-									}
-								</div>
-								<div className="d-flex center gap">
-									<div className="btn d-flex center">
-										<FontAwesomeIcon icon="location-arrow" />
-									</div>
-									<div className="btn d-flex center">
-										<FontAwesomeIcon icon="gamepad" />
-									</div>
-								</div>*/}
 								<div className="d-flex center gap">
 									{userData.id !== friend?.id ? (
 										<button className="btn" onClick={addFriend}>
