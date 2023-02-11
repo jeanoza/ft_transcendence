@@ -123,24 +123,8 @@ export function UserModal({
 				</div>
 			)}
 			<style jsx>{`
-				/*.btn-cont {
-					width:10rem;
-				}
-				.btn-cont .d-flex {
-					font-size:1.2rem;
-				}
 				.btn {
-					width:2.6rem;
-					height:2.6rem;
-					border-radius:50%;
-					background-color:var(--gray-light-2)
-				}
-				.btn:hover {
-					color:white;
-					background-color:var(--gray-dark);
-				}*/
-				.btn {
-					width: 7rem;
+					width: 8rem;
 				}
 				.row {
 					margin-bottom: 1rem;
