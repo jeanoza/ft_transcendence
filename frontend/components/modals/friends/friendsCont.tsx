@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Loader } from "../../loader";
 
 export function FriendsCont() {
-	const { friends, revalid, isLoading } = useAllFriend();
+	const { friends } = useAllFriend();
 
 	async function deleteFriend(e: any) {
 		const { id } = e.currentTarget;

@@ -18,8 +18,8 @@ export function UserModal({
 }) {
 	const { user } = useUser();
 	const { userData } = useUserById(userId);
-	const { friend, revalid } = useFriend(userId);
-	const { blocked, revalid: blockedRevalid } = useBlocked(userId);
+	const { friend, revalid: revalidFriend } = useFriend(userId);
+	const { blocked, revalid: revalidBlocked } = useBlocked(userId);
 
 	function handleClose(e: any) {
 		if (e.target.classList.contains("modal-background")) onClose();
@@ -29,7 +29,7 @@ export function UserModal({
 		try {
 			await axios.post(`friend`, { userId });
 			window.alert(`${userData.name} is added`);
-			revalid(friend);
+			revalidFriend(friend);
 		} catch (e: any) {
 			window.alert(e.response.data.message);
 		}
@@ -38,7 +38,7 @@ export function UserModal({
 		try {
 			await axios.delete(`friend/${userId}`);
 			window.alert(`${userData.name} is deleted`);
-			revalid(friend, false);
+			revalidFriend(friend);
 		} catch (e: any) {
 			window.alert(e.response.data.message);
 		}
@@ -48,7 +48,7 @@ export function UserModal({
 		try {
 			await axios.post(`blocked`, { userId });
 			window.alert(`${userData.name} is blocked`);
-			blockedRevalid();
+			revalidBlocked();
 		} catch (e: any) {
 			window.alert(e.response.data.message);
 		}
@@ -57,7 +57,7 @@ export function UserModal({
 		try {
 			await axios.delete(`blocked/${userId}`);
 			window.alert(`${userData.name} is unblocked`);
-			blockedRevalid();
+			revalidBlocked();
 		} catch (e: any) {
 			window.alert(e.response.data.message);
 		}
