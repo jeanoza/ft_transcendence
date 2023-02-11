@@ -23,7 +23,6 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 	const { socket } = useSocket("chat");
 	const { isLoading: is2faLoading } = use2fa();
 
-	console.log(user?.status);
 	useEffect(() => {
 		//update chat socket
 		if (user && !userConnected) {

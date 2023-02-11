@@ -12,6 +12,7 @@ import { ChannelMember } from './chat/entities/channelMember.entity';
 import { ChannelChat } from './chat/entities/channelChat.entity';
 import { Friend } from './user/entities/friend.entity';
 import { Blocked } from './user/entities/blocked.entity';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -44,7 +45,7 @@ import { Blocked } from './user/entities/blocked.entity';
     ChatModule,
     AuthModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}

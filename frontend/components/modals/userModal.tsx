@@ -8,6 +8,7 @@ import {
 } from "../../utils/hooks/swrHelper";
 import { Avatar } from "../avatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { UserInfo } from "../userInfo";
 
 export function UserModal({
 	userId,
@@ -103,23 +104,7 @@ export function UserModal({
 							</div>
 						)}
 					</div>
-					<div className="user-info">
-						<h3>{userData.name}</h3>
-						<div className="d-flex column gap">
-							<div className="d-flex justify-between">
-								<span>Email</span>
-								<span>{userData.email}</span>
-							</div>
-							<div className="d-flex justify-between">
-								<span>Created at</span>
-								<span>{new Date(userData.createdAt).toLocaleDateString()}</span>
-							</div>
-							<div className="d-flex justify-between">
-								<span>Rank</span>
-								<span>{userData.rank ? userData.rank : "not yet"}</span>
-							</div>
-						</div>
-					</div>
+					<UserInfo user={userData} />
 				</div>
 			)}
 			<style jsx>{`
@@ -127,9 +112,6 @@ export function UserModal({
 					width: 8rem;
 				}
 				.row {
-					margin-bottom: 1rem;
-				}
-				h3 {
 					margin-bottom: 1rem;
 				}
 			`}</style>
