@@ -52,13 +52,15 @@ export function Search() {
 				</div>
 			)}
 			{filtered && filtered.length > 0 && (
-				<ul className="user-list">
-					{filtered.map((el: any) => (
-						<li key={el.id} onClick={() => handleOpenModal(el.id)}>
-							{el?.name}
-						</li>
-					))}
-				</ul>
+				<div className="user-list">
+					<ul >
+						{filtered.map((el: any) => (
+							<li key={el.id} onClick={() => handleOpenModal(el.id)}>
+								{el?.name}
+							</li>
+						))}
+					</ul>
+				</div>
 			)}
 			{openUserModal && userId && (
 				<UserModal userId={userId} onClose={() => setUserModal(false)} />
@@ -76,8 +78,9 @@ export function Search() {
 					outline: none;
 				}
 				.user-list {
+					z-index:1;
 					position: absolute;
-					top: 30px;
+					top: 42px;
 					left: 0;
 					right: 0;
 					color: var(--gray-dark);

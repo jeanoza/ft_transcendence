@@ -31,7 +31,7 @@ export function Setting() {
 				<FontAwesomeIcon icon="gear" />
 			</div>
 			{dropdown && (
-				<div className="user-menu">
+				<div className="nav-dropdown-menu">
 					<div className="user-resume d-flex column center gap">
 						<Avatar url={user.imageURL} status={user.status} />
 						<h3>{user.name}</h3>
@@ -44,6 +44,10 @@ export function Setting() {
 						<li onClick={onLogout}>Logout</li>
 					</ul>
 				</div>
+			)}
+			{openEditModal && <EditModal onClose={() => setEditModal(false)} />}
+			{openFriendsModal && (
+				<FriendsModal onClose={() => setFriendsModal(false)} />
 			)}
 			<style jsx>{`
 				.icon {
@@ -58,7 +62,7 @@ export function Setting() {
 					padding: 1rem;
 					cursor: auto;
 				}
-				.user-menu {
+				.nav-dropdown-menu {
 					z-index:1;
 					position: absolute;
 					top: 42px;
@@ -82,10 +86,7 @@ export function Setting() {
 					color: white;
 				}
 			`}</style>
-			{openEditModal && <EditModal onClose={() => setEditModal(false)} />}
-			{openFriendsModal && (
-				<FriendsModal onClose={() => setFriendsModal(false)} />
-			)}
+
 		</div>
 	);
 }
