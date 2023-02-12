@@ -52,7 +52,7 @@ export function Search() {
 				</div>
 			)}
 			{filtered && filtered.length > 0 && (
-				<div className="user-list">
+				<div className="nav-dropdown-menu">
 					<ul >
 						{filtered.map((el: any) => (
 							<li key={el.id} onClick={() => handleOpenModal(el.id)}>
@@ -77,7 +77,7 @@ export function Search() {
 					border: none;
 					outline: none;
 				}
-				.user-list {
+				.nav-dropdown-menu {
 					z-index:1;
 					position: absolute;
 					top: 42px;
