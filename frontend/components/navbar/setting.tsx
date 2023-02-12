@@ -58,6 +58,10 @@ export function Setting() {
 					width: 160px;
 					cursor: pointer;
 				}
+				.nav-dropdown-menu {
+					top: 41px;
+					right:1rem;
+				}
 				.nav-dropdown-menu li {
 					text-align: center;
 				}

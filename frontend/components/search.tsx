@@ -78,7 +78,7 @@ export function Search() {
 					outline: none;
 				}
 				.nav-dropdown-menu {
-					top: 30px;
+					top: 29px;
 				}
 				.cancelBtn {
 					position: absolute;
