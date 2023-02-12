@@ -308,3 +308,28 @@ svg {
 	font-weight: 500;
 }
 /* #endregion */
+
+/* #region nav */
+.nav-dropdown-menu {
+	z-index: 1;
+	position: absolute;
+	top: 42px;
+	left: 0;
+	right: 0;
+	color: var(--gray-dark);
+	background: white;
+	border: 1px solid var(--border-color);
+	border-top: none;
+	border-radius: 0 0 8px 8px;
+}
+.nav-dropdown-menu li {
+	padding: 0.5rem;
+}
+.nav-dropdown-menu li:last-child {
+	border-radius: 0 0 8px 8px;
+}
+.nav-dropdown-menu li:hover {
+	background-color: var(--border-color);
+	color: white;
+}
+/* #endregion */

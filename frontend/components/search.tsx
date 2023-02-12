@@ -36,7 +36,7 @@ export function Search() {
 		setUserId(id);
 		setUserModal(true);
 		setName("");
-		setFiltered([]);
+		setFiltered(null);
 	}
 
 	function onChange(e: any) {
@@ -78,16 +78,7 @@ export function Search() {
 					outline: none;
 				}
 				.nav-dropdown-menu {
-					z-index:1;
-					position: absolute;
-					top: 42px;
-					left: 0;
-					right: 0;
-					color: var(--gray-dark);
-					background: white;
-					border: 1px solid var(--border-color);
-					border-top: none;
-					border-radius: 0 0 8px 8px;
+					top: 30px;
 				}
 				.cancelBtn {
 					position: absolute;

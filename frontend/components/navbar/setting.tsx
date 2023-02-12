@@ -58,35 +58,14 @@ export function Setting() {
 					width: 160px;
 					cursor: pointer;
 				}
+				.nav-dropdown-menu li {
+					text-align: center;
+				}
 				.user-resume {
 					padding: 1rem;
 					cursor: auto;
 				}
-				.nav-dropdown-menu {
-					z-index:1;
-					position: absolute;
-					top: 42px;
-					left: 0;
-					right: 0;
-					color: var(--gray-dark);
-					background: white;
-					border: 1px solid var(--border-color);
-					border-top: none;
-					border-radius: 0 0 8px 8px;
-				}
-				li {
-					padding: 0.5rem;
-					text-align: center;
-				}
-				li:last-child {
-					border-radius: 0 0 8px 8px;
-				}
-				li:hover {
-					background-color: var(--border-color);
-					color: white;
-				}
 			`}</style>
-
 		</div>
 	);
 }

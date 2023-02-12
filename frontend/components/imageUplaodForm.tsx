@@ -45,6 +45,11 @@ export function ImageUploadForm() {
 			<button type="submit" disabled={loading}>
 				Upload
 			</button>
+			<style jsx>{`
+				form {
+					width:200px;
+				}
+			`}</style>
 		</form>
 	);
 };
