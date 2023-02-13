@@ -105,7 +105,7 @@ export function ChatDisplay({ channel }: { channel: string | null }) {
 			<style jsx>{`
 				h3 {
 					padding: 1rem;
-					border-bottom: 1px solid var(--border-color);
+					/*border-bottom: 1px solid var(--border-color);*/
 				}
 				.sender {
 					font-weight: 600;

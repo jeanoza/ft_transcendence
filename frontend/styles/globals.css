@@ -71,6 +71,11 @@ button:hover {
 svg {
 	cursor: pointer;
 }
+
+.cursor {
+	cursor: pointer;
+}
+
 .cursor-pointer {
 	text-decoration: underline;
 	color: var(--accent);
@@ -232,7 +237,6 @@ svg {
 .field {
 	position: relative;
 	margin: 1rem 0;
-	/*width: 100%;*/
 }
 .field.sm {
 	width: 20rem;
