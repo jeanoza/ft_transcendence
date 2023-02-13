@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { AuthLayout, Layout } from "../components/layout";
+import { useEffect, useState } from "react";
+import { AuthLayout } from "../components/layout";
 import { Seo } from "../components/seo";
 import { useUser } from "../utils/hooks/swrHelper";
 import { ChannelList } from "../components/chat/channelList";
@@ -66,7 +66,7 @@ export default function Chat() {
 			<style jsx>{`
 				.chat {
 					height: 100%;
-					background-color: var(--gray-light-1);
+					background-color: var(--gray-light-0);
 					border-radius: 8px;
 				}
 			`}</style>

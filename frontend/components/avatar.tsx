@@ -21,16 +21,19 @@ export function Avatar({
 					position: relative;
 					background-size: cover;
 					border: 1px solid white;
+					min-width: 7rem;
 					width: 7rem;
 					height: 7rem;
 					border-radius: 50%;
 				}
 				.avatar.lg {
+					min-width: 10rem;
 					width: 10rem;
 					height: 10rem;
 					border-radius: 1rem;
 				}
 				.avatar.sm {
+					min-width: 3rem;
 					width: 3rem;
 					height: 3rem;
 				}

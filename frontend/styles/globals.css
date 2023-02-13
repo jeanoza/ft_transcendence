@@ -1,5 +1,6 @@
 /* #region variable */
 :root {
+	--gray-light-0: rgb(250, 250, 250);
 	--gray-light-1: rgb(240, 240, 240);
 	--gray-light-2: rgb(220, 220, 220);
 	--gray-dark: #424245;

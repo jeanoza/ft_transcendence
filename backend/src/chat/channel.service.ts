@@ -72,15 +72,42 @@ export class ChannelService {
         'channelChats.channelId = :channelId',
         { channelId },
       )
-      .select(['channelChats.content', 'user.name'])
+      .select([
+        'channelChats.content',
+        'user.name',
+        'user.status',
+        'user.imageURL',
+      ])
       .orderBy('channelChats.created_at', 'DESC')
       .limit(5)
       .getRawMany();
-    return channelChat
+
+    const channelChat2 = await this.channelChatRepository
+      .createQueryBuilder('channelChats')
+      .innerJoin('channelChats.user', 'user')
+      .innerJoin(
+        'channelChats.channel',
+        'channel',
+        'channelChats.channelId = :channelId',
+        { channelId },
+      )
+      .select([
+        'channelChats.content',
+        'user.id',
+        'user.name',
+        'user.status',
+        'user.imageURL',
+      ])
+      .orderBy('channelChats.created_at', 'DESC')
+      .limit(5)
+      .getMany();
+
+    console.log(channelChat2);
+    return channelChat2
       .map((el) => {
         return {
-          sender: el.user_name,
-          message: el.channelChats_content,
+          sender: el.user,
+          content: el.content,
         };
       })
       .reverse();
@@ -119,9 +146,9 @@ export class ChannelService {
         'channelMembers.channelId = :channelId',
         { channelId },
       )
-      .select(['users.name'])
+      .select(['users.name', 'users.status', 'users.imageURL'])
       .getMany();
-    return users.map((el) => el.name); //send only username
+    return users; //send only username
   }
 
   //CRUD

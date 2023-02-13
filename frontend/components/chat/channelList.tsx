@@ -1,9 +1,4 @@
-import {
-	Dispatch,
-	MouseEventHandler,
-	SetStateAction,
-	useEffect,
-} from "react";
+import { Dispatch, MouseEventHandler, SetStateAction, useEffect } from "react";
 import { useUser } from "../../utils/hooks/swrHelper";
 import { useSocket } from "../../utils/hooks/useSocket";
 
@@ -12,17 +7,17 @@ import { useSocket } from "../../utils/hooks/useSocket";
 export function ChannelList({
 	channels,
 	openModal,
-	onChangeChannel
+	onChangeChannel,
 }: {
 	channels: any[];
 	openModal: any;
-	onChangeChannel: MouseEventHandler<HTMLElement>
+	onChangeChannel: MouseEventHandler<HTMLElement>;
 }) {
 	const { user } = useUser();
 	const { socket } = useSocket("chat");
 
 	useEffect(() => {
-		socket.emit('enterChatPage', user.id);
+		socket.emit("enterChatPage", user.id);
 	}, []);
 
 	return (
@@ -30,10 +25,14 @@ export function ChannelList({
 			<button onClick={openModal}>New Chat</button>
 			<ul className="">
 				{channels.map((el) => (
-					<li className="d-flex center justify-between gap" id={el.id} key={el.id} onClick={onChangeChannel} title={el.name}>
-						<span>
-							{el.name}
-						</span>
+					<li
+						className="d-flex center justify-between gap"
+						id={el.id}
+						key={el.id}
+						onClick={onChangeChannel}
+						title={el.name}
+					>
+						<span>{el.name}</span>
 						<div className="d-flex btnCont">
 							<div>S</div>
 							<div>D</div>
@@ -45,42 +44,42 @@ export function ChannelList({
 				.cont {
 					border-right: 1px solid var(--border-color);
 					padding: 0.5rem;
+					/*background-color: var(--gray-light-1);*/
 				}
 				ul {
-					gap:0.1rem;
-					overflow-y:auto;
-					width:160px;
+					gap: 0.1rem;
+					overflow-y: auto;
+					width: 160px;
 				}
 				li {
-					padding:0.5rem;
-					border-radius:8px;
+					padding: 0.5rem;
+					border-radius: 8px;
 				}
 				li > span {
-					text-overflow:ellipsis;
-					overflow:hidden;
+					text-overflow: ellipsis;
+					overflow: hidden;
 				}
 				li:hover {
-					background-color:var(--gray-light-2);
+					background-color: var(--gray-light-2);
 				}
-				li.active span{
+				li.active span {
 					color: var(--accent);
-					font-weight:500;	
+					font-weight: 500;
 				}
 				button {
-					background-color: white;
-					white-space:nowrap;
+					white-space: nowrap;
 				}
 				.btnCont {
-					gap:0.5rem;
+					gap: 0.5rem;
 				}
-				.btnCont > div{
-					width:1.5rem;
-					height:1.5rem;
-					border-radius:50%;
-					background-color:white;
-					text-align:center;
-					line-height:1.5rem;
-					font-weight:500;
+				.btnCont > div {
+					width: 1.5rem;
+					height: 1.5rem;
+					border-radius: 50%;
+					/*background-color: white;*/
+					text-align: center;
+					line-height: 1.5rem;
+					font-weight: 500;
 				}
 			`}</style>
 		</div>

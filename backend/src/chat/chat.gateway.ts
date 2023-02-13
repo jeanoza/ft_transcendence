@@ -40,12 +40,11 @@ export class ChatGateway
     this.logger.log('after init');
   }
 
-  //FIXME: ConnectedSocket or not?
+  //#region Connection
   async handleConnection(@ConnectedSocket() client: Socket) {
     this.logger.log(`Chat socket id:${client.id} connected`);
   }
 
-  //FIXME: ConnectedSocket or not?
   async handleDisconnect(@ConnectedSocket() client: Socket) {
     await this.userService.handleDisconnectSocket(client.id);
     //this.server.emit('quit', { disconnected: client.id });
@@ -66,6 +65,9 @@ export class ChatGateway
     }
   }
 
+  //#endregion
+
+  //#region Channel
   @SubscribeMessage('enterChatPage')
   async handleChannelList(client: Socket, userId: number) {
     try {
@@ -104,10 +106,12 @@ export class ChatGateway
   async handlejoinChannel(client: Socket, { channelName }) {
     try {
       client.join(channelName);
-      client.emit(
-        'userList',
-        await this.channelService.findAllUserInChannel(channelName),
-      );
+      this.server
+        .to(channelName)
+        .emit(
+          'userList',
+          await this.channelService.findAllUserInChannel(channelName),
+        );
       client.emit(
         'getChannelChats',
         await this.channelService.findAllChannelChat(channelName),
@@ -125,22 +129,29 @@ export class ChatGateway
   }
 
   @SubscribeMessage('sendMSG')
-  async handleMessage(client: Socket, @MessageBody() data: any): Promise<void> {
-    this.logger.log('sendMSG', data);
+  async handleMessage(
+    client: Socket,
+    @MessageBody('user') user: any,
+    @MessageBody('content') content: string,
+    @MessageBody('channel') channel: string,
+  ): Promise<void> {
+    this.logger.log('sendMSG', user);
+    this.logger.log('sendMSG', content);
+    this.logger.log('sendMSG', channel);
     try {
       await this.channelService.saveChannelChat({
-        userName: data.sender,
-        content: data.message,
-        channelName: data.channel,
+        userName: user.name,
+        content: content,
+        channelName: channel,
       });
-      this.server.in(data.channel).emit('recvMSG', {
-        sender: data.sender,
-        message: data.message,
-        //channel: data.channel,
+      this.server.to(channel).emit('recvMSG', {
+        sender: user,
+        content: content,
       });
     } catch (e) {
       this.logger.log(e);
       client.emit('error', e);
     }
   }
+  //#endregion
 }

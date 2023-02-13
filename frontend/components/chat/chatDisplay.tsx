@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import _2fa from "../../pages/_2fa";
 import { useUser } from "../../utils/hooks/swrHelper";
 import { useSocket } from "../../utils/hooks/useSocket";
 import { InputField } from "../inputField";
@@ -6,10 +7,10 @@ import { InputField } from "../inputField";
 export function ChatDisplay({ channel }: { channel: string | null }) {
 	const { socket } = useSocket("chat");
 	const { user } = useUser();
-	const [message, setMessage] = useState<string>("");
-	const [received, setReceived] = useState<
-		{ sender: string; message: string }[]
-	>([]);
+	const [content, setContent] = useState<string>("");
+	const [received, setReceived] = useState<{ sender: any; content: string }[]>(
+		[]
+	);
 	const dialogueRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -26,6 +27,7 @@ export function ChatDisplay({ channel }: { channel: string | null }) {
 		if (channel) socket.emit("joinChannel", { channelName: channel, user });
 
 		socket.on("recvMSG", function (data) {
+			console.log("recv", data);
 			setReceived((prev) => [...prev, data]);
 			ajustScroll();
 		});
@@ -43,11 +45,16 @@ export function ChatDisplay({ channel }: { channel: string | null }) {
 	async function onKeydown(e: KeyboardEvent) {
 		if (channel && e.code === "Enter") {
 			socket?.emit("sendMSG", {
-				sender: user.name,
-				message,
+				user: {
+					id: user.id,
+					name: user.name,
+					status: user.status,
+					imageURL: user.imageURL,
+				},
+				content,
 				channel,
 			});
-			setMessage("");
+			setContent("");
 		}
 	}
 	return (
@@ -59,8 +66,8 @@ export function ChatDisplay({ channel }: { channel: string | null }) {
 				) : (
 					received.map((el, index) => (
 						<div key={index}>
-							<span className="sender">{el.sender}:</span>
-							<span>{el.message}</span>
+							<span className="sender">{el.sender.name}</span>
+							<span>{el.content}</span>
 						</div>
 					))
 				)}
@@ -69,8 +76,8 @@ export function ChatDisplay({ channel }: { channel: string | null }) {
 				<InputField
 					type="text"
 					name="message"
-					state={message}
-					setState={setMessage}
+					state={content}
+					setState={setContent}
 					onKeydown={onKeydown}
 				/>
 			</div>
@@ -88,11 +95,13 @@ export function ChatDisplay({ channel }: { channel: string | null }) {
 				}
 				.message {
 					padding: 0 1rem;
+					background-color: inherit;
 				}
 				.chat-display-dialogue {
 					height: 100%;
 					overflow-y: auto;
 					padding: 1rem;
+					background-color: white;
 				}
 			`}</style>
 		</div>
