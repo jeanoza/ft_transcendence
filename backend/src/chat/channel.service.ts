@@ -63,26 +63,8 @@ export class ChannelService {
 
   async findAllChannelChat(channelName) {
     const { id: channelId } = await this.findByName(channelName);
-    const channelChat = await this.channelChatRepository
-      .createQueryBuilder('channelChats')
-      .innerJoin('channelChats.user', 'user')
-      .innerJoin(
-        'channelChats.channel',
-        'channel',
-        'channelChats.channelId = :channelId',
-        { channelId },
-      )
-      .select([
-        'channelChats.content',
-        'user.name',
-        'user.status',
-        'user.imageURL',
-      ])
-      .orderBy('channelChats.created_at', 'DESC')
-      .limit(5)
-      .getRawMany();
 
-    const channelChat2 = await this.channelChatRepository
+    const channelChat = await this.channelChatRepository
       .createQueryBuilder('channelChats')
       .innerJoin('channelChats.user', 'user')
       .innerJoin(
@@ -101,7 +83,7 @@ export class ChannelService {
       .orderBy('channelChats.created_at', 'DESC')
       .getMany();
 
-    return channelChat2
+    return channelChat
       .map((el) => {
         return {
           sender: el.user,
