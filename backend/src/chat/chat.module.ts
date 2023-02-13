@@ -10,6 +10,7 @@ import { DMService } from './dm.service';
 import { UserService } from 'src/user/services/user.service';
 import { Friend } from 'src/user/entities/friend.entity';
 import { Blocked } from 'src/user/entities/blocked.entity';
+import { DM } from './entities/dm.entity';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { Blocked } from 'src/user/entities/blocked.entity';
       User,
       Friend,
       Blocked,
+      DM,
     ]),
   ],
   providers: [DMService, ChannelService, UserService, ChatGateway],

@@ -7,8 +7,4 @@ import { User } from 'src/user/entities/user.entity';
 export class DMService {
   @InjectRepository(User)
   private userRepository: Repository<User>;
-
-  async updateUserSocket(socketId: string, userId: number) {
-    return await this.userRepository.update(userId, { chatSocket: socketId });
-  }
 }

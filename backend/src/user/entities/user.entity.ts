@@ -12,6 +12,7 @@ import {
 } from 'typeorm';
 import { Friend } from './friend.entity';
 import { Blocked } from './blocked.entity';
+import { DM } from 'src/chat/entities/dm.entity';
 
 //in postgresql do not put schema
 @Entity({ name: 'users' })
@@ -77,6 +78,12 @@ export class User {
 
   @OneToMany(() => ChannelChat, (channelChat) => channelChat.user)
   channelChats: ChannelChat[];
+
+  @OneToMany(() => DM, (dm) => dm.sender)
+  dmsAsSender: DM[];
+
+  @OneToMany(() => DM, (dm) => dm.receiver)
+  dmsAsReceiver: DM[];
 
   @OneToMany(() => Friend, (friend) => friend.userA)
   friendsAsA: Friend[];

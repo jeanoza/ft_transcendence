@@ -13,6 +13,7 @@ import { ChannelChat } from './chat/entities/channelChat.entity';
 import { Friend } from './user/entities/friend.entity';
 import { Blocked } from './user/entities/blocked.entity';
 import { AppController } from './app.controller';
+import { DM } from './chat/entities/dm.entity';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { AppController } from './app.controller';
         ChannelChat,
         Friend,
         Blocked,
+        DM,
       ],
       logging: process.env.NODE_ENV !== 'production', // logging only on dev
       keepConnectionAlive: true, //hot-reloading disconnect db when code change

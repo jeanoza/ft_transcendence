@@ -45,7 +45,4 @@ export class Channel {
 
   @OneToMany(() => ChannelChat, (channelChat) => channelChat.channel)
   channelChats: ChannelChat[];
-
-  //@ManyToMany(() => User, (user) => user.channels)
-  //members: User[];
 }
