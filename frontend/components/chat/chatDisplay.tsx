@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import _2fa from "../../pages/_2fa";
 import { useUser } from "../../utils/hooks/swrHelper";
 import { useSocket } from "../../utils/hooks/useSocket";
+import { Avatar } from "../avatar";
 import { InputField } from "../inputField";
 
 export function ChatDisplay({ channel }: { channel: string | null }) {
@@ -14,8 +15,9 @@ export function ChatDisplay({ channel }: { channel: string | null }) {
 	const dialogueRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
-		socket.on("getChannelChats", function (data) {
+		socket.on("getChannelChats", async function (data) {
 			setReceived(data);
+			await ajustScroll();
 		});
 		return () => {
 			socket.off("getChanelChats");
@@ -23,13 +25,11 @@ export function ChatDisplay({ channel }: { channel: string | null }) {
 	}, []);
 
 	useEffect(() => {
-		//FIXME: when user click(channel change) => request chat before(channelChat db)
 		if (channel) socket.emit("joinChannel", { channelName: channel, user });
 
-		socket.on("recvMSG", function (data) {
-			console.log("recv", data);
+		socket.on("recvMSG", async function (data) {
 			setReceived((prev) => [...prev, data]);
-			ajustScroll();
+			await ajustScroll();
 		});
 
 		return () => {
@@ -37,9 +37,11 @@ export function ChatDisplay({ channel }: { channel: string | null }) {
 		};
 	}, [channel]);
 
-	function ajustScroll() {
+	async function ajustScroll() {
 		const dialogueCont: HTMLDivElement = dialogueRef.current as HTMLDivElement;
-		dialogueCont.scrollTo(0, dialogueCont.scrollHeight); // scroll to last message
+		setTimeout(() => {
+			dialogueCont?.scrollTo(0, dialogueCont?.scrollHeight); // scroll to last message
+		});
 	}
 
 	async function onKeydown(e: KeyboardEvent) {
@@ -64,12 +66,31 @@ export function ChatDisplay({ channel }: { channel: string | null }) {
 				{!received.length ? (
 					<div />
 				) : (
-					received.map((el, index) => (
-						<div key={index}>
-							<span className="sender">{el.sender.name}</span>
-							<span>{el.content}</span>
-						</div>
-					))
+					received.map((el, index) => {
+						const isMine = el.sender.id === user.id;
+						return (
+							<div
+								key={index}
+								className={`d-flex my-4 ${isMine ? "justify-end" : ""}`}
+							>
+								{!isMine && (
+									<Avatar
+										url={el.sender.imageURL}
+										status={el.sender.status}
+										size="sm"
+									/>
+								)}
+								<div className="mx-2">
+									{!isMine && <span className="sender">{el.sender.name}</span>}
+									<div className="d-flex">
+										<div className={`content ${isMine ? "mine" : ""}`}>
+											{el.content}
+										</div>
+									</div>
+								</div>
+							</div>
+						);
+					})
 				)}
 			</div>
 			<div className="message">
@@ -88,7 +109,18 @@ export function ChatDisplay({ channel }: { channel: string | null }) {
 				}
 				.sender {
 					font-weight: 600;
+					display: block;
 					margin-right: 1rem;
+					margin-bottom: 0.5rem;
+				}
+				.content {
+					background-color: var(--gray-light-1);
+					padding: 0.5rem;
+					border-radius: 8px;
+				}
+				.content.mine {
+					background-color: var(--bg-accent);
+					color: white;
 				}
 				.chat-display {
 					width: 100%;

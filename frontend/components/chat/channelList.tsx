@@ -1,8 +1,6 @@
-import { Dispatch, MouseEventHandler, SetStateAction, useEffect } from "react";
+import { MouseEventHandler, useEffect } from "react";
 import { useUser } from "../../utils/hooks/swrHelper";
 import { useSocket } from "../../utils/hooks/useSocket";
-
-//const channelList = ["chat1", "chat2", "chat3"]; // for test
 
 export function ChannelList({
 	channels,
@@ -44,7 +42,6 @@ export function ChannelList({
 				.cont {
 					border-right: 1px solid var(--border-color);
 					padding: 0.5rem;
-					/*background-color: var(--gray-light-1);*/
 				}
 				ul {
 					gap: 0.1rem;
@@ -60,7 +57,7 @@ export function ChannelList({
 					overflow: hidden;
 				}
 				li:hover {
-					background-color: var(--gray-light-2);
+					background-color: var(--gray-light-1);
 				}
 				li.active span {
 					color: var(--accent);

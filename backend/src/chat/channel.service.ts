@@ -99,10 +99,8 @@ export class ChannelService {
         'user.imageURL',
       ])
       .orderBy('channelChats.created_at', 'DESC')
-      .limit(5)
       .getMany();
 
-    console.log(channelChat2);
     return channelChat2
       .map((el) => {
         return {
