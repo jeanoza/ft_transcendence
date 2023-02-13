@@ -105,7 +105,8 @@ export function ChatDisplay({ channel }: { channel: string | null }) {
 			<style jsx>{`
 				h3 {
 					padding: 1rem;
-					/*border-bottom: 1px solid var(--border-color);*/
+					border-bottom: 1px solid var(--border-color);
+					background-color: white;
 				}
 				.sender {
 					font-weight: 600;
@@ -128,7 +129,7 @@ export function ChatDisplay({ channel }: { channel: string | null }) {
 				}
 				.message {
 					padding: 0 1rem;
-					background-color: inherit;
+					background-color: white;
 				}
 				.chat-display-dialogue {
 					height: 100%;
