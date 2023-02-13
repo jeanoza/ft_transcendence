@@ -12,9 +12,6 @@
 	--modal-bg-color: rgb(100, 100, 100, 0.5);
 	--nav-font-color: rgb(200, 200, 200, 0.92);
 	--border-color: rgb(200, 200, 200);
-
-	--scrollbar-bg-color: #aaa;
-	--scrollbar-thumb-bg-color: rgb(100, 100, 100);
 }
 /* #endregion */
 
@@ -28,13 +25,14 @@
 https://stackoverflow.com/questions/9664325/style-the-scrollbar-with-css-in-google-chrome-webkit
 */
 ::-webkit-scrollbar {
-	width: 4px;
-	background: var(--scrollbar-bg-color);
+	width: 2px;
+	background: white;
+	border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb {
-	background: var(--scrollbar-thumb-bg-color);
-	-webkit-border-radius: 4px;
-	-webkit-box-shadow: 0px 0.5px 1px rgb(0, 0, 0, 0.75);
+	background: var(--gray-dark);
+	-webkit-border-radius: 2px;
+	-webkit-box-shadow: 0px 0.5px 1px rgb(100, 100, 100, 0.5);
 }
 
 html,
