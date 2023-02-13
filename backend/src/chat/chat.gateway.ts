@@ -135,9 +135,6 @@ export class ChatGateway
     @MessageBody('content') content: string,
     @MessageBody('channel') channel: string,
   ): Promise<void> {
-    this.logger.log('sendMSG', user);
-    this.logger.log('sendMSG', content);
-    this.logger.log('sendMSG', channel);
     try {
       await this.channelService.saveChannelChat({
         userName: user.name,

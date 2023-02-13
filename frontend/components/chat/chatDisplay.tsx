@@ -117,6 +117,7 @@ export function ChatDisplay({ channel }: { channel: string | null }) {
 					background-color: var(--gray-light-1);
 					padding: 0.5rem;
 					border-radius: 8px;
+					min-height: 2rem;
 				}
 				.content.mine {
 					background-color: var(--bg-accent);
