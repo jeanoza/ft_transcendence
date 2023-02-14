@@ -27,11 +27,7 @@ export function ChatModal({ onClose }: { onClose: any }) {
 			isPublic: password.length ? false : true
 		}
 		if (!name.length) return window.alert('Put channel name!')
-		socket.emit('newChannel', { channel, userId: user.id }, () => {
-			setName('');
-			setPassword('');
-			onClose();
-		})
+		socket.emit('newChannel', { channel, userId: user.id })
 	}
 
 	return <div className="modal-background">

@@ -7,4 +7,4 @@ import { EventsGateway } from './events.gateway';
   imports: [],
   providers: [EventsGateway, ChatGateway],
 })
-export class NoteModule {}
+export class EventsModule {}

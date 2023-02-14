@@ -29,11 +29,13 @@ export default function Chat() {
 	const { socket } = useSocket("chat");
 	const [channel, setChannel] = useState<string | null>(null); //current channel
 	const [channels, setChannels] = useState<any>([]);
+	const [dms, setDms] = useState<any>([]);
 	const [modal, setModal] = useState<boolean>(false);
 
 	useEffect(() => {
 		socket.on("channels", async (data) => {
-			setChannels(data);
+			setChannels(data.channels);
+			setDms(data.dms);
 		});
 		return () => {
 			socket.off("channels");
@@ -55,6 +57,7 @@ export default function Chat() {
 				<div className="chat d-flex justify-between">
 					<ChannelList
 						channels={channels}
+						dms={dms}
 						openModal={() => setModal(true)}
 						onChangeChannel={onChangeChannel}
 					/>

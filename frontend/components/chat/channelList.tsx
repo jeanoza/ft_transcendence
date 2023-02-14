@@ -4,10 +4,12 @@ import { useSocket } from "../../utils/hooks/useSocket";
 
 export function ChannelList({
 	channels,
+	dms,
 	openModal,
 	onChangeChannel,
 }: {
 	channels: any[];
+	dms: any[];
 	openModal: any;
 	onChangeChannel: MouseEventHandler<HTMLElement>;
 }) {
@@ -21,7 +23,8 @@ export function ChannelList({
 	return (
 		<div className="cont d-flex column gap">
 			<button onClick={openModal}>New Chat</button>
-			<ul className="">
+			<ul>
+				<h4>Channels</h4>
 				{channels.map((el) => (
 					<li
 						className="d-flex center justify-between gap"
@@ -37,6 +40,10 @@ export function ChannelList({
 						</div>
 					</li>
 				))}
+			</ul>
+			<ul>
+				<h4>DMs</h4>
+				{dms.map(el => (<li key={el.id}>{el.name}</li>))}
 			</ul>
 			<style jsx>{`
 				.cont {

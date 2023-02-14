@@ -9,6 +9,9 @@ import {
 import { Avatar } from "../avatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { UserInfo } from "../userInfo";
+import { useSocket } from "../../utils/hooks/useSocket";
+import { DmModal } from "./dmModal";
+import { useState } from "react";
 
 export function UserModal({
 	userId,
@@ -21,6 +24,8 @@ export function UserModal({
 	const { userData } = useUserById(userId);
 	const { friend, revalid: revalidFriend } = useFriend(userId);
 	const { blocked, revalid: revalidBlocked } = useBlocked(userId);
+	const { socket } = useSocket('chat')
+	const [openDmModal, setDmModal] = useState<boolean>(false);
 
 	function handleClose(e: any) {
 		if (e.target.classList.contains("modal-background")) onClose();
@@ -64,6 +69,8 @@ export function UserModal({
 		}
 	}
 
+
+
 	if (!user) return null;
 	return (
 		<div className="modal-background" onClick={handleClose}>
@@ -98,7 +105,7 @@ export function UserModal({
 									)}
 								</div>
 								<div className="d-flex center gap">
-									<button className="btn">DM</button>
+									<button className="btn" onClick={() => setDmModal(true)}>DM</button>
 									<button className="btn">Play</button>
 								</div>
 							</div>
@@ -107,6 +114,7 @@ export function UserModal({
 					<UserInfo user={userData} />
 				</div>
 			)}
+			{openDmModal && <DmModal receiver={userData} onClose={() => setDmModal(false)} />}
 			<style jsx>{`
 				.btn {
 					width: 8rem;

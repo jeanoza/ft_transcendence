@@ -46,7 +46,7 @@ export function ChatDisplay({ channel }: { channel: string | null }) {
 
 	async function onKeydown(e: KeyboardEvent) {
 		if (channel && e.code === "Enter") {
-			socket?.emit("sendMSG", {
+			socket?.emit("channelChat", {
 				user: {
 					id: user.id,
 					name: user.name,

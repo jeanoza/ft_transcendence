@@ -3,7 +3,7 @@ import { useUser } from "../utils/hooks/swrHelper";
 import { Layout } from "../components/layout";
 import { Loader } from "../components/loader";
 import axios, { AxiosError } from "axios";
-import { useState } from "react";
+import React, { useState } from "react";
 import { InputField } from "../components/inputField";
 import Router from "next/router";
 
@@ -34,7 +34,7 @@ export default function _2fa() {
 			window.alert(e.message);
 		}
 	}
-	async function onSubmit2faByEnter(e: any) {
+	async function onSubmit2faByEnter(e: React.KeyboardEvent) {
 		if (e.code === "Enter") authenticate();
 	}
 	function onGoAuthPage() {

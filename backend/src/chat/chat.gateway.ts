@@ -14,6 +14,7 @@ import { Server, Socket } from 'socket.io';
 import { ChannelService } from 'src/chat/channel.service';
 import { UserService } from 'src/user/services/user.service';
 import { DMService } from './dm.service';
+import { User } from 'src/user/entities/user.entity';
 
 @WebSocketGateway({
   namespace: 'ws-chat',
@@ -71,10 +72,10 @@ export class ChatGateway
   @SubscribeMessage('enterChatPage')
   async handleChannelList(client: Socket, userId: number) {
     try {
-      client.emit(
-        'channels',
-        await this.channelService.findAllByUserId(userId),
-      );
+      client.emit('channels', {
+        channels: await this.channelService.findAllByUserId(userId),
+        dms: await this.dmService.getAllDmUsersByCurrentUserId(userId),
+      });
     } catch (e) {
       this.logger.log(e);
       client.emit('error', e);
@@ -128,10 +129,10 @@ export class ChatGateway
     this.logger.log('leaveChannel');
   }
 
-  @SubscribeMessage('sendMSG')
+  @SubscribeMessage('channelChat')
   async handleMessage(
     client: Socket,
-    @MessageBody('user') user: any,
+    @MessageBody('user') user: User,
     @MessageBody('content') content: string,
     @MessageBody('channel') channel: string,
   ): Promise<void> {
@@ -151,4 +152,19 @@ export class ChatGateway
     }
   }
   //#endregion
+
+  //#region DM
+  @SubscribeMessage('dm')
+  async handleDM(
+    client: Socket,
+    @MessageBody('sender') sender: User,
+    @MessageBody('receiver') receiver: User,
+    @MessageBody('content') content: string,
+  ) {
+    try {
+      await this.dmService.createDM(sender.id, receiver.id, content);
+    } catch (e) {
+      console.log(e);
+    }
+  }
 }
