@@ -59,7 +59,7 @@ export function Setting() {
 					cursor: pointer;
 				}
 				.nav-dropdown-menu {
-					top: 41px;
+					top: 42px;
 					right:1rem;
 				}
 				.nav-dropdown-menu li {

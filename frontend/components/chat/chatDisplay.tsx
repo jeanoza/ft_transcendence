@@ -9,7 +9,7 @@ export function ChatDisplay({ channel }: { channel: string | null }) {
 	const { socket } = useSocket("chat");
 	const { user } = useUser();
 	const [content, setContent] = useState<string>("");
-	const [received, setReceived] = useState<{ sender: any; content: string }[]>(
+	const [received, setReceived] = useState<{ sender: IUser; content: string }[]>(
 		[]
 	);
 	const dialogueRef = useRef<HTMLDivElement>(null);
@@ -93,15 +93,17 @@ export function ChatDisplay({ channel }: { channel: string | null }) {
 					})
 				)}
 			</div>
-			<div className="message">
-				<InputField
-					type="text"
-					name="message"
-					state={content}
-					setState={setContent}
-					onKeydown={onKeydown}
-				/>
-			</div>
+			{channel && (
+				<div className="message">
+					<InputField
+						type="text"
+						name="message"
+						state={content}
+						setState={setContent}
+						onKeydown={onKeydown}
+					/>
+				</div>
+			)}
 			<style jsx>{`
 				h3 {
 					padding: 1rem;

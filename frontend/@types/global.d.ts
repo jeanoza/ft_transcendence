@@ -5,6 +5,7 @@ declare global {
 		email?: string;
 		imageURL?: string;
 		password?: string;
+		status?: number;
 	}
 	interface INote {
 		id?: number;

@@ -6,7 +6,7 @@ export function Avatar({
 	status,
 	size,
 }: {
-	url: string;
+	url?: string;
 	status?: number;
 	size?: string;
 }) {
