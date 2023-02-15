@@ -1,4 +1,8 @@
-import { Logger } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Logger,
+  UnauthorizedException,
+} from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -15,6 +19,7 @@ import { ChannelService } from 'src/chat/channel.service';
 import { UserService } from 'src/user/services/user.service';
 import { DMService } from './dm.service';
 import { User } from 'src/user/entities/user.entity';
+import { BlockedService } from 'src/user/services/blocked.service';
 
 @WebSocketGateway({
   namespace: 'ws-chat',
@@ -29,6 +34,7 @@ export class ChatGateway
     private readonly channelService: ChannelService,
     private readonly dmService: DMService,
     private readonly userService: UserService,
+    private readonly blockedService: BlockedService,
   ) {}
 
   @WebSocketServer()
@@ -142,6 +148,7 @@ export class ChatGateway
   //#endregion
 
   //#region DM
+  //FIXME: why no client object??
   @SubscribeMessage('dm')
   async handleDM(
     client: Socket,
@@ -150,20 +157,25 @@ export class ChatGateway
     @MessageBody('content') content: string,
   ) {
     try {
+      //console.log(client);
       const receiver = await this.userService.findByName(receiverName);
-      await this.dmService.createDM(sender.id, receiver.id, content);
-      this.server.to(sender.chatSocket)?.emit('recvMSG', {
-        sender,
-        content,
-        chatName: receiver.name,
-      });
-      this.server.to(receiver.chatSocket)?.emit('recvMSG', {
-        sender,
-        content,
-        chatName: sender.name,
-      });
+      const blockeds = await this.blockedService.getAllBlocked(receiver.id);
+      if (!blockeds.find((el) => el.id === sender.id)) {
+        await this.dmService.createDM(sender.id, receiver.id, content);
+        this.server.to(sender.chatSocket)?.emit('recvMSG', {
+          sender,
+          content,
+          chatName: receiver.name,
+        });
+        this.server.to(receiver.chatSocket)?.emit('recvMSG', {
+          sender,
+          content,
+          chatName: sender.name,
+        });
+      } else throw new ForbiddenException(`You are blocked ${receiverName}`);
     } catch (e) {
-      console.log(e);
+      this.logger.log(e);
+      this.server.to(sender.chatSocket)?.emit('error', e);
     }
   }
 

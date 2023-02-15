@@ -13,6 +13,7 @@ import { Blocked } from 'src/user/entities/blocked.entity';
 import { DM } from './entities/dm.entity';
 import { ChannelController } from './channel.controller';
 import { DMController } from './dm.controller';
+import { BlockedService } from 'src/user/services/blocked.service';
 
 @Module({
   imports: [
@@ -27,6 +28,12 @@ import { DMController } from './dm.controller';
     ]),
   ],
   controllers: [ChannelController, DMController],
-  providers: [DMService, ChannelService, UserService, ChatGateway],
+  providers: [
+    DMService,
+    ChannelService,
+    UserService,
+    BlockedService,
+    ChatGateway,
+  ],
 })
 export class ChatModule {}
