@@ -1,3 +1,4 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAllChannelByUserId, useAllDmByUserId, useUser } from "../../utils/hooks/swrHelper";
 import { useSocket } from "../../utils/hooks/useSocket";
 import { Avatar } from "../avatar";
@@ -65,9 +66,12 @@ export function ChannelList({
 			<h4>DMs</h4>
 			<ul className="dms">
 				{dms?.map((el: IUser) => (
-					<li className="d-flex center justify-start gap" key={el.id} onClick={onChangeDM} title={el.name}>
-						<Avatar size="sm" status={el.status} url={el.imageURL} />
-						<span>{el.name}</span>
+					<li className="d-flex center justify-between" key={el.id} onClick={onChangeDM} title={el.name}>
+						<div className="d-flex center gap">
+							<Avatar size="sm" status={el.status} url={el.imageURL} />
+							<span>{el.name}</span>
+						</div>
+						<FontAwesomeIcon icon="circle-info" onClick={() => openUserModal(el.id)} />
 					</li>
 				))}
 			</ul>
@@ -98,8 +102,9 @@ export function ChannelList({
 					font-weight: 500;
 				}
 				.dms > li {
-					padding:0;
-					margin:0.5rem 0;
+					/*padding-left:0;*/
+					/*margin:0.5rem 0;*/
+					margin-right:0.5rem;
 				}
 				button {
 					white-space: nowrap;

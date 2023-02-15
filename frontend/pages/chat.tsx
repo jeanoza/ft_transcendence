@@ -1,10 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AuthLayout } from "../components/layout";
 import { Seo } from "../components/seo";
-import { useUser } from "../utils/hooks/swrHelper";
 import { ChannelList } from "../components/chat/channelList";
 import { UserList } from "../components/chat/userList";
-import { useSocket } from "../utils/hooks/useSocket";
 import { ChatDisplay } from "../components/chat/chatDisplay";
 import { ChatModal } from "../components/modals/chatModal";
 import { UserModal } from "../components/modals/userModal";
