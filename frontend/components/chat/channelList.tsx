@@ -6,12 +6,16 @@ export function ChannelList({
 	channels,
 	dms,
 	openModal,
-	onChangeChannel,
+	channel,
+	setChannel,
+	setDm,
 }: {
 	channels: any[];
 	dms: any[];
 	openModal: any;
-	onChangeChannel: MouseEventHandler<HTMLElement>;
+	channel: string | null,
+	setChannel: any;
+	setDm: any;
 }) {
 	const { user } = useUser();
 	const { socket } = useSocket("chat");
@@ -20,12 +24,33 @@ export function ChannelList({
 		socket.emit("enterChatPage", user.id);
 	}, []);
 
+	function onChangeChannel(e: React.MouseEvent<HTMLElement>) {
+		const target = e.currentTarget;
+		//FIXME: this is a js method but another way with react?
+		document.querySelector("li.active")?.classList.remove("active");
+		target?.classList?.add("active");
+		socket.emit('leaveChannel', { channelName: channel })
+		setChannel(target?.title);
+		setDm(null)
+	}
+
+	function onChangeDM(e: React.MouseEvent<HTMLElement>) {
+		const target = e.currentTarget;
+		//FIXME: this is a js method but another way with react?
+		document.querySelector("li.active")?.classList.remove("active");
+		target?.classList?.add("active");
+		if (channel)
+			socket.emit('leaveChannel', { channelName: channel })
+		setChannel(null);
+		setDm(target?.title)
+	}
+
 	return (
 		<div className="cont d-flex column gap">
 			<button onClick={openModal}>New Chat</button>
 			<ul>
 				<h4>Channels</h4>
-				{channels.map((el) => (
+				{channels?.map((el) => (
 					<li
 						className="d-flex center justify-between gap"
 						id={el.id}
@@ -43,7 +68,11 @@ export function ChannelList({
 			</ul>
 			<ul>
 				<h4>DMs</h4>
-				{dms.map(el => (<li key={el.id}>{el.name}</li>))}
+				{dms?.map(el => (
+					<li key={el.id} onClick={onChangeDM} title={el.name}>
+						<span>{el.name}</span>
+					</li>
+				))}
 			</ul>
 			<style jsx>{`
 				.cont {

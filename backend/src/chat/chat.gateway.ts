@@ -72,16 +72,19 @@ export class ChatGateway
   @SubscribeMessage('enterChatPage')
   async handleChannelList(client: Socket, userId: number) {
     try {
-      client.emit('channels', {
-        channels: await this.channelService.findAllByUserId(userId),
-        dms: await this.dmService.getAllDmUsersByCurrentUserId(userId),
-      });
+      client.emit(
+        'channels',
+        await this.channelService.findAllByUserId(userId),
+      );
+      client.emit(
+        'dms',
+        await this.dmService.getAllDmUsersByCurrentUserId(userId),
+      );
     } catch (e) {
       this.logger.log(e);
       client.emit('error', e);
     }
   }
-
   /**
    * create or register in channel
    * @param client
@@ -125,7 +128,8 @@ export class ChatGateway
   }
 
   @SubscribeMessage('leaveChannel')
-  handleLeaveChannel(client: Socket, data) {
+  handleLeaveChannel(client: Socket, { channelName }) {
+    client.leave(channelName);
     this.logger.log('leaveChannel');
   }
 
@@ -142,7 +146,7 @@ export class ChatGateway
         content: content,
         channelName: channel,
       });
-      this.server.to(channel).emit('recvMSG', {
+      this.server.in(channel).emit('recvMSG', {
         sender: user,
         content: content,
       });

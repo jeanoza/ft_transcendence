@@ -5,7 +5,7 @@ import { useSocket } from "../../utils/hooks/useSocket";
 import { Avatar } from "../avatar";
 import { InputField } from "../inputField";
 
-export function ChatDisplay({ channel }: { channel: string | null }) {
+export function ChatDisplay({ channel, dm }: { channel: string | null; dm: string | null }) {
 	const { socket } = useSocket("chat");
 	const { user } = useUser();
 	const [content, setContent] = useState<string>("");
@@ -45,23 +45,27 @@ export function ChatDisplay({ channel }: { channel: string | null }) {
 	}
 
 	async function onKeydown(e: KeyboardEvent) {
-		if (channel && e.code === "Enter") {
-			socket?.emit("channelChat", {
-				user: {
-					id: user.id,
-					name: user.name,
-					status: user.status,
-					imageURL: user.imageURL,
-				},
-				content,
-				channel,
-			});
+		if ((channel || dm) && e.code === "Enter") {
+			if (channel)
+				socket?.emit("channelChat", {
+					user: {
+						id: user.id,
+						name: user.name,
+						status: user.status,
+						imageURL: user.imageURL,
+					},
+					content,
+					channel,
+				});
+			else if (dm) {
+				console.log("==dm===", content)
+			}
 			setContent("");
 		}
 	}
 	return (
 		<div className="chat-display d-flex column justify-between">
-			<h3>{channel ? channel : "Please join channel:)"}</h3>
+			<h3>{channel ? channel : "Please join chat:)"}</h3>
 			<div className="chat-display-dialogue" ref={dialogueRef}>
 				{!received.length ? (
 					<div />
@@ -93,7 +97,7 @@ export function ChatDisplay({ channel }: { channel: string | null }) {
 					})
 				)}
 			</div>
-			{channel && (
+			{(channel || dm) && (
 				<div className="message">
 					<InputField
 						type="text"

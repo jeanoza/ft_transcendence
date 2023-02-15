@@ -28,27 +28,25 @@ export default function Chat() {
 	const { user } = useUser();
 	const { socket } = useSocket("chat");
 	const [channel, setChannel] = useState<string | null>(null); //current channel
+	const [dm, setDm] = useState<string | null>(null);
 	const [channels, setChannels] = useState<any>([]);
 	const [dms, setDms] = useState<any>([]);
 	const [modal, setModal] = useState<boolean>(false);
 
 	useEffect(() => {
-		socket.on("channels", async (data) => {
-			setChannels(data.channels);
-			setDms(data.dms);
+		socket.on("channels", async (channels) => {
+			setChannels(channels);
 		});
+		socket.on("dms", async (dms) => {
+			setDms(dms);
+		})
 		return () => {
 			socket.off("channels");
+			socket.off("dms")
 		};
 	}, [user]);
 
-	function onChangeChannel(e: React.MouseEvent<HTMLElement>) {
-		const target = e.currentTarget;
-		//FIXME: this is a js method but another way with react?
-		document.querySelector("li.active")?.classList.remove("active");
-		target?.classList?.add("active");
-		setChannel(target?.title);
-	}
+
 
 	return (
 		<AuthLayout>
@@ -59,10 +57,12 @@ export default function Chat() {
 						channels={channels}
 						dms={dms}
 						openModal={() => setModal(true)}
-						onChangeChannel={onChangeChannel}
+						channel={channel}
+						setChannel={setChannel}
+						setDm={setDm}
 					/>
-					<ChatDisplay channel={channel} />
-					<UserList channel={channel} />
+					<ChatDisplay channel={channel} dm={dm} />
+					{channel && (<UserList channel={channel} />)}
 				</div>
 			</main>
 			{modal && <ChatModal onClose={() => setModal(false)} />}
