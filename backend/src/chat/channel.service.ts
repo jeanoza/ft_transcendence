@@ -83,17 +83,15 @@ export class ChannelService {
         'user.status',
         'user.imageURL',
       ])
-      .orderBy('channelChats.created_at', 'DESC')
+      .orderBy('channelChats.created_at', 'ASC')
       .getMany();
 
-    return channelChat
-      .map((el) => {
-        return {
-          sender: el.user,
-          content: el.content,
-        };
-      })
-      .reverse();
+    return channelChat.map((el) => {
+      return {
+        sender: el.user,
+        content: el.content,
+      };
+    });
   }
 
   async saveChannelChat({ userName, content, channelName }) {

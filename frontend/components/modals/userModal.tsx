@@ -24,7 +24,6 @@ export function UserModal({
 	const { userData } = useUserById(userId);
 	const { friend, revalid: revalidFriend } = useFriend(userId);
 	const { blocked, revalid: revalidBlocked } = useBlocked(userId);
-	const { socket } = useSocket('chat')
 	const [openDmModal, setDmModal] = useState<boolean>(false);
 
 	function handleClose(e: any) {
@@ -114,7 +113,7 @@ export function UserModal({
 					<UserInfo user={userData} />
 				</div>
 			)}
-			{openDmModal && <DmModal receiver={userData} onClose={() => setDmModal(false)} />}
+			{openDmModal && <DmModal receiverName={userData.name} onClose={() => setDmModal(false)} />}
 			<style jsx>{`
 				.btn {
 					width: 8rem;

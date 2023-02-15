@@ -117,7 +117,7 @@ export class ChatGateway
           await this.channelService.findAllUserInChannel(channelName),
         );
       client.emit(
-        'getChannelChats',
+        'getAllChannelChat',
         await this.channelService.findAllChannelChat(channelName),
       );
       this.logger.log('joinChannel');
@@ -138,7 +138,7 @@ export class ChatGateway
     client: Socket,
     @MessageBody('user') user: User,
     @MessageBody('content') content: string,
-    @MessageBody('channel') channel: string,
+    @MessageBody('channel') channel: string | null,
   ): Promise<void> {
     try {
       await this.channelService.saveChannelChat({
@@ -162,13 +162,37 @@ export class ChatGateway
   async handleDM(
     client: Socket,
     @MessageBody('sender') sender: User,
-    @MessageBody('receiver') receiver: User,
+    @MessageBody('receiverName') receiverName: string,
     @MessageBody('content') content: string,
   ) {
     try {
+      const receiver = await this.userService.findByName(receiverName);
       await this.dmService.createDM(sender.id, receiver.id, content);
+      this.server.to(sender.chatSocket)?.emit('recvMSG', {
+        sender,
+        content,
+      });
+      this.server.to(receiver.chatSocket)?.emit('recvMSG', {
+        sender,
+        content,
+      });
     } catch (e) {
       console.log(e);
+    }
+  }
+
+  @SubscribeMessage('joinDM')
+  async handlejoinDM(client: Socket, { user, otherName }) {
+    try {
+      const other = await this.userService.findByName(otherName);
+      client.emit(
+        'getAllDM',
+        await this.dmService.getAllBetweenUser(user.id, other.id),
+      );
+      this.logger.log('joinDM');
+    } catch (e) {
+      this.logger.log(e);
+      client.emit('error', e);
     }
   }
 }

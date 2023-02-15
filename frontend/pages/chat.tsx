@@ -47,7 +47,6 @@ export default function Chat() {
 	}, [user]);
 
 
-
 	return (
 		<AuthLayout>
 			<Seo title="Chat" />

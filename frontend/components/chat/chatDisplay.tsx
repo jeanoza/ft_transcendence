@@ -4,6 +4,7 @@ import { useUser } from "../../utils/hooks/swrHelper";
 import { useSocket } from "../../utils/hooks/useSocket";
 import { Avatar } from "../avatar";
 import { InputField } from "../inputField";
+import axios from "axios";
 
 export function ChatDisplay({ channel, dm }: { channel: string | null; dm: string | null }) {
 	const { socket } = useSocket("chat");
@@ -15,17 +16,25 @@ export function ChatDisplay({ channel, dm }: { channel: string | null; dm: strin
 	const dialogueRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
-		socket.on("getChannelChats", async function (data) {
+		socket.on("getAllChannelChat", async function (data) {
 			setReceived(data);
 			await ajustScroll();
 		});
+		socket.on("getAllDM", async function (data) {
+			setReceived(data);
+			await ajustScroll();
+		})
 		return () => {
-			socket.off("getChanelChats");
+			socket.off("getAllChannelChat");
+			socket.off("getAllDM");
 		};
 	}, []);
 
+
+
 	useEffect(() => {
 		if (channel) socket.emit("joinChannel", { channelName: channel, user });
+		else if (dm) socket.emit("joinDM", { user, otherName: dm })
 
 		socket.on("recvMSG", async function (data) {
 			setReceived((prev) => [...prev, data]);
@@ -35,7 +44,7 @@ export function ChatDisplay({ channel, dm }: { channel: string | null; dm: strin
 		return () => {
 			socket.off("recvMSG");
 		};
-	}, [channel]);
+	}, [channel, dm]);
 
 	async function ajustScroll() {
 		const dialogueCont: HTMLDivElement = dialogueRef.current as HTMLDivElement;
@@ -58,14 +67,18 @@ export function ChatDisplay({ channel, dm }: { channel: string | null; dm: strin
 					channel,
 				});
 			else if (dm) {
-				console.log("==dm===", content)
+				socket?.emit("dm", {
+					sender: user,
+					receiverName: dm,
+					content,
+				});
 			}
 			setContent("");
 		}
 	}
 	return (
 		<div className="chat-display d-flex column justify-between">
-			<h3>{channel ? channel : "Please join chat:)"}</h3>
+			<h3>{channel ? channel : dm ? dm : "Please join chat:)"}</h3>
 			<div className="chat-display-dialogue" ref={dialogueRef}>
 				{!received.length ? (
 					<div />

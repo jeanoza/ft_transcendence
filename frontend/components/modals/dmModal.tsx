@@ -3,7 +3,7 @@ import { InputField } from "../inputField";
 import { useSocket } from "../../utils/hooks/useSocket";
 import { useUser } from "../../utils/hooks/swrHelper";
 
-export function DmModal({ receiver, onClose }: { receiver: any, onClose: any }) {
+export function DmModal({ receiverName, onClose }: { receiverName: string, onClose: any }) {
 
 	const [content, setContent] = useState<string>('');
 	const { socket } = useSocket('chat');
@@ -16,7 +16,7 @@ export function DmModal({ receiver, onClose }: { receiver: any, onClose: any }) 
 	}
 	async function handleSendDM() {
 		if (!content.length) return window.alert('Impossible to send empty message')
-		socket.emit('dm', { sender: user, receiver, content });
+		socket.emit('dm', { sender: user, receiverName, content });
 		onClose();
 	}
 

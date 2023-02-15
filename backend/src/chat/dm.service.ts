@@ -66,4 +66,18 @@ export class DMService {
       .getMany();
     return dms;
   }
+
+  async getAllBetweenUser(userId: number, otherId: number) {
+    const dms = await this.dmRepository
+      .createQueryBuilder('dms')
+      .innerJoinAndSelect('dms.sender', 'sender')
+      .innerJoinAndSelect('dms.receiver', 'receiver')
+      .andWhere(
+        '((dms.senderId = :userId AND dms.receiverId = :otherId) OR (dms.receiverId = :userId AND dms.senderId = :otherId))',
+        { userId, otherId },
+      )
+      .orderBy('dms.createdAt', 'ASC')
+      .getMany();
+    return dms;
+  }
 }
