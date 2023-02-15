@@ -13,8 +13,10 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 
 @Injectable()
 export class UserService {
-  @InjectRepository(User)
-  private userRepository: Repository<User>;
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+  ) {}
 
   logger = new Logger('user service');
 

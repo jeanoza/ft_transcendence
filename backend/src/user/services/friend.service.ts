@@ -5,8 +5,10 @@ import { Friend } from '../entities/friend.entity';
 
 @Injectable()
 export class FriendService {
-  @InjectRepository(Friend)
-  private friendRepository: Repository<Friend>;
+  constructor(
+    @InjectRepository(Friend)
+    private friendRepository: Repository<Friend>,
+  ) {}
 
   logger = new Logger('friend service');
 

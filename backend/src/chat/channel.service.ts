@@ -13,14 +13,16 @@ import { ChannelChat } from './entities/channelChat.entity';
 
 @Injectable()
 export class ChannelService {
-  @InjectRepository(Channel)
-  private channelRepository: Repository<Channel>;
-  @InjectRepository(ChannelMember)
-  private channelMemberRepository: Repository<ChannelMember>;
-  @InjectRepository(ChannelChat)
-  private channelChatRepository: Repository<ChannelChat>;
-  @InjectRepository(User)
-  private userRepository: Repository<User>;
+  constructor(
+    @InjectRepository(Channel)
+    private channelRepository: Repository<Channel>,
+    @InjectRepository(ChannelMember)
+    private channelMemberRepository: Repository<ChannelMember>,
+    @InjectRepository(ChannelChat)
+    private channelChatRepository: Repository<ChannelChat>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+  ) {}
 
   /**
    * create/register(if already exist) channel

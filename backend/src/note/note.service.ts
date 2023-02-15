@@ -12,8 +12,10 @@ import { Note } from './entities/note.entity';
 
 @Injectable()
 export class NoteService {
-  @InjectRepository(Note)
-  private noteRepository: Repository<Note>;
+  constructor(
+    @InjectRepository(Note)
+    private noteRepository: Repository<Note>,
+  ) {}
 
   async create(note: CreateNoteDto) {
     return await this.noteRepository.save(note).catch((e) => {

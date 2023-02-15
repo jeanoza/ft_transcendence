@@ -5,8 +5,10 @@ import { Blocked } from '../entities/blocked.entity';
 
 @Injectable()
 export class BlockedService {
-  @InjectRepository(Blocked)
-  private blockedRepository: Repository<Blocked>;
+  constructor(
+    @InjectRepository(Blocked)
+    private blockedRepository: Repository<Blocked>,
+  ) {}
 
   logger = new Logger('blocked service');
 

@@ -6,10 +6,12 @@ import { DM } from './entities/dm.entity';
 
 @Injectable()
 export class DMService {
-  @InjectRepository(User)
-  private userRepository: Repository<User>;
-  @InjectRepository(DM)
-  private dmRepository: Repository<DM>;
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+    @InjectRepository(DM)
+    private dmRepository: Repository<DM>,
+  ) {}
 
   async createDM(senderId: number, receiverId: number, content: string) {
     try {
