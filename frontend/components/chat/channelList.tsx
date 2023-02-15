@@ -1,17 +1,13 @@
-import { MouseEventHandler, useEffect } from "react";
-import { useUser } from "../../utils/hooks/swrHelper";
+import { useAllChannelByUserId, useAllDmByUserId, useUser } from "../../utils/hooks/swrHelper";
 import { useSocket } from "../../utils/hooks/useSocket";
+import { Avatar } from "../avatar";
 
 export function ChannelList({
-	channels,
-	dms,
 	openModal,
 	channel,
 	setChannel,
 	setDm,
 }: {
-	channels: any[];
-	dms: any[];
 	openModal: any;
 	channel: string | null,
 	setChannel: any;
@@ -19,10 +15,8 @@ export function ChannelList({
 }) {
 	const { user } = useUser();
 	const { socket } = useSocket("chat");
-
-	useEffect(() => {
-		socket.emit("enterChatPage", user.id);
-	}, []);
+	const { channels } = useAllChannelByUserId(user.id);
+	const { dms } = useAllDmByUserId(user.id);
 
 	function onChangeChannel(e: React.MouseEvent<HTMLElement>) {
 		const target = e.currentTarget;
@@ -50,10 +44,10 @@ export function ChannelList({
 			<button onClick={openModal}>New Chat</button>
 			<ul>
 				<h4>Channels</h4>
-				{channels?.map((el) => (
+				{channels?.map((el: IChannel) => (
 					<li
 						className="d-flex center justify-between gap"
-						id={el.id}
+						//id={String(el.id)}
 						key={el.id}
 						onClick={onChangeChannel}
 						title={el.name}
@@ -66,10 +60,11 @@ export function ChannelList({
 					</li>
 				))}
 			</ul>
-			<ul>
+			<ul className="dms">
 				<h4>DMs</h4>
-				{dms?.map(el => (
-					<li key={el.id} onClick={onChangeDM} title={el.name}>
+				{dms?.map((el: IUser) => (
+					<li className="d-flex center justify-start gap" key={el.id} onClick={onChangeDM} title={el.name}>
+						<Avatar size="sm" status={el.status} url={el.imageURL} />
 						<span>{el.name}</span>
 					</li>
 				))}
@@ -99,6 +94,10 @@ export function ChannelList({
 				li.active span {
 					color: var(--accent);
 					font-weight: 500;
+				}
+				.dms > li {
+					padding:0;
+					margin:0.5rem 0;
 				}
 				button {
 					white-space: nowrap;

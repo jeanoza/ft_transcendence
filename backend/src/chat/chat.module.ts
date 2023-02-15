@@ -11,6 +11,8 @@ import { UserService } from 'src/user/services/user.service';
 import { Friend } from 'src/user/entities/friend.entity';
 import { Blocked } from 'src/user/entities/blocked.entity';
 import { DM } from './entities/dm.entity';
+import { ChannelController } from './channel.controller';
+import { DMController } from './dm.controller';
 
 @Module({
   imports: [
@@ -24,6 +26,7 @@ import { DM } from './entities/dm.entity';
       DM,
     ]),
   ],
+  controllers: [ChannelController, DMController],
   providers: [DMService, ChannelService, UserService, ChatGateway],
 })
 export class ChatModule {}

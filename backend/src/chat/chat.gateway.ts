@@ -48,7 +48,6 @@ export class ChatGateway
 
   async handleDisconnect(@ConnectedSocket() client: Socket) {
     await this.userService.handleDisconnectSocket(client.id);
-    //this.server.emit('quit', { disconnected: client.id });
     this.logger.log(`Chat socket id:${client.id} disconnected`);
   }
 
@@ -69,22 +68,6 @@ export class ChatGateway
   //#endregion
 
   //#region Channel
-  @SubscribeMessage('enterChatPage')
-  async handleChannelList(client: Socket, userId: number) {
-    try {
-      client.emit(
-        'channels',
-        await this.channelService.findAllByUserId(userId),
-      );
-      client.emit(
-        'dms',
-        await this.dmService.getAllDmUsersByCurrentUserId(userId),
-      );
-    } catch (e) {
-      this.logger.log(e);
-      client.emit('error', e);
-    }
-  }
   /**
    * create or register in channel
    * @param client
@@ -149,6 +132,7 @@ export class ChatGateway
       this.server.in(channel).emit('recvMSG', {
         sender: user,
         content: content,
+        chatName: channel,
       });
     } catch (e) {
       this.logger.log(e);
@@ -171,10 +155,12 @@ export class ChatGateway
       this.server.to(sender.chatSocket)?.emit('recvMSG', {
         sender,
         content,
+        chatName: receiver.name,
       });
       this.server.to(receiver.chatSocket)?.emit('recvMSG', {
         sender,
         content,
+        chatName: sender.name,
       });
     } catch (e) {
       console.log(e);

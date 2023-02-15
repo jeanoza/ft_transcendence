@@ -25,27 +25,9 @@ export function getServerSideProps({ req }: any) {
 //let socketUpdated = false; // to socket_id send only one time.
 
 export default function Chat() {
-	const { user } = useUser();
-	const { socket } = useSocket("chat");
 	const [channel, setChannel] = useState<string | null>(null); //current channel
 	const [dm, setDm] = useState<string | null>(null);
-	const [channels, setChannels] = useState<any>([]);
-	const [dms, setDms] = useState<any>([]);
 	const [modal, setModal] = useState<boolean>(false);
-
-	useEffect(() => {
-		socket.on("channels", async (channels) => {
-			setChannels(channels);
-		});
-		socket.on("dms", async (dms) => {
-			setDms(dms);
-		})
-		return () => {
-			socket.off("channels");
-			socket.off("dms")
-		};
-	}, [user]);
-
 
 	return (
 		<AuthLayout>
@@ -53,8 +35,6 @@ export default function Chat() {
 			<main>
 				<div className="chat d-flex justify-between">
 					<ChannelList
-						channels={channels}
-						dms={dms}
 						openModal={() => setModal(true)}
 						channel={channel}
 						setChannel={setChannel}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { InputField } from "../inputField";
 import { useSocket } from "../../utils/hooks/useSocket";
-import { useUser } from "../../utils/hooks/swrHelper";
+import { useAllChannelByUserId, useUser } from "../../utils/hooks/swrHelper";
 
 export function ChatModal({ onClose }: { onClose: any }) {
 
@@ -9,10 +9,12 @@ export function ChatModal({ onClose }: { onClose: any }) {
 	const [password, setPassword] = useState<string>('');
 	const { socket } = useSocket('chat');
 	const { user } = useUser();
+	const { revalid } = useAllChannelByUserId(user.id);
 
 	//FIXME: see if better way => how to use callback with socketio in nest server??
 	useEffect(() => {
 		socket.on('channelRegistered', () => {
+			revalid();
 			setName('');
 			setPassword('');
 			onClose();

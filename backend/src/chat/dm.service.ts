@@ -49,7 +49,14 @@ export class DMService {
 
     return Promise.all(
       Array.from(ids).map((el: number) =>
-        this.userRepository.findOne({ where: { id: el } }),
+        this.userRepository.findOne({ where: { id: el } }).then((res) => {
+          return {
+            id: res.id,
+            name: res.name,
+            status: res.status,
+            imageURL: res.imageURL,
+          };
+        }),
       ),
     );
   }

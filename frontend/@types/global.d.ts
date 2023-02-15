@@ -16,6 +16,12 @@ declare global {
 		authorId?: number;
 		author?: IUser | null;
 	}
+
+	interface IChannel {
+		id: number;
+		name: string;
+		isPublic: boolean;
+	}
 }
 
 export { IUser, INote };

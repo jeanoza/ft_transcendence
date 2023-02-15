@@ -252,3 +252,61 @@ export function useAllNote() {
 		error,
 	};
 }
+
+export function useAllChannelByUserId(userId: number) {
+	const { data, error, mutate, isLoading } = useSWR(
+		`channel/${userId}`,
+		fetcher,
+		{
+			onError: (e) => {
+				console.log("useAllChannel", e);
+			},
+			onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+				// Never retry on 404.
+				if (error?.response?.status === 404) return;
+
+				// Never retry for a specific key.
+				if (key === `channel/${userId}`) return;
+
+				// Only retry up to 10 times.
+				if (retryCount >= 10) return;
+
+				// Retry after 5 seconds.
+				setTimeout(() => revalidate({ retryCount }), 5000);
+			},
+		}
+	);
+	return {
+		channels: data,
+		revalid: mutate,
+		isLoading,
+		error,
+	};
+}
+
+export function useAllDmByUserId(userId: number) {
+	const { data, error, mutate, isLoading } = useSWR(`dm/${userId}`, fetcher, {
+		onError: (e) => {
+			console.log("useAllDm", e);
+		},
+		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+			// Never retry on 404.
+			if (error?.response?.status === 404) return;
+
+			// Never retry for a specific key.
+			if (key === `dm/${userId}`) return;
+
+			// Only retry up to 10 times.
+			if (retryCount >= 10) return;
+
+			// Retry after 5 seconds.
+			setTimeout(() => revalidate({ retryCount }), 5000);
+		},
+	});
+	return {
+		dms: data,
+		revalid: mutate,
+		isLoading,
+		error,
+	};
+}

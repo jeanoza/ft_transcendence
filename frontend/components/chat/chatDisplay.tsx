@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import _2fa from "../../pages/_2fa";
-import { useUser } from "../../utils/hooks/swrHelper";
+import { useAllDmByUserId, useUser } from "../../utils/hooks/swrHelper";
 import { useSocket } from "../../utils/hooks/useSocket";
 import { Avatar } from "../avatar";
 import { InputField } from "../inputField";
@@ -13,6 +13,7 @@ export function ChatDisplay({ channel, dm }: { channel: string | null; dm: strin
 	const [received, setReceived] = useState<{ sender: IUser; content: string }[]>(
 		[]
 	);
+	const { revalid } = useAllDmByUserId(user.id);
 	const dialogueRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -37,8 +38,11 @@ export function ChatDisplay({ channel, dm }: { channel: string | null; dm: strin
 		else if (dm) socket.emit("joinDM", { user, otherName: dm })
 
 		socket.on("recvMSG", async function (data) {
-			setReceived((prev) => [...prev, data]);
-			await ajustScroll();
+			revalid();
+			if (data.chatName === channel || data.chatName === dm) {
+				setReceived((prev) => [...prev, data]);
+				await ajustScroll();
+			}
 		});
 
 		return () => {

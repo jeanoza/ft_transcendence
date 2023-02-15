@@ -10,13 +10,11 @@ import {
   Body,
   UseInterceptors,
   UploadedFile,
-  Query,
 } from '@nestjs/common';
 import { diskStorage } from 'multer';
 import { UserService } from '../services/user.service';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { IsNumber, IsString } from 'class-validator';
 
 @Controller('api/user')
 @UseGuards(JwtAuthGuard)
