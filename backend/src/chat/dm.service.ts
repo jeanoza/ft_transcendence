@@ -16,12 +16,12 @@ export class DMService {
   async createDM(senderId: number, receiverId: number, content: string) {
     try {
       const sender = await this.userRepository
-        .createQueryBuilder('user')
-        .where('user.id = :senderId', { senderId })
+        .createQueryBuilder('users')
+        .where('users.id = :senderId', { senderId })
         .getOne();
       const receiver = await this.userRepository
-        .createQueryBuilder('user')
-        .where('user.id = :receiverId', { receiverId })
+        .createQueryBuilder('users')
+        .where('users.id = :receiverId', { receiverId })
         .getOne();
       if (!(sender && receiver))
         throw new UnauthorizedException('no exist sender or receiver');

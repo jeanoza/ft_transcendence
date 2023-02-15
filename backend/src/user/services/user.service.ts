@@ -43,8 +43,8 @@ export class UserService {
 
   async findAll() {
     return await this.userRepository
-      .createQueryBuilder('user')
-      .select(['user.id', 'user.name'])
+      .createQueryBuilder('users')
+      .select(['users.id', 'users.name'])
       .getMany();
   }
 
@@ -69,9 +69,11 @@ export class UserService {
 
   async findAllByName(name: string) {
     return await this.userRepository
-      .createQueryBuilder('user')
-      .where('lower(user.name) like :name', { name: `%${name.toLowerCase()}%` })
-      .select(['user.id', 'user.name'])
+      .createQueryBuilder('users')
+      .where('lower(users.name) like :name', {
+        name: `%${name.toLowerCase()}%`,
+      })
+      .select(['users.id', 'users.name'])
       .getMany();
   }
 
