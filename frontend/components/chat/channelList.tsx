@@ -44,8 +44,8 @@ export function ChannelList({
 	return (
 		<div className="cont d-flex column gap">
 			<button onClick={openChatModal}>New Chat</button>
+			<h4>Channels</h4>
 			<ul>
-				<h4>Channels</h4>
 				{channels?.map((el: IChannel) => (
 					<li
 						className="d-flex center justify-between gap"
@@ -62,8 +62,8 @@ export function ChannelList({
 					</li>
 				))}
 			</ul>
+			<h4>DMs</h4>
 			<ul className="dms">
-				<h4>DMs</h4>
 				{dms?.map((el: IUser) => (
 					<li className="d-flex center justify-start gap" key={el.id} onClick={onChangeDM} title={el.name}>
 						<Avatar size="sm" status={el.status} url={el.imageURL} />
@@ -78,8 +78,8 @@ export function ChannelList({
 				}
 				ul {
 					gap: 0.1rem;
-					overflow-y: auto;
 					width: 160px;
+					overflow-y: auto;
 				}
 				li {
 					padding: 0.5rem;
