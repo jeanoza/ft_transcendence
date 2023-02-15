@@ -19,7 +19,7 @@ export function PageList() {
 				</Link>
 			</li>
 			<li>
-				<Link href="#">
+				<Link href="/game">
 					<span className={(router.pathname.includes("game")) ? "active" : ""} >
 						game
 					</span>

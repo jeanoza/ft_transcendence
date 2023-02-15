@@ -54,14 +54,8 @@ export class UserController {
     return 'Your avatar photo is updated';
   }
 
-  //@Get(':name')
-  //async getAllUserByName(@Param('name') name) {
-  //  return await this.userService.findAllByName(name);
-  //}
-
   @Get(':id')
   async getUserById(@Param('id') id: number) {
-    this.logger.debug('byId');
     return await this.userService.findOne(id);
   }
 

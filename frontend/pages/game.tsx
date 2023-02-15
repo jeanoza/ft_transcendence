@@ -19,8 +19,6 @@ export function getServerSideProps({ req }: any) {
 	return { props: {} };
 }
 export default function Game() {
-	const { user } = useUser();
-
 	return (
 		<AuthLayout>
 			<Seo title="Game" />
