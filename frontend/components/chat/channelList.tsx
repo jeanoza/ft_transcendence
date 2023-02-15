@@ -58,6 +58,7 @@ export function ChannelList({
 				li {
 					padding: 0.5rem;
 					border-radius: 8px;
+					cursor:pointer;
 				}
 				li > span {
 					text-overflow: ellipsis;
