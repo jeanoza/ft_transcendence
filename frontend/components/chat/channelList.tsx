@@ -3,13 +3,15 @@ import { useSocket } from "../../utils/hooks/useSocket";
 import { Avatar } from "../avatar";
 
 export function ChannelList({
-	openModal,
+	openUserModal,
+	openChatModal,
 	channel,
 	setChannel,
 	setDm,
 }: {
-	openModal: any;
-	channel: string | null,
+	openUserModal: any;
+	openChatModal: any;
+	channel: string | null;
 	setChannel: any;
 	setDm: any;
 }) {
@@ -41,7 +43,7 @@ export function ChannelList({
 
 	return (
 		<div className="cont d-flex column gap">
-			<button onClick={openModal}>New Chat</button>
+			<button onClick={openChatModal}>New Chat</button>
 			<ul>
 				<h4>Channels</h4>
 				{channels?.map((el: IChannel) => (

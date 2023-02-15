@@ -7,6 +7,7 @@ import { UserList } from "../components/chat/userList";
 import { useSocket } from "../utils/hooks/useSocket";
 import { ChatDisplay } from "../components/chat/chatDisplay";
 import { ChatModal } from "../components/modals/chatModal";
+import { UserModal } from "../components/modals/userModal";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -27,7 +28,15 @@ export function getServerSideProps({ req }: any) {
 export default function Chat() {
 	const [channel, setChannel] = useState<string | null>(null); //current channel
 	const [dm, setDm] = useState<string | null>(null);
-	const [modal, setModal] = useState<boolean>(false);
+	const [openChatModal, setChatModal] = useState<boolean>(false);
+	const [openUserModal, setUserModal] = useState<boolean>(false);
+	const [userId, setUserId] = useState<number | null>(null)
+
+	async function handleOpenUserModal(id: number) {
+		console.log(id);
+		setUserId(id);
+		setUserModal(true);
+	}
 
 	return (
 		<AuthLayout>
@@ -35,7 +44,8 @@ export default function Chat() {
 			<main>
 				<div className="chat d-flex justify-between">
 					<ChannelList
-						openModal={() => setModal(true)}
+						openUserModal={handleOpenUserModal}
+						openChatModal={() => setChatModal(true)}
 						channel={channel}
 						setChannel={setChannel}
 						setDm={setDm}
@@ -44,7 +54,10 @@ export default function Chat() {
 					{channel && (<UserList channel={channel} />)}
 				</div>
 			</main>
-			{modal && <ChatModal onClose={() => setModal(false)} />}
+			{openChatModal && <ChatModal onClose={() => setChatModal(false)} />}
+			{openUserModal && userId && (
+				<UserModal userId={userId} onClose={() => setUserModal(false)} />
+			)}
 			<style jsx>{`
 				.chat {
 					height: 100%;
