@@ -96,6 +96,8 @@
 
     - [x] user get request '/auth/logout' => update status to 'offline'
 
+  - [x] manage no_image case(if no image saved in server)
+
   - SocketIO
 
     - [x] save ChannelChat in db
