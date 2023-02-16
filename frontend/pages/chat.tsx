@@ -21,8 +21,6 @@ export function getServerSideProps({ req }: any) {
 	return { props: {} };
 }
 
-//let socketUpdated = false; // to socket_id send only one time.
-
 export default function Chat() {
 	const [channel, setChannel] = useState<string | null>(null); //current channel
 	const [dm, setDm] = useState<string | null>(null);

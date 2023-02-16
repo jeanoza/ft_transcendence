@@ -1,4 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React from "react";
 import {
 	useAllChannelByUserId,
 	useAllDmByUserId,
@@ -6,6 +7,7 @@ import {
 } from "../../utils/hooks/swrHelper";
 import { useSocket } from "../../utils/hooks/useSocket";
 import { Avatar } from "../avatar";
+import { Dropdown } from "../dropdown";
 
 export function ChannelList({
 	openUserModal,
@@ -25,7 +27,9 @@ export function ChannelList({
 	const { channels } = useAllChannelByUserId(user.id);
 	const { dms } = useAllDmByUserId(user.id);
 
-	function onChangeChannel(e: React.MouseEvent<HTMLElement>) {
+	function onChangeChannel(e: any) {
+		if (e.target.closest("svg")) return;
+
 		const target = e.currentTarget;
 		//FIXME: this is a js method but another way with react?
 		document.querySelector("li.active")?.classList.remove("active");
@@ -35,7 +39,9 @@ export function ChannelList({
 		setDm(null);
 	}
 
-	function onChangeDM(e: React.MouseEvent<HTMLElement>) {
+	function onChangeDM(e: any) {
+		if (e.target.closest("svg")) return;
+
 		const target = e.currentTarget;
 		//FIXME: this is a js method but another way with react?
 		document.querySelector("li.active")?.classList.remove("active");
@@ -43,6 +49,12 @@ export function ChannelList({
 		if (channel) socket.emit("leaveChannel", { channelName: channel });
 		setChannel(null);
 		setDm(target?.title);
+	}
+
+	function onDeleteDM(id?: number) {
+		if (window.confirm("You will delete " + id)) {
+			// requette
+		}
 	}
 
 	return (
@@ -53,15 +65,22 @@ export function ChannelList({
 				{channels?.map((el: IChannel) => (
 					<li
 						className="d-flex center justify-between gap"
-						//id={String(el.id)}
 						key={el.id}
-						onClick={onChangeChannel}
 						title={el.name}
+						onClick={onChangeChannel}
 					>
 						<span>{el.name}</span>
-						<div className="d-flex btnCont">
-							<div>S</div>
-							<div>D</div>
+						<div className="d-flex">
+							<div className="icon-cont py-3 px-1">
+								<FontAwesomeIcon icon="circle-info" />
+							</div>
+							<div
+								title="delete"
+								className="icon-cont py-3 px-1"
+								onClick={() => onDeleteDM(el.id)}
+							>
+								<FontAwesomeIcon icon={["far", "trash-can"]} />
+							</div>
 						</div>
 					</li>
 				))}
@@ -72,18 +91,30 @@ export function ChannelList({
 					<li
 						className="d-flex center justify-between "
 						key={el.id}
-						onClick={onChangeDM}
 						title={el.name}
+						onClick={onChangeDM}
 					>
 						<Avatar size="sm" status={el.status} url={el.imageURL} />
-						<span className="text-overflow">{el.name}</span>
-						<FontAwesomeIcon
-							icon="circle-info"
-							onClick={() => openUserModal(el.id)}
-						/>
+						<span className="text-overflow mx-2">{el.name}</span>
+						<div className="d-flex">
+							<div
+								className="icon-cont py-3 px-1"
+								onClick={() => openUserModal(el.id)}
+							>
+								<FontAwesomeIcon icon="circle-info" />
+							</div>
+							<div
+								title="delete"
+								className="icon-cont py-3 px-1"
+								onClick={() => onDeleteDM(el.id)}
+							>
+								<FontAwesomeIcon icon={["far", "trash-can"]} />
+							</div>
+						</div>
 					</li>
 				))}
 			</ul>
+
 			<style jsx>{`
 				.cont {
 					border-right: 1px solid var(--border-color);
@@ -97,6 +128,7 @@ export function ChannelList({
 					overflow-y: auto;
 				}
 				li {
+					position: relative;
 					padding: 0.5rem;
 					border-radius: 8px;
 					cursor: pointer;
@@ -113,17 +145,6 @@ export function ChannelList({
 				}
 				button {
 					white-space: nowrap;
-				}
-				.btnCont {
-					gap: 0.5rem;
-				}
-				.btnCont > div {
-					width: 1.5rem;
-					height: 1.5rem;
-					border-radius: 50%;
-					text-align: center;
-					line-height: 1.5rem;
-					font-weight: 500;
 				}
 			`}</style>
 		</div>

@@ -31,7 +31,7 @@ make fclean
 
   - [ ] chat page
 
-    - [ ] dropdown or icon?
+    - [ ] dropdown or icon? => icon... ++ easy:))
 
       - [ ] chatlist - enter, delete, banned user list in current channel(Modal??)
 
@@ -40,6 +40,12 @@ make fclean
       - [ ] userList(right) - ban in channel userinfo(userModal)
 
   - [ ] Match History => after
+
+  - [ ] Home page
+
+    - [ ] leader board
+
+    - [ ]
 
 - Backend:
 
