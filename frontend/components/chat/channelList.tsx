@@ -1,5 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useAllChannelByUserId, useAllDmByUserId, useUser } from "../../utils/hooks/swrHelper";
+import {
+	useAllChannelByUserId,
+	useAllDmByUserId,
+	useUser,
+} from "../../utils/hooks/swrHelper";
 import { useSocket } from "../../utils/hooks/useSocket";
 import { Avatar } from "../avatar";
 
@@ -26,9 +30,9 @@ export function ChannelList({
 		//FIXME: this is a js method but another way with react?
 		document.querySelector("li.active")?.classList.remove("active");
 		target?.classList?.add("active");
-		socket.emit('leaveChannel', { channelName: channel })
+		socket.emit("leaveChannel", { channelName: channel });
 		setChannel(target?.title);
-		setDm(null)
+		setDm(null);
 	}
 
 	function onChangeDM(e: React.MouseEvent<HTMLElement>) {
@@ -36,10 +40,9 @@ export function ChannelList({
 		//FIXME: this is a js method but another way with react?
 		document.querySelector("li.active")?.classList.remove("active");
 		target?.classList?.add("active");
-		if (channel)
-			socket.emit('leaveChannel', { channelName: channel })
+		if (channel) socket.emit("leaveChannel", { channelName: channel });
 		setChannel(null);
-		setDm(target?.title)
+		setDm(target?.title);
 	}
 
 	return (
@@ -66,12 +69,18 @@ export function ChannelList({
 			<h4>DMs</h4>
 			<ul className="dms">
 				{dms?.map((el: IUser) => (
-					<li className="d-flex center justify-between" key={el.id} onClick={onChangeDM} title={el.name}>
-						<div className="d-flex center gap">
-							<Avatar size="sm" status={el.status} url={el.imageURL} />
-							<span>{el.name}</span>
-						</div>
-						<FontAwesomeIcon icon="circle-info" onClick={() => openUserModal(el.id)} />
+					<li
+						className="d-flex center justify-between "
+						key={el.id}
+						onClick={onChangeDM}
+						title={el.name}
+					>
+						<Avatar size="sm" status={el.status} url={el.imageURL} />
+						<span className="text-overflow">{el.name}</span>
+						<FontAwesomeIcon
+							icon="circle-info"
+							onClick={() => openUserModal(el.id)}
+						/>
 					</li>
 				))}
 			</ul>
@@ -83,16 +92,17 @@ export function ChannelList({
 				ul {
 					gap: 0.1rem;
 					width: 160px;
+					min-width: 160px;
+					max-width: 160px;
 					overflow-y: auto;
 				}
 				li {
 					padding: 0.5rem;
 					border-radius: 8px;
-					cursor:pointer;
+					cursor: pointer;
 				}
-				li > span {
-					text-overflow: ellipsis;
-					overflow: hidden;
+				li span {
+					width: 80px;
 				}
 				li:hover {
 					background-color: var(--gray-light-1);
@@ -100,11 +110,6 @@ export function ChannelList({
 				li.active span {
 					color: var(--accent);
 					font-weight: 500;
-				}
-				.dms > li {
-					/*padding-left:0;*/
-					/*margin:0.5rem 0;*/
-					margin-right:0.5rem;
 				}
 				button {
 					white-space: nowrap;
@@ -116,7 +121,6 @@ export function ChannelList({
 					width: 1.5rem;
 					height: 1.5rem;
 					border-radius: 50%;
-					/*background-color: white;*/
 					text-align: center;
 					line-height: 1.5rem;
 					font-weight: 500;

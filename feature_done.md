@@ -38,6 +38,24 @@
 
       - [x] blokced list
 
+    - [ ] Edit Modal
+
+      - [x] two factor
+
+      - [x] change avatar photo
+
+    - [ ] chat page
+
+      - [x] left
+
+        - [x] channelList
+
+        - [x] DM list
+
+      - [x] center(dialogue pannel) + messageInput
+
+      - [x] right(currenteUserList)
+
 - Backend:
 
   - [x] connect Postgresql with typeorm

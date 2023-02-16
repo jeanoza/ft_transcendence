@@ -28,10 +28,9 @@ export default function Chat() {
 	const [dm, setDm] = useState<string | null>(null);
 	const [openChatModal, setChatModal] = useState<boolean>(false);
 	const [openUserModal, setUserModal] = useState<boolean>(false);
-	const [userId, setUserId] = useState<number | null>(null)
+	const [userId, setUserId] = useState<number | null>(null);
 
 	async function handleOpenUserModal(id: number) {
-		console.log(id);
 		setUserId(id);
 		setUserModal(true);
 	}
@@ -49,7 +48,7 @@ export default function Chat() {
 						setDm={setDm}
 					/>
 					<ChatDisplay channel={channel} dm={dm} />
-					{channel && (<UserList channel={channel} />)}
+					{channel && <UserList channel={channel} />}
 				</div>
 			</main>
 			{openChatModal && <ChatModal onClose={() => setChatModal(false)} />}

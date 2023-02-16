@@ -31,27 +31,15 @@ make fclean
 
   - [ ] chat page
 
-    - [x] left
+    - [ ] dropdown or icon?
 
-      - [x] channelList
+      - [ ] chatlist - enter, delete, banned user list in current channel(Modal??)
 
-      - [ ] DM list
+      - [ ] dm list - enter, delete userinfo(userModal)
 
-    - [x] center(dialogue pannel) + messageInput
-
-    - [x] right(currenteUserList)
-
-  - [ ] Modal
-
-    - [ ] Edit Modal
-
-      - [x] two factor
-
-      - [ ] change avatar photo
+      - [ ] userList(right) - ban in channel userinfo(userModal)
 
   - [ ] Match History => after
-
-  - [ ] use socket with a gateway which contains only connect/disconnect event(or use chat gateway??)
 
 - Backend:
 
