@@ -7,7 +7,6 @@ import {
 } from "../../utils/hooks/swrHelper";
 import { useSocket } from "../../utils/hooks/useSocket";
 import { Avatar } from "../avatar";
-import { Dropdown } from "../dropdown";
 
 export function ChannelList({
 	openUserModal,
