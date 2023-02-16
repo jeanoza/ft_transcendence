@@ -88,5 +88,7 @@ export class DMService {
     return dms;
   }
 
-  async deleteAllBetweenUser(userId: number, otherId: number) {}
+  async deleteAllBetweenUser(userId: number, otherId: number) {
+    console.log(userId, otherId);
+  }
 }

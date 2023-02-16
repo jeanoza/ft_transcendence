@@ -61,7 +61,7 @@ export class ChatGateway
   @SubscribeMessage('connectUser')
   async handleConnectUser(
     @ConnectedSocket() client: Socket,
-    @MessageBody('userId') userId: number,
+    @MessageBody() userId: number,
   ) {
     try {
       await this.userService.update(userId, {
@@ -70,7 +70,7 @@ export class ChatGateway
       });
       client.emit('connected');
     } catch (e) {
-      console.log(e);
+      this.logger.debug(e);
       client.emit('error', e);
     }
   }
@@ -97,7 +97,7 @@ export class ChatGateway
       );
       client.emit('channelRegistered', data.channel.name);
     } catch (e) {
-      this.logger.log(e);
+      this.logger.debug(e);
       client.emit('error', e);
     }
   }
