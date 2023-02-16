@@ -24,7 +24,7 @@ export function ChannelList({
 	const { user } = useUser();
 	const { socket } = useSocket("chat");
 	const { channels } = useAllChannelByUserId(user.id);
-	const { dms } = useAllDmByUserId(user.id);
+	const { dms, revalid: revalidDms } = useAllDmByUserId(user.id);
 
 	function onChangeChannel(e: any) {
 		if (e.target.closest("svg")) return;
@@ -50,9 +50,10 @@ export function ChannelList({
 		setDm(target?.title);
 	}
 
-	function onDeleteDM(id?: number) {
-		if (window.confirm("You will delete " + id)) {
-			// requette
+	function onDeleteDM(otherId?: number) {
+		if (window.confirm("You will delete " + otherId)) {
+			socket.emit("deleteDM", { userId: user.id, otherId });
+			revalidDms();
 		}
 	}
 

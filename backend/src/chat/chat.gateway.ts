@@ -20,6 +20,7 @@ import { UserService } from 'src/user/services/user.service';
 import { DMService } from './dm.service';
 import { User } from 'src/user/entities/user.entity';
 import { BlockedService } from 'src/user/services/blocked.service';
+import { Channel } from './entities/channel.entity';
 
 @WebSocketGateway({
   namespace: 'ws-chat',
@@ -58,7 +59,10 @@ export class ChatGateway
   }
 
   @SubscribeMessage('connectUser')
-  async handleConnectUser(client: Socket, userId: number) {
+  async handleConnectUser(
+    @ConnectedSocket() client: Socket,
+    @MessageBody('userId') userId: number,
+  ) {
     try {
       await this.userService.update(userId, {
         status: 1,
@@ -80,7 +84,10 @@ export class ChatGateway
    * @param data
    */
   @SubscribeMessage('newChannel')
-  async handleRegister(client: Socket, data) {
+  async handleRegister(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: { channel: Channel; userId: number },
+  ) {
     this.logger.log('newChannel');
     try {
       await this.channelService.register(data);
@@ -96,7 +103,10 @@ export class ChatGateway
   }
 
   @SubscribeMessage('joinChannel')
-  async handlejoinChannel(client: Socket, { channelName }) {
+  async handlejoinChannel(
+    @ConnectedSocket() client: Socket,
+    @MessageBody('channelName') channelName: string,
+  ) {
     try {
       client.join(channelName);
       this.server
@@ -109,7 +119,7 @@ export class ChatGateway
         'getAllChannelChat',
         await this.channelService.findAllChannelChat(channelName),
       );
-      this.logger.log('joinChannel');
+      this.logger.debug(`[joinChannel]: ${client.id} join ${channelName}`);
     } catch (e) {
       this.logger.log(e);
       client.emit('error', e);
@@ -117,14 +127,17 @@ export class ChatGateway
   }
 
   @SubscribeMessage('leaveChannel')
-  handleLeaveChannel(client: Socket, { channelName }) {
+  handleLeaveChannel(
+    @ConnectedSocket() client: Socket,
+    @MessageBody('channelName') channelName: string,
+  ) {
     client.leave(channelName);
-    this.logger.log('leaveChannel');
+    this.logger.debug(`[leaveChannel]: ${client.id} leaves ${channelName}`);
   }
 
   @SubscribeMessage('channelChat')
   async handleMessage(
-    client: Socket,
+    @ConnectedSocket() client: Socket,
     @MessageBody('user') user: User,
     @MessageBody('content') content: string,
     @MessageBody('channel') channel: string | null,
@@ -151,18 +164,17 @@ export class ChatGateway
   //FIXME: why no client object??
   @SubscribeMessage('dm')
   async handleDM(
-    client: Socket,
+    @ConnectedSocket() client: Socket,
     @MessageBody('sender') sender: User,
     @MessageBody('receiverName') receiverName: string,
     @MessageBody('content') content: string,
   ) {
     try {
-      //console.log(client);
       const receiver = await this.userService.findByName(receiverName);
       const blockeds = await this.blockedService.getAllBlocked(receiver.id);
       if (!blockeds.find((el) => el.id === sender.id)) {
         await this.dmService.createDM(sender.id, receiver.id, content);
-        this.server.to(sender.chatSocket)?.emit('recvMSG', {
+        client.emit('recvMSG', {
           sender,
           content,
           chatName: receiver.name,
@@ -180,17 +192,36 @@ export class ChatGateway
   }
 
   @SubscribeMessage('joinDM')
-  async handlejoinDM(client: Socket, { user, otherName }) {
+  async handleJoinDM(
+    @ConnectedSocket() client: Socket,
+    @MessageBody('user') user: User,
+    @MessageBody('otherName') otherName: string,
+  ) {
     try {
       const other = await this.userService.findByName(otherName);
       client.emit(
         'getAllDM',
         await this.dmService.getAllBetweenUser(user.id, other.id),
       );
-      this.logger.log('joinDM');
+      this.logger.debug(`[joinDM]: ${client.id} join ${otherName}`);
     } catch (e) {
       this.logger.log(e);
       client.emit('error', e);
     }
+  }
+
+  @SubscribeMessage('deleteDM')
+  async handleDeleteDM(
+    @ConnectedSocket() client: Socket,
+    @MessageBody('userId') userId: number,
+    @MessageBody('otherId') otherId: number,
+  ) {
+    try {
+      this.dmService.deleteAllBetweenUser(userId, otherId);
+    } catch (e) {
+      this.logger.log(e);
+      client.emit('error', e);
+    }
+    this.logger.debug(`[deleteDM]: ${client.id} delete ${otherId}`);
   }
 }

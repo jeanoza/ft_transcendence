@@ -10,6 +10,6 @@ export class DMController {
 
   @Get(':userId')
   async getAllDms(@Param('userId') userId: number) {
-    return this.dmService.getAllDmUsersByCurrentUserId(userId);
+    return await this.dmService.getAllDmUsersByCurrentUserId(userId);
   }
 }

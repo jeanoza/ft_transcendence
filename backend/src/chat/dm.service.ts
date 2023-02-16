@@ -87,4 +87,6 @@ export class DMService {
       .getMany();
     return dms;
   }
+
+  async deleteAllBetweenUser(userId: number, otherId: number) {}
 }

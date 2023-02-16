@@ -10,7 +10,6 @@ export class ChannelController {
 
   @Get(':userId')
   async getAllChannel(@Param('userId') userId: number) {
-    this.logger.debug(userId);
-    return this.channelService.findAllByUserId(userId);
+    return await this.channelService.findAllByUserId(userId);
   }
 }
