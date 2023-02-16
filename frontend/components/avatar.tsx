@@ -10,7 +10,6 @@ export function Avatar({
 	status?: number;
 	size?: string;
 }) {
-	console.log(status);
 	return (
 		<div
 			className={`avatar ${size ? size : ""}`}
