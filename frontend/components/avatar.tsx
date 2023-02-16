@@ -10,12 +10,14 @@ export function Avatar({
 	status?: number;
 	size?: string;
 }) {
+	console.log(status);
 	return (
 		<div
 			className={`avatar ${size ? size : ""}`}
 			style={{ backgroundImage: `url(${url})` }}
 		>
-			<div className={`status ${status ? STATUS[status] : "offline"}`} />
+			{status === null && <div className="status offline" />}
+			{status && <div className={`status ${STATUS[status]}`} />}
 			<style jsx>{`
 				.avatar {
 					position: relative;

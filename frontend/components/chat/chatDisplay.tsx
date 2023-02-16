@@ -97,7 +97,6 @@ export function ChatDisplay({ channel, dm }: { channel: string | null; dm: strin
 								{!isMine && (
 									<Avatar
 										url={el.sender.imageURL}
-										status={el.sender.status}
 										size="sm"
 									/>
 								)}
