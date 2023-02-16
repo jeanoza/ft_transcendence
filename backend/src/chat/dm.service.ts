@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
@@ -12,6 +12,8 @@ export class DMService {
     @InjectRepository(DM)
     private dmRepository: Repository<DM>,
   ) {}
+
+  logger = new Logger('DMService');
 
   async createDM(senderId: number, receiverId: number, content: string) {
     try {
@@ -89,6 +91,17 @@ export class DMService {
   }
 
   async deleteAllBetweenUser(userId: number, otherId: number) {
-    console.log(userId, otherId);
+    this.logger.debug(userId, otherId);
+    const dms = await this.dmRepository
+      .createQueryBuilder('dms')
+      .innerJoin('dms.sender', 'sender')
+      .innerJoin('dms.receiver', 'receiver')
+      .andWhere(
+        '((dms.senderId = :userId AND dms.receiverId = :otherId) OR (dms.receiverId = :userId AND dms.senderId = :otherId))',
+        { userId, otherId },
+      )
+      .getMany();
+    console.log(dms);
+    //await this.dmRepository.delete(dms.map((dm) => dm.id));
   }
 }
