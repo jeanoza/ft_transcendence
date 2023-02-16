@@ -5,9 +5,10 @@ import * as fs from 'fs';
 @Controller('')
 export class AppController {
   @Get('/images/avatar/:path')
-  getAvatar(@Param('path') path: string, @Res() res: Response) {
-    const imagePath = '/images/avatar/' + path;
+  async getAvatar(@Param('path') path: string, @Res() res: Response) {
+    const imagePath = 'images/avatar/' + path;
+
     if (fs.existsSync(imagePath)) res.sendFile(imagePath, { root: '.' });
-    else res.sendFile('/images/no_image.png', { root: '.' });
+    else res.sendFile('images/no_image.png', { root: '.' });
   }
 }
