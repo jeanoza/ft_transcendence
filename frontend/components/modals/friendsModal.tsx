@@ -1,20 +1,19 @@
 import axios from "axios";
-import { useAllFriend, useFriend, useUser, useUserById } from "../../utils/hooks/swrHelper";
+import {
+	useAllFriend,
+	useFriend,
+	useUser,
+	useUserById,
+} from "../../utils/hooks/swrHelper";
 import React, { useState } from "react";
 import { FriendsCont } from "./friends/friendsCont";
 import { BlockedsCont } from "./friends/blockedsCont";
 
-export function FriendsModal({
-	onClose,
-}: {
-	onClose: any;
-}) {
+export function FriendsModal({ onClose }: { onClose: any }) {
 	const { user } = useUser();
 	const { friends } = useAllFriend();
 	const [isFriendsTab, setFriendsTab] = useState<boolean>(true);
 	const [isBlockedsTab, setBlockedTab] = useState<boolean>(false);
-
-
 
 	function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
 		const { name } = e.currentTarget;
@@ -36,26 +35,38 @@ export function FriendsModal({
 		<div className="modal-background" onClick={handleClose}>
 			<div className="modal-container">
 				<div className="header d-flex center justify-between gap">
-					<button className={isFriendsTab ? "active" : ""} name="friends" onClick={handleClick}>Friends</button>
-					<button className={isBlockedsTab ? "active" : ""} name="blockeds" onClick={handleClick}>Blockeds</button>
+					<button
+						className={isFriendsTab ? "active" : ""}
+						name="friends"
+						onClick={handleClick}
+					>
+						Friends
+					</button>
+					<button
+						className={isBlockedsTab ? "active" : ""}
+						name="blockeds"
+						onClick={handleClick}
+					>
+						Blockeds
+					</button>
 				</div>
 				{friends && isFriendsTab && <FriendsCont />}
 				{isBlockedsTab && <BlockedsCont />}
 			</div>
 			<style jsx>{`
 				button.active {
-					background-color:var(--gray-dark);
-					color:white;
+					background-color: var(--bg-accent);
+					color: white;
 				}
 				.modal-container {
-					height:400px;
+					height: 400px;
 				}
 				.header {
-					padding-bottom:1rem;
-					border-bottom:1px solid var(--border-color);
-					margin-bottom:1rem;
+					padding-bottom: 1rem;
+					border-bottom: 1px solid var(--border-color);
+					margin-bottom: 1rem;
 				}
 			`}</style>
-		</div >
+		</div>
 	);
 }

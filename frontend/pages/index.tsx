@@ -19,12 +19,6 @@ export function getServerSideProps({ req }: any) {
 }
 export default function Home() {
 	const { user } = useUser();
-	//const { socket } = useSocket("chat");
-
-	//useEffect(() => {
-	//	//update chat socket
-	//	if (user) socket.emit("chatSocket", user.id);
-	//}, [user]);
 
 	return (
 		<AuthLayout>

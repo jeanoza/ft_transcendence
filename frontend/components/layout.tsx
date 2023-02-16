@@ -1,20 +1,9 @@
 import axios from "axios";
 import { useEffect } from "react";
-import {
-	use2fa,
-	useAllBlocked,
-	useAllFriend,
-	useAllUser,
-	useUser,
-} from "../utils/hooks/swrHelper";
+import { use2fa, useUser } from "../utils/hooks/swrHelper";
 import { useSocket } from "../utils/hooks/useSocket";
 import { Loader } from "./loader";
 import { Navbar } from "./navbar";
-
-enum STATUS {
-	online = 1,
-	ingame,
-}
 
 let userConnected = false;
 
@@ -26,11 +15,11 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 	useEffect(() => {
 		//update chat socket
 		if (user && !userConnected) {
-			socket.emit('connectUser', user.id);
+			socket.emit("connectUser", user.id);
 			userConnected = true;
-			socket.on('connected', function () {
+			socket.on("connected", function () {
 				revalid();
-			})
+			});
 			return () => {
 				socket.off("connected");
 			};
