@@ -34,7 +34,7 @@ export function ChannelList({
 		//FIXME: this is a js method but another way with react?
 		document.querySelector("li.active")?.classList.remove("active");
 		target?.classList?.add("active");
-		socket.emit("leaveChannel", { channelName: channel });
+		if (channel) socket.emit("leaveChannel", { channelName: channel });
 		setChannel(target?.title);
 		setDm(null);
 	}
