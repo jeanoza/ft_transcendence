@@ -1,7 +1,31 @@
-export function UserInfo({ user }: any) {
+import React, { useState } from "react"
+import { InputField } from "./inputField"
+import axios from "axios"
+import { useUser } from "../utils/hooks/swrHelper"
+
+export function UserInfo({ user, isEditModal }: { user: IUser, isEditModal?: boolean }) {
+	const [name, setName] = useState<string | any>(user.name)
+	const { revalid } = useUser();
+
+	async function onSubmitName(e: any) {
+		if (e.code === "Enter" && name.length) {
+			if (name === user.name) return;
+			try {
+				await axios.patch('user', { name: name.trim() })
+				window.alert('updated')
+				revalid();
+			} catch (e: any) {
+				window.alert(e?.response?.data.message);
+			}
+		}
+	}
+
 	return (
 		<div className="user-info">
-			<h3>{user.name}</h3>
+			{isEditModal ?
+				<InputField type="text" name="name" state={name} setState={setName} onKeyUp={onSubmitName} />
+				: <h3>{user.name}</h3>
+			}
 			<div className="d-flex column gap">
 				<div className="d-flex justify-between">
 					<span>Email</span>

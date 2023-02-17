@@ -12,7 +12,7 @@ export function Profile() {
 				<Avatar size="lg" url={user.imageURL} status={user.status} />
 				<ImageUploadForm />
 			</div>
-			<UserInfo user={user} />
+			<UserInfo user={user} isEditModal={true} />
 		</div >
 	)
 }

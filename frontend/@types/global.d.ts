@@ -6,6 +6,8 @@ declare global {
 		imageURL?: string;
 		password?: string;
 		status?: number;
+		rank?: number;
+		createdAt: string;
 	}
 	interface INote {
 		id?: number;

@@ -88,6 +88,10 @@ export class UserService {
   }
 
   async update(id: number, data) {
+    if (data.name) {
+      const user = await this.findByName(data.name);
+      if (user) throw new UnauthorizedException('Already exist name');
+    }
     return await this.userRepository.update(id, data);
   }
 }

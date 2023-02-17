@@ -26,6 +26,10 @@ export class UserController {
   async getAllUser() {
     return await this.userService.findAll();
   }
+  @Patch()
+  async updateCurrentUserName(@Req() req, @Body('name') name) {
+    return await this.userService.update(req.user.id, { name });
+  }
 
   @Get('current')
   async getCurrentUser(@Req() req) {

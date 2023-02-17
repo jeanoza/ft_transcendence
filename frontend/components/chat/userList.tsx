@@ -17,7 +17,6 @@ export function UserList({ channel, openUserModal }: { channel: string | null, o
 		};
 	}, [channel]);
 
-	console.log(userList)
 
 	if (!userList) return null;
 	return (
