@@ -184,7 +184,7 @@ export class ChatGateway
           content,
           chatName: sender.name,
         });
-      } else throw new ForbiddenException(`You are blocked ${receiverName}`);
+      } else throw new ForbiddenException(`You are blocked by ${receiverName}`);
     } catch (e) {
       this.logger.log(e);
       this.server.to(sender.chatSocket)?.emit('error', e);

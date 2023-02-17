@@ -57,7 +57,7 @@ export function ChatDisplay({ channel, dm }: { channel: string | null; dm: strin
 	}
 
 	function onKeyUp(e: KeyboardEvent) {
-		if ((channel || dm) && e.code === "Enter" && content.length) {
+		if (content.length && (channel || dm) && e.code === "Enter") {
 			if (channel)
 				socket?.emit("channelChat", {
 					user: {
