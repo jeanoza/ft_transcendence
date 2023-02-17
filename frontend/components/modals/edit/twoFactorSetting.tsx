@@ -66,7 +66,7 @@ export function TwoFactorSetting() {
 			</div>
 			<style jsx>{`
 				img {
-					width: 128px;
+					width: 172px;
 				}
 				h3 {
 					color: var(--gray-dark);
