@@ -22,9 +22,9 @@ export function UserList({ channel, openUserModal }: { channel: string | null, o
 	return (
 		<ul>
 			{userList.map((el: any, index) => (
-				<li key={index} className="d-flex center justify-start p-2 cursor">
+				<li key={index} className="d-flex center justify-between p-2 cursor">
 					<Avatar url={el.imageURL} status={el.status} size="sm"></Avatar>
-					<span className="text-overflow">{el.name}</span>
+					<span className="mx-2 text-overflow">{el.name}</span>
 					<div
 						className="icon-cont py-3 px-1"
 						onClick={() => openUserModal(el.id)}
@@ -42,8 +42,10 @@ export function UserList({ channel, openUserModal }: { channel: string | null, o
 					width: 160px;
 					min-width: 160px;
 				}
+				span {
+					width:80px;
+				}
 				li {
-					gap: 0.5rem;
 					border-radius: 8px;
 				}
 				li:hover {
