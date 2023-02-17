@@ -148,7 +148,7 @@ export class ChatGateway
         content: content,
         channelName: channel,
       });
-      this.server.in(channel).emit('recvMSG', {
+      this.server.to(channel).emit('recvMSG', {
         sender: user,
         content: content,
         chatName: channel,

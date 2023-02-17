@@ -13,7 +13,7 @@ export function ChatDisplay({ channel, dm }: { channel: string | null; dm: strin
 	const [received, setReceived] = useState<{ sender: IUser; content: string }[]>(
 		[]
 	);
-	const { revalid } = useAllDmByUserId(user.id);
+	//const { revalid } = useAllDmByUserId(user.id);
 	const dialogueRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -32,13 +32,12 @@ export function ChatDisplay({ channel, dm }: { channel: string | null; dm: strin
 	}, []);
 
 
-
 	useEffect(() => {
 		if (channel) socket.emit("joinChannel", { channelName: channel, user });
 		else if (dm) socket.emit("joinDM", { user, otherName: dm })
 
 		socket.on("recvMSG", async function (data) {
-			revalid();
+			//revalid();
 			if (data.chatName === channel || data.chatName === dm) {
 				setReceived((prev) => [...prev, data]);
 				await ajustScroll();
@@ -57,8 +56,8 @@ export function ChatDisplay({ channel, dm }: { channel: string | null; dm: strin
 		});
 	}
 
-	async function onKeydown(e: KeyboardEvent) {
-		if ((channel || dm) && e.code === "Enter") {
+	function onKeyUp(e: KeyboardEvent) {
+		if ((channel || dm) && e.code === "Enter" && content.length) {
 			if (channel)
 				socket?.emit("channelChat", {
 					user: {
@@ -120,7 +119,7 @@ export function ChatDisplay({ channel, dm }: { channel: string | null; dm: strin
 						name="message"
 						state={content}
 						setState={setContent}
-						onKeydown={onKeydown}
+						onKeyUp={onKeyUp}
 					/>
 				</div>
 			)}

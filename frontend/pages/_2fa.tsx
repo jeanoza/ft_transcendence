@@ -52,7 +52,7 @@ export default function _2fa() {
 						name="code"
 						state={_2faCode}
 						setState={set_2faCode}
-						onKeydown={onSubmit2faByEnter}
+						onKeyUp={onSubmit2faByEnter}
 					/>
 				</div>
 				<div className="d-flex center gap">

@@ -11,7 +11,7 @@ export function DmModal({ receiverName, onClose }: { receiverName: string, onClo
 
 	//FIXME: see if better way => how to use callback with socketio in nest server??
 
-	async function onKeydown(e: React.KeyboardEvent) {
+	async function onKeyUp(e: React.KeyboardEvent) {
 		if (e.code === 'Enter') handleSendDM();
 	}
 	async function handleSendDM() {
@@ -24,7 +24,7 @@ export function DmModal({ receiverName, onClose }: { receiverName: string, onClo
 		<div className="modal-container">
 			<h3>new DM</h3>
 			<div></div>
-			<InputField type="text" name="message" state={content} setState={setContent} onKeydown={onKeydown} />
+			<InputField type="text" name="message" state={content} setState={setContent} onKeyUp={onKeyUp} />
 			<div className="d-flex justify-end gap">
 				<button onClick={handleSendDM}>Send</button>
 				<button onClick={onClose}>Cancel</button>

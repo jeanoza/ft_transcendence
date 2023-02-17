@@ -10,14 +10,14 @@ export function InputField({
 	name,
 	state,
 	setState,
-	onKeydown,
+	onKeyUp,
 }: {
 	size?: string;
 	type: string;
 	name: string;
 	state: string;
 	setState: SetStateAction<any>;
-	onKeydown?: any;
+	onKeyUp?: any;
 }) {
 	function onChange(e: React.ChangeEvent<HTMLInputElement>) {
 		setState(e.currentTarget.value);
@@ -30,7 +30,7 @@ export function InputField({
 				name={name}
 				onChange={onChange}
 				value={state}
-				onKeyDown={onKeydown}
+				onKeyUp={onKeyUp}
 			/>
 		</div>
 	);
