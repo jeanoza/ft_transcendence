@@ -22,7 +22,7 @@ export function ChatModal({ onClose }: { onClose: any }) {
 		return () => { socket.off('channelRegistered') }
 	}, [])
 
-	function onClick() {
+	function onSubmit() {
 		const channel = {
 			name,
 			password,
@@ -39,7 +39,7 @@ export function ChatModal({ onClose }: { onClose: any }) {
 			<InputField type="text" name="name" state={name} setState={setName} />
 			<InputField type="password" name="password" state={password} setState={setPassword} />
 			<div className="d-flex justify-end gap">
-				<button onClick={onClick}>Join</button>
+				<button onClick={onSubmit}>Join</button>
 				<button onClick={onClose}>Cancel</button>
 			</div>
 		</div>

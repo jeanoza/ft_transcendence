@@ -29,23 +29,27 @@ make fclean
 
 - Frontend:
 
+  - [ ] edit profile => username
+
   - [ ] chat page
 
-    - [ ] dropdown or icon? => icon... ++ easy:))
+    - [ ] ChannelSettingModal(only admins and creator)
 
-      - [ ] chatlist - enter, delete, banned user list in current channel(Modal??)
+      - [ ] update password
 
-      - [ ] dm list - enter, delete userinfo(userModal)
+    - [ ] User list(only admin and creator)
 
-      - [ ] userList(right) - ban in channel userinfo(userModal)
+      - [ ] ban: users in channel
+
+      - [ ] mute: mutted user can't send message (with time determinated)
+
+      - [ ] give admin right
 
   - [ ] Match History => after
 
   - [ ] Home page
 
     - [ ] leader board
-
-    - [ ]
 
 - Backend:
 

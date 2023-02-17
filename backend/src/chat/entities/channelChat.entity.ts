@@ -28,11 +28,11 @@ export class ChannelChat {
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: Date;
 
-  @Column('int', { primary: true, name: 'channel_id' })
-  channelId: number;
+  @Column('int', { nullable: true, name: 'channel_id' })
+  channelId: number | null;
 
-  @Column('int', { primary: true, name: 'user_id' })
-  userId: number;
+  @Column('int', { nullable: true, name: 'user_id' })
+  userId: number | null;
 
   @ManyToOne(() => Channel, (channel) => channel.channelChats, {
     onDelete: 'SET NULL',

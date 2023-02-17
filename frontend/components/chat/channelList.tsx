@@ -24,7 +24,7 @@ export function ChannelList({
 	const { user } = useUser();
 	const { socket } = useSocket("chat");
 	const { channels } = useAllChannelByUserId(user.id);
-	const { dms, revalid: revalidDms } = useAllDmByUserId(user.id);
+	const { dms } = useAllDmByUserId(user.id);
 
 	function onChangeChannel(e: any) {
 		if (e.target.closest("svg")) return;
@@ -50,12 +50,6 @@ export function ChannelList({
 		setDm(target?.title);
 	}
 
-	function onDeleteDM(otherId?: number) {
-		if (window.confirm("You will delete " + otherId)) {
-			socket.emit("deleteDM", { userId: user.id, otherId });
-			revalidDms();
-		}
-	}
 
 	return (
 		<div className="cont d-flex column gap">
@@ -70,17 +64,8 @@ export function ChannelList({
 						onClick={onChangeChannel}
 					>
 						<span>{el.name}</span>
-						<div className="d-flex">
-							<div className="icon-cont py-3 px-1">
-								<FontAwesomeIcon icon="circle-info" />
-							</div>
-							<div
-								title="delete"
-								className="icon-cont py-3 px-1"
-								onClick={() => onDeleteDM(el.id)}
-							>
-								<FontAwesomeIcon icon={["far", "trash-can"]} />
-							</div>
+						<div className="icon-cont py-3 px-1">
+							<FontAwesomeIcon icon="circle-info" />
 						</div>
 					</li>
 				))}
@@ -96,20 +81,11 @@ export function ChannelList({
 					>
 						<Avatar size="sm" status={el.status} url={el.imageURL} />
 						<span className="text-overflow mx-2">{el.name}</span>
-						<div className="d-flex">
-							<div
-								className="icon-cont py-3 px-1"
-								onClick={() => openUserModal(el.id)}
-							>
-								<FontAwesomeIcon icon="circle-info" />
-							</div>
-							<div
-								title="delete"
-								className="icon-cont py-3 px-1"
-								onClick={() => onDeleteDM(el.id)}
-							>
-								<FontAwesomeIcon icon={["far", "trash-can"]} />
-							</div>
+						<div
+							className="icon-cont py-3 px-1"
+							onClick={() => openUserModal(el.id)}
+						>
+							<FontAwesomeIcon icon="circle-info" />
 						</div>
 					</li>
 				))}
@@ -147,6 +123,6 @@ export function ChannelList({
 					white-space: nowrap;
 				}
 			`}</style>
-		</div>
+		</div >
 	);
 }

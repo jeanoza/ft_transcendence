@@ -27,11 +27,11 @@ export class DM {
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: Date;
 
-  @Column('int', { primary: true, name: 'sender_id' })
-  senderId: number;
+  @Column('int', { nullable: true, name: 'sender_id' })
+  senderId: number | null;
 
-  @Column('int', { primary: true, name: 'receiver_id' })
-  receiverId: number;
+  @Column('int', { nullable: true, name: 'receiver_id' })
+  receiverId: number | null;
 
   @ManyToOne(() => User, (user) => user.dmsAsSender, {
     onDelete: 'SET NULL',

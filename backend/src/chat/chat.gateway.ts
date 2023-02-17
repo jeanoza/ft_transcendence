@@ -1,8 +1,4 @@
-import {
-  ForbiddenException,
-  Logger,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { ForbiddenException, Logger } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -172,22 +168,22 @@ export class ChatGateway
     try {
       const receiver = await this.userService.findByName(receiverName);
       const blockeds = await this.blockedService.getAllBlocked(receiver.id);
+      await this.dmService.createDM(sender.id, receiver.id, content);
+      client.emit('recvMSG', {
+        sender,
+        content,
+        chatName: receiver.name,
+      });
       if (!blockeds.find((el) => el.id === sender.id)) {
-        await this.dmService.createDM(sender.id, receiver.id, content);
-        client.emit('recvMSG', {
-          sender,
-          content,
-          chatName: receiver.name,
-        });
         this.server.to(receiver.chatSocket)?.emit('recvMSG', {
           sender,
           content,
           chatName: sender.name,
         });
-      } else throw new ForbiddenException(`You are blocked by ${receiverName}`);
+      }
     } catch (e) {
       this.logger.log(e);
-      this.server.to(sender.chatSocket)?.emit('error', e);
+      client.emit('error', e);
     }
   }
 
@@ -217,11 +213,15 @@ export class ChatGateway
     @MessageBody('otherId') otherId: number,
   ) {
     try {
-      this.dmService.deleteAllBetweenUser(userId, otherId);
+      await this.dmService.deleteAllBetweenUser(userId, otherId);
+      //FIXME: i decide to do not implement delete in this moment.
+      // probleme:
+      // when a user delete dm in db, il will be deleted in other user...
+      // to fix this, i have to add table but it make complexe whole logic.
+      this.logger.debug(`[deleteDM]: ${client.id} delete ${otherId}`);
     } catch (e) {
       this.logger.log(e);
       client.emit('error', e);
     }
-    this.logger.debug(`[deleteDM]: ${client.id} delete ${otherId}`);
   }
 }

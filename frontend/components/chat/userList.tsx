@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useSocket } from "../../utils/hooks/useSocket";
 import { Avatar } from "../avatar";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export function UserList({ channel }: { channel: string | null }) {
+export function UserList({ channel, openUserModal }: { channel: string | null, openUserModal: any }) {
 	const { socket } = useSocket("chat");
 	const [userList, setUserList] = useState<string[] | null>(null);
 
@@ -16,6 +17,8 @@ export function UserList({ channel }: { channel: string | null }) {
 		};
 	}, [channel]);
 
+	console.log(userList)
+
 	if (!userList) return null;
 	return (
 		<ul>
@@ -23,6 +26,12 @@ export function UserList({ channel }: { channel: string | null }) {
 				<li key={index} className="d-flex center justify-start p-2 cursor">
 					<Avatar url={el.imageURL} status={el.status} size="sm"></Avatar>
 					<span className="text-overflow">{el.name}</span>
+					<div
+						className="icon-cont py-3 px-1"
+						onClick={() => openUserModal(el.id)}
+					>
+						<FontAwesomeIcon icon="circle-info" />
+					</div>
 				</li>
 			))}
 			<style jsx>{`

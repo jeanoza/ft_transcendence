@@ -126,7 +126,7 @@ export class ChannelService {
         'channelMembers.channelId = :channelId',
         { channelId },
       )
-      .select(['users.name', 'users.status', 'users.imageURL'])
+      .select(['users.id', 'users.name', 'users.status', 'users.imageURL'])
       .getMany();
     return users; //send only username
   }

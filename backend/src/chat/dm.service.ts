@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { DM } from './entities/dm.entity';
+import { Blocked } from 'src/user/entities/blocked.entity';
 
 @Injectable()
 export class DMService {
@@ -11,6 +12,8 @@ export class DMService {
     private userRepository: Repository<User>,
     @InjectRepository(DM)
     private dmRepository: Repository<DM>,
+    @InjectRepository(Blocked)
+    private blockedRepository: Repository<Blocked>,
   ) {}
 
   logger = new Logger('DMService');
@@ -50,26 +53,26 @@ export class DMService {
     });
 
     return Promise.all(
-      Array.from(ids).map((el: number) =>
-        this.userRepository.findOne({ where: { id: el } }).then((res) => {
+      Array.from(ids).map(async (id: number) => {
+        return this.userRepository.findOne({ where: { id } }).then((res) => {
           return {
             id: res.id,
             name: res.name,
             status: res.status,
             imageURL: res.imageURL,
           };
-        }),
-      ),
+        });
+      }),
     );
   }
 
   async getAllByUserId(userId: number) {
     const dms = await this.dmRepository
       .createQueryBuilder('dms')
-      .where('dms.senderId = :userId', {
+      .where('dms.sender_id = :userId', {
         userId,
       })
-      .orWhere('dms.receiverId = :userId', {
+      .orWhere('dms.receiver_id = :userId', {
         userId,
       })
       .getMany();
@@ -77,31 +80,42 @@ export class DMService {
   }
 
   async getAllBetweenUser(userId: number, otherId: number) {
+    this.logger.debug(userId, otherId);
     const dms = await this.dmRepository
       .createQueryBuilder('dms')
       .innerJoinAndSelect('dms.sender', 'sender')
       .innerJoinAndSelect('dms.receiver', 'receiver')
-      .andWhere(
-        '((dms.senderId = :userId AND dms.receiverId = :otherId) OR (dms.receiverId = :userId AND dms.senderId = :otherId))',
+      .leftJoin('receiver.blockedsAsA', 'receiverBlockedsAsA')
+      .leftJoin('receiver.blockedsAsB', 'receiverBlockedsAsB')
+      .leftJoin('sender.blockedsAsA', 'senderBlockedsAsA')
+      .leftJoin('sender.blockedsAsB', 'senderBlockedsAsB')
+      .where(
+        `((dms.sender_id = :userId AND dms.receiver_id = :otherId)
+				OR (dms.receiver_id = :userId AND dms.sender_id = :otherId))`,
         { userId, otherId },
       )
       .orderBy('dms.createdAt', 'ASC')
       .getMany();
+    const blocked = await this.blockedRepository
+      .createQueryBuilder('blockeds')
+      .where('blockeds.user_a_id = :userId AND blockeds.user_b_id = :otherId', {
+        userId,
+        otherId,
+      })
+      .getOne();
+
+    if (blocked) return dms.filter((el) => el.sender.id != otherId);
     return dms;
   }
 
   async deleteAllBetweenUser(userId: number, otherId: number) {
-    this.logger.debug(userId, otherId);
-    const dms = await this.dmRepository
+    await this.dmRepository
       .createQueryBuilder('dms')
-      .innerJoin('dms.sender', 'sender')
-      .innerJoin('dms.receiver', 'receiver')
-      .andWhere(
-        '((dms.senderId = :userId AND dms.receiverId = :otherId) OR (dms.receiverId = :userId AND dms.senderId = :otherId))',
+      .delete()
+      .where(
+        '((dms.sender_id = :userId AND dms.receiver_id = :otherId) OR (dms.receiver_id = :userId AND dms.sender_id = :otherId))',
         { userId, otherId },
       )
-      .getMany();
-    console.log(dms);
-    //await this.dmRepository.delete(dms.map((dm) => dm.id));
+      .execute();
   }
 }

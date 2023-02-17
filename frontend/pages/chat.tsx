@@ -46,7 +46,7 @@ export default function Chat() {
 						setDm={setDm}
 					/>
 					<ChatDisplay channel={channel} dm={dm} />
-					{channel && <UserList channel={channel} />}
+					{channel && <UserList channel={channel} openUserModal={handleOpenUserModal} />}
 				</div>
 			</main>
 			{openChatModal && <ChatModal onClose={() => setChatModal(false)} />}
