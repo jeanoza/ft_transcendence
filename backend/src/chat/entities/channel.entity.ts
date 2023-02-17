@@ -18,6 +18,9 @@ export class Channel {
   @Column('varchar', { name: 'name', unique: true, length: 30 })
   name: string;
 
+  @Column('int', { name: 'owner_id' })
+  ownerId: number;
+
   @Column('varchar', {
     name: 'password',
     length: 100,

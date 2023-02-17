@@ -27,14 +27,14 @@ export class ChannelService {
    * create/register(if already exist) channel
    * @param data
    */
-  async register(data) {
+  async register({ channel, userId }) {
     //find a channel, if no channel => create with data received
-    let channel = await this.findByName(data.channel.name);
-    if (channel && channel.password !== data.channel.password)
+    let _channel = await this.findByName(channel.name);
+    if (_channel && channel.password !== channel.password)
       throw new UnauthorizedException('wrong password');
-    if (!channel) channel = await this.create(data.channel);
+    if (!_channel) _channel = await this.create({ channel, ownerId: userId });
 
-    await this.registerMember(data.userId, channel.id);
+    await this.registerMember(userId, _channel.id);
   }
 
   async registerMember(userId: number, channelId: number) {
@@ -133,8 +133,13 @@ export class ChannelService {
 
   //CRUD
   //create
-  async create(data) {
-    return await this.channelRepository.save(data);
+  async create({ channel: { name, isPublic, password }, ownerId }) {
+    const _channel = new Channel();
+    _channel.name = name;
+    _channel.isPublic = isPublic;
+    _channel.password = password;
+    _channel.ownerId = ownerId;
+    return await this.channelRepository.save(_channel);
   }
 
   //read
@@ -163,9 +168,9 @@ export class ChannelService {
 
   //update
   async update(id: number, data) {
-    this.findOne(id);
+    await this.findOne(id);
     try {
-      this.channelRepository.update(id, { ...data });
+      await this.channelRepository.update(id, { ...data });
       return { msg: 'updated' };
     } catch (e) {
       console.log(e);

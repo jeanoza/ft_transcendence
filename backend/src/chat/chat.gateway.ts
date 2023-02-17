@@ -84,7 +84,7 @@ export class ChatGateway
     @ConnectedSocket() client: Socket,
     @MessageBody() data: { channel: Channel; userId: number },
   ) {
-    this.logger.log('newChannel');
+    this.logger.log('newChannel', data);
     try {
       await this.channelService.register(data);
       client.emit(
