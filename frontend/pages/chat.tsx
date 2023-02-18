@@ -4,7 +4,7 @@ import { Seo } from "../components/seo";
 import { ChannelList } from "../components/chat/channelList";
 import { UserList } from "../components/chat/userList";
 import { ChatDisplay } from "../components/chat/chatDisplay";
-import { ChatModal } from "../components/modals/chatModal";
+import { NewChatModal } from "../components/modals/newChatModal";
 import { UserModal } from "../components/modals/userModal";
 
 export function getServerSideProps({ req }: any) {
@@ -24,7 +24,7 @@ export function getServerSideProps({ req }: any) {
 export default function Chat() {
 	const [channelName, setChannelName] = useState<string | null>(null); //current channelName
 	const [dmName, setDmName] = useState<string | null>(null);
-	const [openChatModal, setChatModal] = useState<boolean>(false);
+	const [openNewChatModal, setNewChatModal] = useState<boolean>(false);
 	const [openUserModal, setUserModal] = useState<boolean>(false);
 	const [userId, setUserId] = useState<number | null>(null);
 
@@ -40,7 +40,7 @@ export default function Chat() {
 				<div className="chat d-flex justify-between">
 					<ChannelList
 						openUserModal={handleOpenUserModal}
-						openChatModal={() => setChatModal(true)}
+						openNewChatModal={() => setNewChatModal(true)}
 						channelName={channelName}
 						setChannelName={setChannelName}
 						setDmName={setDmName}
@@ -49,7 +49,7 @@ export default function Chat() {
 					{channelName && <UserList channelName={channelName} openUserModal={handleOpenUserModal} />}
 				</div>
 			</main>
-			{openChatModal && <ChatModal onClose={() => setChatModal(false)} />}
+			{openNewChatModal && <NewChatModal onClose={() => setNewChatModal(false)} />}
 			{openUserModal && userId && (
 				<UserModal userId={userId} onClose={() => setUserModal(false)} />
 			)}

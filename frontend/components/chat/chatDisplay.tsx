@@ -4,23 +4,26 @@ import { useSocket } from "../../utils/hooks/useSocket";
 import { Avatar } from "../avatar";
 import { InputField } from "../inputField";
 
+interface IChat {
+	sender: IUser;
+	content: string;
+}
+
 export function ChatDisplay({ channelName, dmName }: { channelName: string | null; dmName: string | null }) {
 	const { socket } = useSocket("chat");
 	const { user } = useUser();
 	const [content, setContent] = useState<string>("");
-	const [received, setReceived] = useState<{ sender: IUser; content: string }[]>(
-		[]
-	);
+	const [chats, setChats] = useState<IChat[]>([]);
 	const { revalid } = useAllDM();
 	const dialogueRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
-		socket.on("getAllChannelChat", async function (data) {
-			setReceived(data);
+		socket.on("getAllChannelChat", async function (channelChats) {
+			setChats(channelChats);
 			await ajustScroll();
 		});
-		socket.on("getAllDM", async function (data) {
-			setReceived(data);
+		socket.on("getAllDM", async function (dmChats) {
+			setChats(dmChats);
 			await ajustScroll();
 		})
 		return () => {
@@ -37,7 +40,7 @@ export function ChatDisplay({ channelName, dmName }: { channelName: string | nul
 		socket.on("recvMSG", async function (data) {
 			revalid();
 			if (data.chatName === channelName || data.chatName === dmName) {
-				setReceived((prev) => [...prev, data]);
+				setChats((prev) => [...prev, data]);
 				await ajustScroll();
 			}
 		});
@@ -81,10 +84,10 @@ export function ChatDisplay({ channelName, dmName }: { channelName: string | nul
 		<div className="chat-display d-flex column justify-between">
 			<h3>{channelName ? channelName : dmName ? dmName : "Please join chat:)"}</h3>
 			<div className="chat-display-dialogue" ref={dialogueRef}>
-				{!received.length ? (
+				{!chats.length ? (
 					<div />
 				) : (
-					received.map((el, index) => {
+					chats.map((el, index) => {
 						const isMine = el.sender.id === user.id;
 						return (
 							<div

@@ -10,13 +10,13 @@ import { Avatar } from "../avatar";
 
 export function ChannelList({
 	openUserModal,
-	openChatModal,
+	openNewChatModal,
 	channelName,
 	setChannelName,
 	setDmName,
 }: {
 	openUserModal: any;
-	openChatModal: any;
+	openNewChatModal: any;
 	channelName: string | null;
 	setChannelName: any;
 	setDmName: any;
@@ -52,7 +52,7 @@ export function ChannelList({
 
 	return (
 		<div className="cont d-flex column gap">
-			<button onClick={openChatModal}>New Chat</button>
+			<button onClick={openNewChatModal}>New Chat</button>
 			<h4>Channels</h4>
 			<ul>
 				{channels?.map((el: IChannel) => (

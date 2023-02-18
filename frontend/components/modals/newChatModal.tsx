@@ -3,7 +3,7 @@ import { InputField } from "../inputField";
 import { useSocket } from "../../utils/hooks/useSocket";
 import { useAllChannel, useUser } from "../../utils/hooks/swrHelper";
 
-export function ChatModal({ onClose }: { onClose: any }) {
+export function NewChatModal({ onClose }: { onClose: any }) {
 
 	const [name, setName] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
