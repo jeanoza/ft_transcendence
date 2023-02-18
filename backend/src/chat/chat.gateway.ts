@@ -36,7 +36,6 @@ export class ChatGateway
 
   @WebSocketServer()
   server: Server;
-  //connected = new Set();
 
   private logger: Logger = new Logger('ChatGateway');
 
@@ -136,18 +135,18 @@ export class ChatGateway
     @ConnectedSocket() client: Socket,
     @MessageBody('user') user: User,
     @MessageBody('content') content: string,
-    @MessageBody('channel') channel: string | null,
+    @MessageBody('channelName') channelName: string | null,
   ): Promise<void> {
     try {
       await this.channelService.saveChannelChat({
         userName: user.name,
         content: content,
-        channelName: channel,
+        channelName,
       });
-      this.server.to(channel).emit('recvMSG', {
+      this.server.to(channelName).emit('recvMSG', {
         sender: user,
         content: content,
-        chatName: channel,
+        chatName: channelName,
       });
     } catch (e) {
       this.logger.log(e);

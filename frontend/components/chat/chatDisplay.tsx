@@ -4,7 +4,7 @@ import { useSocket } from "../../utils/hooks/useSocket";
 import { Avatar } from "../avatar";
 import { InputField } from "../inputField";
 
-export function ChatDisplay({ channel, dm }: { channel: string | null; dm: string | null }) {
+export function ChatDisplay({ channelName, dmName }: { channelName: string | null; dmName: string | null }) {
 	const { socket } = useSocket("chat");
 	const { user } = useUser();
 	const [content, setContent] = useState<string>("");
@@ -31,12 +31,12 @@ export function ChatDisplay({ channel, dm }: { channel: string | null; dm: strin
 
 
 	useEffect(() => {
-		if (channel) socket.emit("joinChannel", { channelName: channel, user });
-		else if (dm) socket.emit("joinDM", { user, otherName: dm })
+		if (channelName) socket.emit("joinChannel", { channelName, user });
+		else if (dmName) socket.emit("joinDM", { user, otherName: dmName })
 
 		socket.on("recvMSG", async function (data) {
 			revalid();
-			if (data.chatName === channel || data.chatName === dm) {
+			if (data.chatName === channelName || data.chatName === dmName) {
 				setReceived((prev) => [...prev, data]);
 				await ajustScroll();
 			}
@@ -45,7 +45,7 @@ export function ChatDisplay({ channel, dm }: { channel: string | null; dm: strin
 		return () => {
 			socket.off("recvMSG");
 		};
-	}, [channel, dm]);
+	}, [channelName, dmName]);
 
 	async function ajustScroll() {
 		const dialogueCont: HTMLDivElement = dialogueRef.current as HTMLDivElement;
@@ -55,8 +55,8 @@ export function ChatDisplay({ channel, dm }: { channel: string | null; dm: strin
 	}
 
 	function onKeyUp(e: KeyboardEvent) {
-		if (content.length && (channel || dm) && e.code === "Enter") {
-			if (channel)
+		if (content.length && (channelName || dmName) && e.code === "Enter") {
+			if (channelName)
 				socket?.emit("channelChat", {
 					user: {
 						id: user.id,
@@ -65,12 +65,12 @@ export function ChatDisplay({ channel, dm }: { channel: string | null; dm: strin
 						imageURL: user.imageURL,
 					},
 					content,
-					channel,
+					channelName,
 				});
-			else if (dm) {
+			else if (dmName) {
 				socket?.emit("dm", {
 					sender: user,
-					receiverName: dm,
+					receiverName: dmName,
 					content,
 				});
 			}
@@ -79,7 +79,7 @@ export function ChatDisplay({ channel, dm }: { channel: string | null; dm: strin
 	}
 	return (
 		<div className="chat-display d-flex column justify-between">
-			<h3>{channel ? channel : dm ? dm : "Please join chat:)"}</h3>
+			<h3>{channelName ? channelName : dmName ? dmName : "Please join chat:)"}</h3>
 			<div className="chat-display-dialogue" ref={dialogueRef}>
 				{!received.length ? (
 					<div />
@@ -110,7 +110,7 @@ export function ChatDisplay({ channel, dm }: { channel: string | null; dm: strin
 					})
 				)}
 			</div>
-			{(channel || dm) && (
+			{(channelName || dmName) && (
 				<div className="message">
 					<InputField
 						type="text"

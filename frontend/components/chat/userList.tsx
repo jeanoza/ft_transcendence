@@ -3,7 +3,7 @@ import { useSocket } from "../../utils/hooks/useSocket";
 import { Avatar } from "../avatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export function UserList({ channel, openUserModal }: { channel: string | null, openUserModal: any }) {
+export function UserList({ channelName, openUserModal }: { channelName: string | null, openUserModal: any }) {
 	const { socket } = useSocket("chat");
 	const [userList, setUserList] = useState<string[] | null>(null);
 
@@ -15,7 +15,7 @@ export function UserList({ channel, openUserModal }: { channel: string | null, o
 			//clean up socket event
 			socket.off("userList");
 		};
-	}, [channel]);
+	}, [channelName]);
 
 
 	if (!userList) return null;

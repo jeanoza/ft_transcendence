@@ -11,15 +11,15 @@ import { Avatar } from "../avatar";
 export function ChannelList({
 	openUserModal,
 	openChatModal,
-	channel,
-	setChannel,
-	setDm,
+	channelName,
+	setChannelName,
+	setDmName,
 }: {
 	openUserModal: any;
 	openChatModal: any;
-	channel: string | null;
-	setChannel: any;
-	setDm: any;
+	channelName: string | null;
+	setChannelName: any;
+	setDmName: any;
 }) {
 	const { user } = useUser();
 	const { socket } = useSocket("chat");
@@ -33,9 +33,9 @@ export function ChannelList({
 		//FIXME: this is a js method but another way with react?
 		document.querySelector("li.active")?.classList.remove("active");
 		target?.classList?.add("active");
-		if (channel) socket.emit("leaveChannel", { channelName: channel });
-		setChannel(target?.title);
-		setDm(null);
+		if (channelName) socket.emit("leaveChannel", { channelName });
+		setChannelName(target?.title);
+		setDmName(null);
 	}
 
 	function onChangeDM(e: any) {
@@ -45,9 +45,9 @@ export function ChannelList({
 		//FIXME: this is a js method but another way with react?
 		document.querySelector("li.active")?.classList.remove("active");
 		target?.classList?.add("active");
-		if (channel) socket.emit("leaveChannel", { channelName: channel });
-		setChannel(null);
-		setDm(target?.title);
+		if (channelName) socket.emit("leaveChannel", { channelName });
+		setChannelName(null);
+		setDmName(target?.title);
 	}
 
 

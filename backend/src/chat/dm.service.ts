@@ -80,15 +80,10 @@ export class DMService {
   }
 
   async getAllBetweenUser(userId: number, otherId: number) {
-    this.logger.debug(userId, otherId);
     const dms = await this.dmRepository
       .createQueryBuilder('dms')
       .innerJoinAndSelect('dms.sender', 'sender')
       .innerJoinAndSelect('dms.receiver', 'receiver')
-      .leftJoin('receiver.blockedsAsA', 'receiverBlockedsAsA')
-      .leftJoin('receiver.blockedsAsB', 'receiverBlockedsAsB')
-      .leftJoin('sender.blockedsAsA', 'senderBlockedsAsA')
-      .leftJoin('sender.blockedsAsB', 'senderBlockedsAsB')
       .where(
         `((dms.sender_id = :userId AND dms.receiver_id = :otherId)
 				OR (dms.receiver_id = :userId AND dms.sender_id = :otherId))`,

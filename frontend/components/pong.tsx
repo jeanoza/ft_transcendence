@@ -92,7 +92,7 @@ const Pong = () => {
 			}
 
 			setBallPosition({ x: nextX, y: nextY });
-		}, 50);
+		}, 25);
 
 		return () => {
 			clearInterval(intervalId);
@@ -124,7 +124,7 @@ const Pong = () => {
 				<div className="PlayerScore">{score.player2}</div>
 			</div>
 			<style jsx>{`
-			.Pong {
+				.Pong {
 					position:relative;
 					width: 600px;
 					height: 400px;

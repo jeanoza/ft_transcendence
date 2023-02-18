@@ -22,8 +22,8 @@ export function getServerSideProps({ req }: any) {
 }
 
 export default function Chat() {
-	const [channel, setChannel] = useState<string | null>(null); //current channel
-	const [dm, setDm] = useState<string | null>(null);
+	const [channelName, setChannel] = useState<string | null>(null); //current channelName
+	const [dmName, setDmName] = useState<string | null>(null);
 	const [openChatModal, setChatModal] = useState<boolean>(false);
 	const [openUserModal, setUserModal] = useState<boolean>(false);
 	const [userId, setUserId] = useState<number | null>(null);
@@ -41,12 +41,12 @@ export default function Chat() {
 					<ChannelList
 						openUserModal={handleOpenUserModal}
 						openChatModal={() => setChatModal(true)}
-						channel={channel}
-						setChannel={setChannel}
-						setDm={setDm}
+						channelName={channelName}
+						setChannelName={setChannel}
+						setDmName={setDmName}
 					/>
-					<ChatDisplay channel={channel} dm={dm} />
-					{channel && <UserList channel={channel} openUserModal={handleOpenUserModal} />}
+					<ChatDisplay channelName={channelName} dmName={dmName} />
+					{channelName && <UserList channelName={channelName} openUserModal={handleOpenUserModal} />}
 				</div>
 			</main>
 			{openChatModal && <ChatModal onClose={() => setChatModal(false)} />}
