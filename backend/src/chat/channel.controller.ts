@@ -13,8 +13,8 @@ export class ChannelController {
     return await this.channelService.findAllByUserId(req.user.id);
   }
 
-  @Get(':name')
-  async getChannelByName(@Param('name') name: string) {
-    return await this.channelService.findByName(name);
+  @Get(':id')
+  async getChannelByid(@Param('id') id: number) {
+    return await this.channelService.findOne(id);
   }
 }

@@ -6,6 +6,7 @@ import { UserList } from "../components/chat/userList";
 import { ChatDisplay } from "../components/chat/chatDisplay";
 import { NewChatModal } from "../components/modals/newChatModal";
 import { UserModal } from "../components/modals/userModal";
+import { ChannelModal } from "../components/modals/channelModal";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -26,11 +27,18 @@ export default function Chat() {
 	const [dmName, setDmName] = useState<string | null>(null);
 	const [openNewChatModal, setNewChatModal] = useState<boolean>(false);
 	const [openUserModal, setUserModal] = useState<boolean>(false);
+	const [openChannelModal, setChannelModal] = useState<boolean>(false);
 	const [userId, setUserId] = useState<number | null>(null);
+	const [channelId, setChannelId] = useState<number | null>(null)
 
 	async function handleOpenUserModal(id: number) {
 		setUserId(id);
 		setUserModal(true);
+	}
+
+	async function handleOpenChannelModal(channelId: number) {
+		setChannelId(channelId);
+		setChannelModal(true);
 	}
 
 	return (
@@ -41,6 +49,7 @@ export default function Chat() {
 					<ChannelList
 						openUserModal={handleOpenUserModal}
 						openNewChatModal={() => setNewChatModal(true)}
+						openChannelModal={handleOpenChannelModal}
 						channelName={channelName}
 						setChannelName={setChannelName}
 						setDmName={setDmName}
@@ -49,6 +58,7 @@ export default function Chat() {
 					{channelName && <UserList channelName={channelName} openUserModal={handleOpenUserModal} />}
 				</div>
 			</main>
+			{openChannelModal && channelId && <ChannelModal channelId={channelId} onClose={() => setChannelModal(false)} />}
 			{openNewChatModal && <NewChatModal onClose={() => setNewChatModal(false)} />}
 			{openUserModal && userId && (
 				<UserModal userId={userId} onClose={() => setUserModal(false)} />

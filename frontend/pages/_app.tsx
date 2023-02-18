@@ -21,6 +21,7 @@ import {
 import { faPaperPlane, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 library.add(
+	faGear,
 	faMagnifyingGlass,
 	faXmark,
 	faGear,

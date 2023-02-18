@@ -22,6 +22,10 @@ export function NewChatModal({ onClose }: { onClose: any }) {
 		return () => { socket.off('channelRegistered') }
 	}, [])
 
+	function handleClose(e: any) {
+		if (e.target.classList.contains("modal-background")) onClose();
+	}
+
 	function onSubmit() {
 		const channel = {
 			name,
@@ -32,7 +36,7 @@ export function NewChatModal({ onClose }: { onClose: any }) {
 		socket.emit('newChannel', { channel, userId: user.id })
 	}
 
-	return <div className="modal-background">
+	return <div className="modal-background" onClick={handleClose}>
 		<div className="modal-container">
 			<h3>New Chat</h3>
 			<div></div>

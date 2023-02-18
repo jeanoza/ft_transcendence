@@ -59,7 +59,12 @@ export class ChannelService {
         'channelMembers.userId = :userId',
         { userId },
       )
-      .select(['channels.id', 'channels.name', 'channels.isPublic'])
+      .select([
+        'channels.id',
+        'channels.name',
+        'channels.isPublic',
+        'channels.ownerId',
+      ])
       .getMany();
   }
 
@@ -158,12 +163,12 @@ export class ChannelService {
   }
 
   async findOne(id: number) {
-    return await this.channelRepository
-      .findOne({ where: { id } })
-      .catch((e) => {
-        console.log(e);
-        throw new NotFoundException();
-      });
+    const channel = await this.channelRepository
+      .createQueryBuilder('channels')
+      .where('channels.id = :id', { id })
+      .getOne();
+    if (!channel) throw new NotFoundException();
+    return channel;
   }
 
   //update

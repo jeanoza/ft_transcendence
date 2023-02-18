@@ -11,16 +11,19 @@ import { Avatar } from "../avatar";
 export function ChannelList({
 	openUserModal,
 	openNewChatModal,
+	openChannelModal,
 	channelName,
 	setChannelName,
 	setDmName,
 }: {
 	openUserModal: any;
 	openNewChatModal: any;
+	openChannelModal: any;
 	channelName: string | null;
 	setChannelName: any;
 	setDmName: any;
 }) {
+	const { user } = useUser();
 	const { socket } = useSocket("chat");
 	const { channels } = useAllChannel();
 	const { dms } = useAllDM();
@@ -55,34 +58,36 @@ export function ChannelList({
 			<button onClick={openNewChatModal}>New Chat</button>
 			<h4>Channels</h4>
 			<ul>
-				{channels?.map((el: IChannel) => (
+				{channels?.map((channel: IChannel) => (
 					<li
 						className="d-flex center justify-between gap"
-						key={el.id}
-						title={el.name}
+						key={channel.id}
+						title={channel.name}
 						onClick={onChangeChannel}
 					>
-						<span>{el.name}</span>
-						<div className="icon-cont py-3 px-1">
-							<FontAwesomeIcon icon="circle-info" />
-						</div>
+						<span>{channel.name}</span>
+						{channel.ownerId === user.id &&
+							<div className="icon-cont py-3 px-1" onClick={() => openChannelModal(channel.id)}>
+								<FontAwesomeIcon icon="gear" />
+							</div>
+						}
 					</li>
 				))}
 			</ul>
 			<h4>DMs</h4>
 			<ul className="dms">
-				{dms?.map((el: IUser) => (
+				{dms?.map((user: IUser) => (
 					<li
 						className="d-flex center justify-between "
-						key={el.id}
-						title={el.name}
+						key={user.id}
+						title={user.name}
 						onClick={onChangeDM}
 					>
-						<Avatar size="sm" status={el.status} url={el.imageURL} />
-						<span className="text-overflow mx-2">{el.name}</span>
+						<Avatar size="sm" status={user.status} url={user.imageURL} />
+						<span className="text-overflow mx-2">{user.name}</span>
 						<div
 							className="icon-cont py-3 px-1"
-							onClick={() => openUserModal(el.id)}
+							onClick={() => openUserModal(user.id)}
 						>
 							<FontAwesomeIcon icon="circle-info" />
 						</div>
