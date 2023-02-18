@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Logger, Get, Param } from '@nestjs/common';
+import { Controller, UseGuards, Logger, Get, Req } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { DMService } from './dm.service';
 
@@ -8,8 +8,8 @@ export class DMController {
   constructor(private readonly dmService: DMService) {}
   logger = new Logger('DM.controller');
 
-  @Get(':userId')
-  async getAllDms(@Param('userId') userId: number) {
-    return await this.dmService.getAllDmUsersByCurrentUserId(userId);
+  @Get()
+  async getAllDms(@Req() req) {
+    return await this.dmService.getAllDmUsersByCurrentUserId(req.user.id);
   }
 }

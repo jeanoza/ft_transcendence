@@ -1,8 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import {
-	useAllChannelByUserId,
-	useAllDmByUserId,
+	useAllChannel,
+	useAllDM,
 	useUser,
 } from "../../utils/hooks/swrHelper";
 import { useSocket } from "../../utils/hooks/useSocket";
@@ -21,10 +21,9 @@ export function ChannelList({
 	setChannelName: any;
 	setDmName: any;
 }) {
-	const { user } = useUser();
 	const { socket } = useSocket("chat");
-	const { channels } = useAllChannelByUserId(user.id);
-	const { dms } = useAllDmByUserId(user.id);
+	const { channels } = useAllChannel();
+	const { dms } = useAllDM();
 
 	function onChangeChannel(e: any) {
 		if (e.target.closest("svg")) return;

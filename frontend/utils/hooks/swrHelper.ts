@@ -253,29 +253,25 @@ export function useAllNote() {
 	};
 }
 
-export function useAllChannelByUserId(userId: number) {
-	const { data, error, mutate, isLoading } = useSWR(
-		`channel/${userId}`,
-		fetcher,
-		{
-			onError: (e) => {
-				console.log("useAllChannel", e);
-			},
-			onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-				// Never retry on 404.
-				if (error?.response?.status === 404) return;
+export function useAllChannel() {
+	const { data, error, mutate, isLoading } = useSWR(`channel`, fetcher, {
+		onError: (e) => {
+			console.log("useAllChannel", e);
+		},
+		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+			// Never retry on 404.
+			if (error?.response?.status === 404) return;
 
-				// Never retry for a specific key.
-				if (key === `channel/${userId}`) return;
+			// Never retry for a specific key.
+			if (key === `channel`) return;
 
-				// Only retry up to 10 times.
-				if (retryCount >= 10) return;
+			// Only retry up to 10 times.
+			if (retryCount >= 10) return;
 
-				// Retry after 5 seconds.
-				setTimeout(() => revalidate({ retryCount }), 5000);
-			},
-		}
-	);
+			// Retry after 5 seconds.
+			setTimeout(() => revalidate({ retryCount }), 5000);
+		},
+	});
 	return {
 		channels: data,
 		revalid: mutate,
@@ -284,17 +280,17 @@ export function useAllChannelByUserId(userId: number) {
 	};
 }
 
-export function useAllDmByUserId(userId: number) {
-	const { data, error, mutate, isLoading } = useSWR(`dm/${userId}`, fetcher, {
+export function useAllDM() {
+	const { data, error, mutate, isLoading } = useSWR(`dm`, fetcher, {
 		onError: (e) => {
-			console.log("useAllDm", e);
+			console.log("useAllDM", e);
 		},
 		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
 			// Never retry on 404.
 			if (error?.response?.status === 404) return;
 
 			// Never retry for a specific key.
-			if (key === `dm/${userId}`) return;
+			if (key === `dm`) return;
 
 			// Only retry up to 10 times.
 			if (retryCount >= 10) return;

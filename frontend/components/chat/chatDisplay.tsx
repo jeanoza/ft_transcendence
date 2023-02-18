@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useAllDmByUserId, useUser } from "../../utils/hooks/swrHelper";
+import { useAllDM, useUser } from "../../utils/hooks/swrHelper";
 import { useSocket } from "../../utils/hooks/useSocket";
 import { Avatar } from "../avatar";
 import { InputField } from "../inputField";
@@ -11,7 +11,7 @@ export function ChatDisplay({ channelName, dmName }: { channelName: string | nul
 	const [received, setReceived] = useState<{ sender: IUser; content: string }[]>(
 		[]
 	);
-	const { revalid } = useAllDmByUserId(user.id);
+	const { revalid } = useAllDM();
 	const dialogueRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
