@@ -22,7 +22,7 @@ export function getServerSideProps({ req }: any) {
 }
 
 export default function Chat() {
-	const [channelName, setChannel] = useState<string | null>(null); //current channelName
+	const [channelName, setChannelName] = useState<string | null>(null); //current channelName
 	const [dmName, setDmName] = useState<string | null>(null);
 	const [openChatModal, setChatModal] = useState<boolean>(false);
 	const [openUserModal, setUserModal] = useState<boolean>(false);
@@ -42,7 +42,7 @@ export default function Chat() {
 						openUserModal={handleOpenUserModal}
 						openChatModal={() => setChatModal(true)}
 						channelName={channelName}
-						setChannelName={setChannel}
+						setChannelName={setChannelName}
 						setDmName={setDmName}
 					/>
 					<ChatDisplay channelName={channelName} dmName={dmName} />
