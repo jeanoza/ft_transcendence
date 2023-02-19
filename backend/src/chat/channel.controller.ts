@@ -44,7 +44,6 @@ export class ChannelController {
   }
   @Get(':name/is_admin')
   async isAdmin(@Param('name') name: string, @Req() req) {
-    console.log(req.user);
     return await this.channelService.isAdmin(req.user.id, name);
   }
 

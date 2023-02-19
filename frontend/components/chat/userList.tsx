@@ -11,8 +11,6 @@ export function UserList({ channelName, openUserModal }: { channelName: string |
 	const { channel } = useChannel(channelName!);
 	const { isAdmin } = useIsAdmin(channelName!);
 	const { isOwner } = useIsOwner(channelName!);
-	//console.log(isAdmin, isOwner)
-	console.log(channel)
 
 	function canBan(userId: number) {
 		//self and owner must not be banned
@@ -40,8 +38,6 @@ export function UserList({ channelName, openUserModal }: { channelName: string |
 			socket.off("revalidUsers");
 		};
 	}, []);
-
-
 
 
 	if (!users) return null;
