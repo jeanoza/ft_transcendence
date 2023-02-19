@@ -35,7 +35,7 @@ export function UserInfo({ user, isEditModal }: { user: IUser, isEditModal?: boo
 				</div>
 				<div className="d-flex justify-between">
 					<span>Created at</span>
-					<span>{new Date(user.createdAt).toLocaleDateString()}</span>
+					<span>{user.createdAt && new Date(user.createdAt).toLocaleDateString()}</span>
 				</div>
 				<div className="d-flex justify-between">
 					<span>Rank</span>

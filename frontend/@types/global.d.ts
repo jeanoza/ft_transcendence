@@ -7,7 +7,7 @@ declare global {
 		password?: string;
 		status?: number;
 		rank?: number;
-		createdAt: string;
+		createdAt?: string;
 	}
 	interface INote {
 		id?: number;

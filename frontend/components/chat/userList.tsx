@@ -13,8 +13,6 @@ export function UserList({ channelName, openUserModal }: { channelName: string |
 	const { isAdmin: currentIsAdmin } = useIsAdmin(channelName!);
 	const { isOwner: currentIsOwner } = useIsOwner(channelName!);
 
-	console.log(channel);
-
 	useEffect(() => {
 		socket.on("revalidUsers", function () {
 			revalid();
@@ -28,6 +26,8 @@ export function UserList({ channelName, openUserModal }: { channelName: string |
 			socket.off("revalidChannel");
 		};
 	}, []);
+
+
 
 	function isAdmin(userId: number): boolean {
 		if (channel.adminIds.find((adminId: number) => adminId === userId))
@@ -59,7 +59,6 @@ export function UserList({ channelName, openUserModal }: { channelName: string |
 	function handleOnBan(userId: number) {
 		console.log('ban', userId)
 	}
-
 	if (!users || !channel || !currentUser) return null;
 	return (
 		<div className="cont">
@@ -69,15 +68,15 @@ export function UserList({ channelName, openUserModal }: { channelName: string |
 						<Avatar url={user.imageURL} status={user.status} size="sm"></Avatar>
 						<span className="mx-2 text-overflow">{user.name}</span>
 						<div className="d-flex icons">
-							{canGiveAdmin(user.id!) &&
+							{user.id && canGiveAdmin(user.id) &&
 								<div
-									className={`icon-cont p-1 ${isAdmin(user.id!) ? "active" : ""}`}
+									className={`icon-cont p-1 ${channel && isAdmin(user.id!) ? "active" : ""}`}
 									onClick={() => handleGiveAdmin(user.id!)}>
 									<FontAwesomeIcon icon={"hand"} />
 									{/*<FontAwesomeIcon icon={["far", "hand"]} />*/}
 								</div>
 							}
-							{canBan(user.id!) &&
+							{user.id && canBan(user.id) &&
 								<>
 									<div className="icon-cont p-1" onClick={() => handleOnBan(user.id!)}>
 										<FontAwesomeIcon icon="ban" />
