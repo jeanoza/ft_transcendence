@@ -344,3 +344,7 @@ svg {
 	color: white;
 }
 /* #endregion */
+
+.icon-cont:hover {
+	color: var(--accent);
+}

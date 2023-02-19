@@ -17,10 +17,12 @@ import {
 	faLocationArrow,
 	faGamepad,
 	faCircleInfo,
+	faUniversalAccess,
 } from "@fortawesome/free-solid-svg-icons";
 import { faPaperPlane, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 library.add(
+	faUniversalAccess,
 	faGear,
 	faMagnifyingGlass,
 	faXmark,

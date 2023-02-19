@@ -64,11 +64,13 @@ export class ChannelService {
         'channels.name',
         'channels.isPublic',
         'channels.ownerId',
+        'channels.adminIds',
+        'channels.bannedIds',
       ])
       .getMany();
   }
 
-  async findAllChannelChat(channelName) {
+  async findAllChannelChat(channelName: string) {
     const { id: channelId } = await this.findByName(channelName);
 
     const channelChat = await this.channelChatRepository
@@ -144,6 +146,8 @@ export class ChannelService {
     _channel.isPublic = isPublic;
     _channel.password = password;
     _channel.ownerId = ownerId;
+    _channel.adminIds = [];
+    _channel.bannedIds = [];
     return await this.channelRepository.save(_channel);
   }
 
@@ -154,12 +158,12 @@ export class ChannelService {
   }
 
   async findByName(name: string) {
-    return await this.channelRepository
-      .findOne({ where: { name }, select: ['id', 'name', 'password'] })
-      .catch((e) => {
-        console.log(e);
-        throw new NotFoundException();
-      });
+    const channel = await this.channelRepository
+      .createQueryBuilder('channels')
+      .where('channels.name = :name', { name })
+      .getOne();
+    //if (!channel) throw new NotFoundException();
+    return channel;
   }
 
   async findOne(id: number) {
@@ -189,5 +193,16 @@ export class ChannelService {
       console.log(e);
       throw new UnauthorizedException();
     });
+  }
+
+  async isAdmin(userId: number, channelName: string) {
+    const channel = await this.findByName(channelName);
+    if (channel.adminIds.find((adminId) => adminId === userId)) return true;
+    return false;
+  }
+  async isOwner(userId: number, channelName: string) {
+    const channel = await this.findByName(channelName);
+    if (channel.ownerId === userId) return true;
+    return false;
   }
 }

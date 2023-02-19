@@ -104,12 +104,7 @@ export class ChatGateway
   ) {
     try {
       client.join(channelName);
-      this.server
-        .to(channelName)
-        .emit(
-          'userList',
-          await this.channelService.findAllUserInChannel(channelName),
-        );
+      this.server.to(channelName).emit('revalidUsers');
       client.emit(
         'getAllChannelChat',
         await this.channelService.findAllChannelChat(channelName),
@@ -156,7 +151,6 @@ export class ChatGateway
   //#endregion
 
   //#region DM
-  //FIXME: why no client object??
   @SubscribeMessage('dm')
   async handleDM(
     @ConnectedSocket() client: Socket,

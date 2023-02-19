@@ -280,20 +280,20 @@ export function useAllChannel() {
 	};
 }
 
-export function useChannel(channelId: number) {
+export function useAllUsersInChannel(channelName: string) {
 	const { data, error, mutate, isLoading } = useSWR(
-		`channel/${channelId}`,
+		`channel/${channelName}/user`,
 		fetcher,
 		{
 			onError: (e) => {
-				console.log("useChannel", e);
+				console.log("useAllUsersInChannel", e);
 			},
 			onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
 				// Never retry on 404.
 				if (error?.response?.status === 404) return;
 
 				// Never retry for a specific key.
-				if (key === `channel/${channelId}`) return;
+				if (key === `channel`) return;
 
 				// Only retry up to 10 times.
 				if (retryCount >= 10) return;
@@ -304,7 +304,99 @@ export function useChannel(channelId: number) {
 		}
 	);
 	return {
+		users: data,
+		revalid: mutate,
+		isLoading,
+		error,
+	};
+}
+
+export function useChannel(channel: number | string) {
+	let query = "channel?";
+	if (typeof channel === "number") query += `id=${channel}`;
+	else query += `name=${channel}`;
+	const { data, error, mutate, isLoading } = useSWR(query, fetcher, {
+		onError: (e) => {
+			console.log("useChannel", e);
+		},
+		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+			// Never retry on 404.
+			if (error?.response?.status === 404) return;
+
+			// Never retry for a specific key.
+			if (key === query) return;
+
+			// Only retry up to 10 times.
+			if (retryCount >= 10) return;
+
+			// Retry after 5 seconds.
+			setTimeout(() => revalidate({ retryCount }), 5000);
+		},
+	});
+	return {
 		channel: data,
+		revalid: mutate,
+		isLoading,
+		error,
+	};
+}
+
+export function useIsOwner(channel: string) {
+	const { data, error, mutate, isLoading } = useSWR(
+		`channel/${channel}/is_owner`,
+		fetcher,
+		{
+			onError: (e) => {
+				console.log("useIsOwner", e);
+			},
+			onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+				// Never retry on 404.
+				if (error?.response?.status === 404) return;
+
+				// Never retry for a specific key.
+				if (key === `${channel}/is_owner`) return;
+
+				// Only retry up to 10 times.
+				if (retryCount >= 10) return;
+
+				// Retry after 5 seconds.
+				setTimeout(() => revalidate({ retryCount }), 5000);
+			},
+		}
+	);
+	return {
+		isOwner: data,
+		revalid: mutate,
+		isLoading,
+		error,
+	};
+}
+
+export function useIsAdmin(channel: string) {
+	const { data, error, mutate, isLoading } = useSWR(
+		`channel/${channel}/is_admin`,
+		fetcher,
+		{
+			onError: (e) => {
+				console.log("useIsAdmin", e);
+			},
+			onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+				// Never retry on 404.
+				if (error?.response?.status === 404) return;
+
+				// Never retry for a specific key.
+				if (key === `${channel}/is_admin`) return;
+
+				// Only retry up to 10 times.
+				if (retryCount >= 10) return;
+
+				// Retry after 5 seconds.
+				setTimeout(() => revalidate({ retryCount }), 5000);
+			},
+		}
+	);
+	return {
+		isAdmin: data,
 		revalid: mutate,
 		isLoading,
 		error,

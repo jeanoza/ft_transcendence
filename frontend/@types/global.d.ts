@@ -24,6 +24,7 @@ declare global {
 		name: string;
 		isPublic: boolean;
 		ownerId: number;
+		adminIds: number[];
 	}
 }
 

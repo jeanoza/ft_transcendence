@@ -29,15 +29,17 @@ make fclean
 
 - Frontend:
 
-  - [ ] edit profile => username
+  - [x] edit profile => username
 
-  - [ ] chat page
+  - [x] chat page
 
-    - [ ] ChannelSettingModal(only admins and creator)
+    - [x] ChannelSettingModal(only creator)
 
-      - [ ] update password
+      - [x] update password
 
-    - [ ] User list(only admin and creator)
+      - [ ] not yet update with db
+
+    - [ ] User list(admin and creator)
 
       - [ ] ban: users in channel
 

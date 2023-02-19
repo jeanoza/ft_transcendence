@@ -28,6 +28,7 @@ export function ChannelList({
 	const { channels } = useAllChannel();
 	const { dms } = useAllDM();
 
+
 	function onChangeChannel(e: any) {
 		if (e.target.closest("svg")) return;
 
@@ -51,8 +52,6 @@ export function ChannelList({
 		setChannelName(null);
 		setDmName(target?.title);
 	}
-
-
 	return (
 		<div className="cont d-flex column gap">
 			<button onClick={openNewChatModal}>New Chat</button>
@@ -66,10 +65,12 @@ export function ChannelList({
 						onClick={onChangeChannel}
 					>
 						<span>{channel.name}</span>
-						{channel.ownerId === user.id &&
-							<div className="icon-cont py-3 px-1" onClick={() => openChannelModal(channel.id)}>
-								<FontAwesomeIcon icon="gear" />
-							</div>
+						{channel.ownerId === user.id
+							&& (
+								<div className="icon-cont py-3 px-1" onClick={() => openChannelModal(channel.id)}>
+									<FontAwesomeIcon icon="gear" />
+								</div>
+							)
 						}
 					</li>
 				))}
