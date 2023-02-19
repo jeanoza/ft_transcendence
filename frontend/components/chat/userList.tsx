@@ -3,6 +3,7 @@ import { useSocket } from "../../utils/hooks/useSocket";
 import { Avatar } from "../avatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAllUsersInChannel, useChannel, useIsAdmin, useIsOwner, useUser } from "../../utils/hooks/swrHelper";
+import { Loader } from "../loader";
 
 export function UserList({ channelName, openUserModal }: { channelName: string | null, openUserModal: any }) {
 	const { socket } = useSocket("chat");
@@ -34,7 +35,7 @@ export function UserList({ channelName, openUserModal }: { channelName: string |
 		return false;
 	}
 
-	async function canBan(userId: number) {
+	function canBan(userId: number) {
 		//self and owner must not be banned
 		if (userId === currentUser.id || userId === channel.ownerId) return false;
 		//owner can ban everyone
@@ -45,7 +46,7 @@ export function UserList({ channelName, openUserModal }: { channelName: string |
 	}
 
 
-	async function canGiveAdmin(userId: number) {
+	function canGiveAdmin(userId: number) {
 		if (userId === currentUser.id || userId === channel.ownerId) return false;
 		if (currentIsOwner) return true;
 		return false;
