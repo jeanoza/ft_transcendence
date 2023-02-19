@@ -18,10 +18,19 @@ import {
 	faGamepad,
 	faCircleInfo,
 	faUniversalAccess,
+	faInfo,
+	faUser,
+	faHand,
+	faCommentSlash
 } from "@fortawesome/free-solid-svg-icons";
-import { faPaperPlane, faTrashCan } from "@fortawesome/free-regular-svg-icons";
+import { faPaperPlane, faTrashCan, faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
 
 library.add(
+	faCommentSlash,
+	faUser,
+	faInfo,
+	faCircleQuestion,
+	faHand,
 	faUniversalAccess,
 	faGear,
 	faMagnifyingGlass,

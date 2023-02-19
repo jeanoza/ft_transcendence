@@ -67,7 +67,7 @@ export function ChannelList({
 						<span>{channel.name}</span>
 						{channel.ownerId === user.id
 							&& (
-								<div className="icon-cont py-3 px-1" onClick={() => openChannelModal(channel.id)}>
+								<div className="icon-cont p-1" onClick={() => openChannelModal(channel.id)}>
 									<FontAwesomeIcon icon="gear" />
 								</div>
 							)
@@ -87,11 +87,13 @@ export function ChannelList({
 						<Avatar size="sm" status={user.status} url={user.imageURL} />
 						<span className="text-overflow mx-2">{user.name}</span>
 						<div
-							className="icon-cont py-3 px-1"
+							className="icon-cont p-1"
 							onClick={() => openUserModal(user.id)}
 						>
-							<FontAwesomeIcon icon="circle-info" />
+							{/*<FontAwesomeIcon icon="circle-info" size="1x" />*/}
+							<FontAwesomeIcon icon="user" />
 						</div>
+
 					</li>
 				))}
 			</ul>

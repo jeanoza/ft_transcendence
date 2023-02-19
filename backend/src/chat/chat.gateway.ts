@@ -148,6 +148,22 @@ export class ChatGateway
       client.emit('error', e);
     }
   }
+
+  @SubscribeMessage('giveAdmin')
+  async handleGiveAdmin(
+    @ConnectedSocket() client: Socket,
+    @MessageBody('channelName') channelName: string,
+    @MessageBody('userId') userId: number,
+  ): Promise<void> {
+    const channel = await this.channelService.findByName(channelName);
+    const adminIds = channel.adminIds;
+    if (!adminIds.find((id) => id === userId)) {
+      adminIds.push(userId);
+    } else adminIds.splice(adminIds.indexOf(userId), 1);
+    await this.channelService.update(channel.id, { adminIds });
+    this.server.to(channelName).emit('revalidChannel');
+    //this.logger.debug(channelName, userId);
+  }
   //#endregion
 
   //#region DM

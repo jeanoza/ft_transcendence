@@ -8,64 +8,91 @@ export function UserList({ channelName, openUserModal }: { channelName: string |
 	const { socket } = useSocket("chat");
 	const { user: currentUser } = useUser();
 	const { users, revalid } = useAllUsersInChannel(channelName!)
-	const { channel } = useChannel(channelName!);
-	const { isAdmin } = useIsAdmin(channelName!);
-	const { isOwner } = useIsOwner(channelName!);
+	const { channel, revalid: revalidChannel } = useChannel(channelName!);
+	const { isAdmin: currentIsAdmin } = useIsAdmin(channelName!);
+	const { isOwner: currentIsOwner } = useIsOwner(channelName!);
 
-	function canBan(userId: number) {
-		//self and owner must not be banned
-		if (userId === currentUser.id || userId === channel.ownerId) return false;
-		//owner can ban everyone
-		if (isOwner) return true;
-		//admin can not ban other admin
-		if (isAdmin && channel.adminIds.find((adminId: number) => adminId !== userId)) return true;
-		return false;
-	}
-
-	function canGiveAdmin(userId: number) {
-		if (userId === currentUser.id || userId === channel.ownerId) return false;
-		if (isOwner) return true;
-		return false;
-	}
-
+	console.log(channel);
 
 	useEffect(() => {
 		socket.on("revalidUsers", function () {
 			revalid();
 		});
+		socket.on("revalidChannel", function () {
+			revalidChannel();
+		});
 		return () => {
 			//clean up socket event
 			socket.off("revalidUsers");
+			socket.off("revalidChannel");
 		};
 	}, []);
 
+	function isAdmin(userId: number): boolean {
+		if (channel.adminIds.find((adminId: number) => adminId === userId))
+			return true;
+		return false;
+	}
 
-	if (!users) return null;
+	async function canBan(userId: number) {
+		//self and owner must not be banned
+		if (userId === currentUser.id || userId === channel.ownerId) return false;
+		//owner can ban everyone
+		if (currentIsOwner) return true;
+		//admin can not ban other admin
+		if (currentIsAdmin && !isAdmin(userId)) return true;
+		return false;
+	}
+
+
+	async function canGiveAdmin(userId: number) {
+		if (userId === currentUser.id || userId === channel.ownerId) return false;
+		if (currentIsOwner) return true;
+		return false;
+	}
+
+	function handleGiveAdmin(userId: number) {
+		socket.emit('giveAdmin', { channelName, userId });
+	}
+
+	function handleOnBan(userId: number) {
+		console.log('ban', userId)
+	}
+
+	if (!users || !channel || !currentUser) return null;
 	return (
 		<div className="cont">
 			<ul>
-				{users.map((user: IUser, index: string) => (
-					<li key={index} className="d-flex center justify-between p-2 cursor">
+				{users.map((user: IUser) => (
+					<li key={user.id} className="d-flex center justify-between p-2 cursor">
 						<Avatar url={user.imageURL} status={user.status} size="sm"></Avatar>
 						<span className="mx-2 text-overflow">{user.name}</span>
 						<div className="d-flex icons">
 							{canGiveAdmin(user.id!) &&
 								<div
-									className="icon-cont py-3 px-1"
-								>
-									<FontAwesomeIcon icon="user-plus" />
+									className={`icon-cont p-1 ${isAdmin(user.id!) ? "active" : ""}`}
+									onClick={() => handleGiveAdmin(user.id!)}>
+									<FontAwesomeIcon icon={"hand"} />
+									{/*<FontAwesomeIcon icon={["far", "hand"]} />*/}
 								</div>
 							}
 							{canBan(user.id!) &&
-								<div className="icon-cont py-3 px-1">
-									<FontAwesomeIcon icon="ban" />
-								</div>
+								<>
+									<div className="icon-cont p-1" onClick={() => handleOnBan(user.id!)}>
+										<FontAwesomeIcon icon="ban" />
+									</div>
+									<div
+										className="icon-cont p-1"
+									>
+										<FontAwesomeIcon icon="comment-slash" />
+									</div>
+								</>
 							}
 							<div
-								className="icon-cont py-3 px-1"
+								className="icon-cont p-1"
 								onClick={() => openUserModal(user.id)}
 							>
-								<FontAwesomeIcon icon="circle-info" />
+								<FontAwesomeIcon icon="user" />
 							</div>
 						</div>
 					</li>
@@ -90,6 +117,9 @@ export function UserList({ channelName, openUserModal }: { channelName: string |
 				}
 				li:hover {
 					background-color: var(--gray-light-1);
+				}
+				.active {
+					color:var(--accent);
 				}
 			`}</style>
 		</div >

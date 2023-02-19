@@ -43,7 +43,7 @@ export function Search() {
 	}
 	return (
 		<div className="search d-flex center justify-start gap">
-			<FontAwesomeIcon icon="magnifying-glass" />
+			<FontAwesomeIcon icon="magnifying-glass" size="lg" />
 			<input value={name} onChange={onChange} placeholder="search" />
 			{filtered && (
 				<div className="cancelBtn" onClick={handleCancelBtn}>

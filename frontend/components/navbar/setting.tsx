@@ -28,7 +28,7 @@ export function Setting() {
 	return (
 		<div className="setting d-flex center gap justify-end">
 			<div className="icon" onClick={onToggle}>
-				<FontAwesomeIcon icon="gear" />
+				<FontAwesomeIcon icon="gear" size="lg" />
 			</div>
 			{dropdown && (
 				<div className="nav-dropdown-menu">
