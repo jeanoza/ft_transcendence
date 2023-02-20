@@ -6,10 +6,12 @@ import {
 	useAllUsersInChannel,
 	useChannel,
 	useIsAdmin,
+	useIsBanned,
 	useIsOwner,
 	useUser,
 } from "../../utils/hooks/swrHelper";
 import { Loader } from "../loader";
+import { useRouter } from "next/router";
 
 export function UserList({
 	channelName,
@@ -28,8 +30,15 @@ export function UserList({
 	const { isOwner: currentIsOwner, revalid: revalidOwner } = useIsOwner(
 		channelName!
 	);
+	const { isBanned: currentIsBanned, revalid: revalidBanned } = useIsBanned(
+		channelName!
+	);
 
 	useEffect(() => {
+		socket.on("revalidBanned", function () {
+			revalidBanned();
+			revalidChannel();
+		});
 		socket.on("revalidAdmin", function () {
 			revalidAdmin();
 			revalidChannel();
@@ -37,18 +46,29 @@ export function UserList({
 		return () => {
 			//clean up socket event
 			socket.off("revalidAdmin");
+			socket.off("revalidBanned");
 		};
 	}, [channel]);
 
 	useEffect(() => {
+		socket.on("banned", function (msg) {
+			window.alert(msg);
+		});
 		socket.on("revalidUsers", function () {
 			revalid();
 		});
 		return () => {
 			//clean up socket event
 			socket.off("revalidUsers");
+			socket.off("banned");
 		};
 	}, []);
+
+	function isBanned(userId: number): boolean {
+		if (channel.bannedIds.find((bannedId: number) => bannedId === userId))
+			return true;
+		return false;
+	}
 
 	function isAdmin(userId: number): boolean {
 		if (channel.adminIds.find((adminId: number) => adminId === userId))
@@ -78,10 +98,14 @@ export function UserList({
 			socket.emit("giveAdmin", { channelName, userId });
 	}
 
-	function handleOnBan(userId: number) {
-		console.log("ban", userId);
+	function handleBanUser(userId: number, userName: string) {
+		const message = isBanned(userId) ? "give access to channel to" : "ban";
+
+		if (window.confirm(`Do you wanna ${message} ${userName}?`))
+			socket.emit("banUser", { channelName, userId });
 	}
-	if (!users || !channel || !currentUser) return null;
+
+	if (!users || !channel || !currentUser || currentIsBanned) return null;
 	return (
 		<div className="cont">
 			<ul>
@@ -107,8 +131,10 @@ export function UserList({
 							{user.id && canBan(user.id) && (
 								<>
 									<div
-										className="icon-cont p-1"
-										onClick={() => handleOnBan(user.id!)}
+										className={`icon-cont p-1 ${
+											channel && isBanned(user.id!) ? "active" : ""
+										}`}
+										onClick={() => handleBanUser(user.id!, user.name!)}
 									>
 										<FontAwesomeIcon icon="ban" />
 									</div>

@@ -205,4 +205,10 @@ export class ChannelService {
     if (channel.ownerId === userId) return true;
     return false;
   }
+
+  async isBanned(userId: number, channelName: string) {
+    const channel = await this.findByName(channelName);
+    if (channel?.bannedIds.find((bannedId) => bannedId === userId)) return true;
+    return false;
+  }
 }

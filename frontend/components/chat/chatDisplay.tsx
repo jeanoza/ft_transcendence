@@ -1,5 +1,6 @@
+import { Router, useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import { useAllDM, useUser } from "../../utils/hooks/swrHelper";
+import { useAllDM, useIsBanned, useUser } from "../../utils/hooks/swrHelper";
 import { useSocket } from "../../utils/hooks/useSocket";
 import { Avatar } from "../avatar";
 import { InputField } from "../inputField";
@@ -9,13 +10,20 @@ interface IChat {
 	content: string;
 }
 
-export function ChatDisplay({ channelName, dmName }: { channelName: string | null; dmName: string | null }) {
+export function ChatDisplay({
+	channelName,
+	dmName,
+}: {
+	channelName: string | null;
+	dmName: string | null;
+}) {
 	const { socket } = useSocket("chat");
 	const { user } = useUser();
 	const [content, setContent] = useState<string>("");
 	const [chats, setChats] = useState<IChat[]>([]);
 	const { revalid } = useAllDM();
 	const dialogueRef = useRef<HTMLDivElement>(null);
+	const { isBanned } = useIsBanned(channelName!);
 
 	useEffect(() => {
 		socket.on("getAllChannelChat", async function (channelChats) {
@@ -25,17 +33,20 @@ export function ChatDisplay({ channelName, dmName }: { channelName: string | nul
 		socket.on("getAllDM", async function (dmChats) {
 			setChats(dmChats);
 			await ajustScroll();
-		})
+		});
+		//socket.on("banned", function (msg) {
+		//	window.alert(msg);
+		//});
 		return () => {
 			socket.off("getAllChannelChat");
 			socket.off("getAllDM");
+			socket.off("banned");
 		};
 	}, []);
 
-
 	useEffect(() => {
 		if (channelName) socket.emit("joinChannel", { channelName, user });
-		else if (dmName) socket.emit("joinDM", { user, otherName: dmName })
+		else if (dmName) socket.emit("joinDM", { user, otherName: dmName });
 
 		socket.on("recvMSG", async function (data) {
 			revalid();
@@ -80,9 +91,12 @@ export function ChatDisplay({ channelName, dmName }: { channelName: string | nul
 			setContent("");
 		}
 	}
+	if (isBanned) return null;
 	return (
 		<div className="chat-display d-flex column justify-between">
-			<h3>{channelName ? channelName : dmName ? dmName : "Please join chat:)"}</h3>
+			<h3>
+				{channelName ? channelName : dmName ? dmName : "Please join chat:)"}
+			</h3>
 			<div className="chat-display-dialogue" ref={dialogueRef}>
 				{!chats.length ? (
 					<div />
@@ -94,12 +108,7 @@ export function ChatDisplay({ channelName, dmName }: { channelName: string | nul
 								key={index}
 								className={`d-flex my-4 ${isMine ? "justify-end" : ""}`}
 							>
-								{!isMine && (
-									<Avatar
-										url={el.sender.imageURL}
-										size="sm"
-									/>
-								)}
+								{!isMine && <Avatar url={el.sender.imageURL} size="sm" />}
 								<div className="mx-2">
 									{!isMine && <span className="sender">{el.sender.name}</span>}
 									<div className="d-flex">
@@ -138,7 +147,7 @@ export function ChatDisplay({ channelName, dmName }: { channelName: string | nul
 				}
 				.content {
 					background-color: var(--gray-light-1);
-					line-break:anywhere;
+					line-break: anywhere;
 					padding: 0.5rem;
 					border-radius: 8px;
 					min-height: 2rem;

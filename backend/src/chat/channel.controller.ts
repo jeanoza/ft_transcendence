@@ -51,4 +51,8 @@ export class ChannelController {
   async isOwner(@Param('name') name: string, @Req() req) {
     return await this.channelService.isOwner(req.user.id, name);
   }
+  @Get(':name/is_banned')
+  async isBanned(@Param('name') name: string, @Req() req) {
+    return await this.channelService.isBanned(req.user.id, name);
+  }
 }

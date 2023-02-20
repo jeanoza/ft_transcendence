@@ -1,4 +1,8 @@
-import { ForbiddenException, Logger } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Logger,
+  UnauthorizedException,
+} from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -101,8 +105,14 @@ export class ChatGateway
   async handlejoinChannel(
     @ConnectedSocket() client: Socket,
     @MessageBody('channelName') channelName: string,
+    @MessageBody('user') user: User,
   ) {
     try {
+      const isBanned = await this.channelService.isBanned(user.id, channelName);
+      if (isBanned)
+        throw new UnauthorizedException(`You are banned in ${channelName}`);
+
+      this.logger.log('here??');
       client.join(channelName);
       this.server.to(channelName).emit('revalidUsers');
       client.emit(
@@ -162,6 +172,25 @@ export class ChatGateway
     } else adminIds.splice(adminIds.indexOf(userId), 1);
     await this.channelService.update(channel.id, { adminIds });
     this.server.to(channelName).emit('revalidAdmin');
+  }
+
+  @SubscribeMessage('banUser')
+  async handleBanUser(
+    @ConnectedSocket() client: Socket,
+    @MessageBody('channelName') channelName: string,
+    @MessageBody('userId') userId: number,
+  ): Promise<void> {
+    const channel = await this.channelService.findByName(channelName);
+    const bannedIds = channel.bannedIds;
+    if (!bannedIds.find((id) => id === userId)) {
+      bannedIds.push(userId);
+      const user = await this.userService.findOne(userId);
+      this.server
+        .to(user.chatSocket)
+        .emit('banned', `Your are banned in ${channelName}`);
+    } else bannedIds.splice(bannedIds.indexOf(userId), 1);
+    await this.channelService.update(channel.id, { bannedIds });
+    this.server.to(channelName).emit('revalidBanned');
   }
   //#endregion
 

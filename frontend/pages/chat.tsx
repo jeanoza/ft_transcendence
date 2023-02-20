@@ -29,7 +29,7 @@ export default function Chat() {
 	const [openUserModal, setUserModal] = useState<boolean>(false);
 	const [openChannelModal, setChannelModal] = useState<boolean>(false);
 	const [userId, setUserId] = useState<number | null>(null);
-	const [channelId, setChannelId] = useState<number | null>(null)
+	const [channelId, setChannelId] = useState<number | null>(null);
 
 	async function handleOpenUserModal(id: number) {
 		setUserId(id);
@@ -55,11 +55,23 @@ export default function Chat() {
 						setDmName={setDmName}
 					/>
 					<ChatDisplay channelName={channelName} dmName={dmName} />
-					{channelName && <UserList channelName={channelName} openUserModal={handleOpenUserModal} />}
+					{channelName && (
+						<UserList
+							channelName={channelName}
+							openUserModal={handleOpenUserModal}
+						/>
+					)}
 				</div>
 			</main>
-			{openChannelModal && channelId && <ChannelModal channelId={channelId} onClose={() => setChannelModal(false)} />}
-			{openNewChatModal && <NewChatModal onClose={() => setNewChatModal(false)} />}
+			{openChannelModal && channelId && (
+				<ChannelModal
+					channelId={channelId}
+					onClose={() => setChannelModal(false)}
+				/>
+			)}
+			{openNewChatModal && (
+				<NewChatModal onClose={() => setNewChatModal(false)} />
+			)}
 			{openUserModal && userId && (
 				<UserModal userId={userId} onClose={() => setUserModal(false)} />
 			)}
