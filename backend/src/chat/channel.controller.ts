@@ -32,7 +32,6 @@ export class ChannelController {
     @Query('id') id: number,
     @Query('name') name: string,
   ) {
-    this.logger.debug('HERE', id, name);
     if (!Number.isNaN(id)) return await this.channelService.findOne(id);
     if (name !== undefined) return await this.channelService.findByName(name);
     return await this.channelService.findAllByUserId(req.user.id);
