@@ -45,7 +45,7 @@ make fclean
 
       - [ ] mute: mutted user can't send message (with time determinated)
 
-      - [ ] give admin right
+      - [x] give admin right
 
   - [ ] Match History => after
 

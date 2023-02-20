@@ -5,6 +5,7 @@ clean:
 	docker-compose down
 
 fclean: $(clean)
+	rm -rf ./backend/images/avatar/*
 	docker container prune --force
 	docker image prune --force --all
 	docker network prune --force

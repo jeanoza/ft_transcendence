@@ -161,8 +161,7 @@ export class ChatGateway
       adminIds.push(userId);
     } else adminIds.splice(adminIds.indexOf(userId), 1);
     await this.channelService.update(channel.id, { adminIds });
-    this.server.to(channelName).emit('revalidChannel');
-    //this.logger.debug(channelName, userId);
+    this.server.to(channelName).emit('revalidAdmin');
   }
   //#endregion
 
