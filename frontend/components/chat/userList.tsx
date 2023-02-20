@@ -99,6 +99,12 @@ export function UserList({
 			socket.emit("banUser", { channelName, userId });
 	}
 
+	function handleKickUser(userId: number, userName: string) {
+		if (window.confirm(`Do you wanna kick ${userName}?`)) {
+			socket.emit("banUser", { channelName, userId });
+		}
+	}
+
 	if (!users || !channel || !currentUser || currentIsBanned) return null;
 	return (
 		<div className="cont">
