@@ -109,8 +109,15 @@ export class ChatGateway
   ) {
     try {
       const isBanned = await this.channelService.isBanned(user.id, channelName);
-      if (isBanned)
-        throw new UnauthorizedException(`You are banned in ${channelName}`);
+      if (isBanned) {
+        //throw new UnauthorizedException(
+        //  `You are banned in ${channelName}  [joinChannel]`,
+        //);
+        return client.emit(
+          'banned',
+          `You are banned in ${channelName}  [joinChannel]`,
+        );
+      }
 
       this.logger.log('here??');
       client.join(channelName);
@@ -187,7 +194,7 @@ export class ChatGateway
       const user = await this.userService.findOne(userId);
       this.server
         .to(user.chatSocket)
-        .emit('banned', `Your are banned in ${channelName}`);
+        .emit('banned', `Your are banned in ${channelName} BANUSER`);
     } else bannedIds.splice(bannedIds.indexOf(userId), 1);
     await this.channelService.update(channel.id, { bannedIds });
     this.server.to(channelName).emit('revalidBanned');

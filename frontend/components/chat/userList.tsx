@@ -10,8 +10,6 @@ import {
 	useIsOwner,
 	useUser,
 } from "../../utils/hooks/swrHelper";
-import { Loader } from "../loader";
-import { useRouter } from "next/router";
 
 export function UserList({
 	channelName,
