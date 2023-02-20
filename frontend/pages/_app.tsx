@@ -21,11 +21,17 @@ import {
 	faInfo,
 	faUser,
 	faHand,
-	faCommentSlash
+	faCommentSlash,
+	faUserSlash,
 } from "@fortawesome/free-solid-svg-icons";
-import { faPaperPlane, faTrashCan, faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
+import {
+	faPaperPlane,
+	faTrashCan,
+	faCircleQuestion,
+} from "@fortawesome/free-regular-svg-icons";
 
 library.add(
+	faUserSlash,
 	faCommentSlash,
 	faUser,
 	faInfo,

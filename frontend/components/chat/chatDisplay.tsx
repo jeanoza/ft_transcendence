@@ -12,9 +12,11 @@ interface IChat {
 
 export function ChatDisplay({
 	channelName,
+	setChannelName,
 	dmName,
 }: {
 	channelName: string | null;
+	setChannelName: any;
 	dmName: string | null;
 }) {
 	const { socket } = useSocket("chat");
@@ -23,7 +25,6 @@ export function ChatDisplay({
 	const [chats, setChats] = useState<IChat[]>([]);
 	const { revalid } = useAllDM();
 	const dialogueRef = useRef<HTMLDivElement>(null);
-	const { isBanned } = useIsBanned(channelName!);
 
 	useEffect(() => {
 		socket.on("getAllChannelChat", async function (channelChats) {
@@ -34,9 +35,11 @@ export function ChatDisplay({
 			setChats(dmChats);
 			await ajustScroll();
 		});
-		//socket.on("banned", function (msg) {
-		//	window.alert(msg);
-		//});
+		socket.on("banned", function (msg) {
+			window.alert(msg);
+			setChannelName(null);
+			setChats([]);
+		});
 		return () => {
 			socket.off("getAllChannelChat");
 			socket.off("getAllDM");
@@ -91,7 +94,7 @@ export function ChatDisplay({
 			setContent("");
 		}
 	}
-	if (isBanned) return null;
+	if (!channelName && !dmName) return null;
 	return (
 		<div className="chat-display d-flex column justify-between">
 			<h3>

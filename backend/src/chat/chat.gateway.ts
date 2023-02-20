@@ -110,16 +110,13 @@ export class ChatGateway
     try {
       const isBanned = await this.channelService.isBanned(user.id, channelName);
       if (isBanned) {
-        //throw new UnauthorizedException(
-        //  `You are banned in ${channelName}  [joinChannel]`,
-        //);
+        this.logger.debug(`${user.name} tries to connect to ${channelName}`);
         return client.emit(
           'banned',
-          `You are banned in ${channelName}  [joinChannel]`,
+          `You are banned in ${channelName} [sent by joinChannel]`,
         );
       }
 
-      this.logger.log('here??');
       client.join(channelName);
       this.server.to(channelName).emit('revalidUsers');
       client.emit(

@@ -49,16 +49,12 @@ export function UserList({
 	}, [channel]);
 
 	useEffect(() => {
-		socket.on("banned", function (msg) {
-			window.alert(msg);
-		});
 		socket.on("revalidUsers", function () {
 			revalid();
 		});
 		return () => {
 			//clean up socket event
 			socket.off("revalidUsers");
-			socket.off("banned");
 		};
 	}, []);
 
@@ -74,7 +70,7 @@ export function UserList({
 		return false;
 	}
 
-	function canBan(userId: number) {
+	function canAdminAction(userId: number) {
 		//self and owner must not be banned
 		if (userId === currentUser.id || userId === channel.ownerId) return false;
 		//owner can ban everyone
@@ -108,44 +104,48 @@ export function UserList({
 		<div className="cont">
 			<ul>
 				{users.map((user: IUser) => (
-					<li
-						key={user.id}
-						className="d-flex center justify-between p-2 cursor"
-					>
-						<Avatar url={user.imageURL} status={user.status} size="sm"></Avatar>
-						<span className="mx-2 text-overflow">{user.name}</span>
-						<div className="d-flex icons">
-							{user.id && canGiveAdmin(user.id) && (
+					<li key={user.id} className="d-flex center justify-start p-2 cursor">
+						<Avatar url={user.imageURL} status={user.status} size="sm" />
+						<div>
+							<div className="d-flex center justify-between">
+								<span className="m-2 text-overflow">{user.name}</span>
 								<div
-									className={`icon-cont p-1 ${
-										channel && isAdmin(user.id!) ? "active" : ""
-									}`}
-									onClick={() => handleGiveAdmin(user.id!, user.name!)}
+									className="icon-cont p-1"
+									onClick={() => openUserModal(user.id)}
 								>
-									<FontAwesomeIcon icon={"hand"} />
-									{/*<FontAwesomeIcon icon={["far", "hand"]} />*/}
+									<FontAwesomeIcon icon="user" />
 								</div>
-							)}
-							{user.id && canBan(user.id) && (
-								<>
+							</div>
+							<div className="d-flex justify-end icons">
+								{user.id && canGiveAdmin(user.id) && (
 									<div
 										className={`icon-cont p-1 ${
-											channel && isBanned(user.id!) ? "active" : ""
+											channel && isAdmin(user.id!) ? "active" : ""
 										}`}
-										onClick={() => handleBanUser(user.id!, user.name!)}
+										onClick={() => handleGiveAdmin(user.id!, user.name!)}
 									>
-										<FontAwesomeIcon icon="ban" />
+										<FontAwesomeIcon icon={"hand"} />
+										{/*<FontAwesomeIcon icon={["far", "hand"]} />*/}
 									</div>
-									<div className="icon-cont p-1">
-										<FontAwesomeIcon icon="comment-slash" />
-									</div>
-								</>
-							)}
-							<div
-								className="icon-cont p-1"
-								onClick={() => openUserModal(user.id)}
-							>
-								<FontAwesomeIcon icon="user" />
+								)}
+								{user.id && canAdminAction(user.id) && (
+									<>
+										<div className="icon-cont p-1">
+											<FontAwesomeIcon icon="comment-slash" />
+										</div>
+										<div className="icon-cont p-1">
+											<FontAwesomeIcon icon="user-slash" />
+										</div>
+										<div
+											className={`icon-cont p-1 ${
+												channel && isBanned(user.id!) ? "active" : ""
+											}`}
+											onClick={() => handleBanUser(user.id!, user.name!)}
+										>
+											<FontAwesomeIcon icon="ban" />
+										</div>
+									</>
+								)}
 							</div>
 						</div>
 					</li>
@@ -164,6 +164,7 @@ export function UserList({
 				}
 				span {
 					width: 80px;
+					/*display: block;*/
 				}
 				li {
 					border-radius: 8px;

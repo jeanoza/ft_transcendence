@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AuthLayout } from "../components/layout";
 import { Seo } from "../components/seo";
 import { ChannelList } from "../components/chat/channelList";
@@ -7,6 +7,7 @@ import { ChatDisplay } from "../components/chat/chatDisplay";
 import { NewChatModal } from "../components/modals/newChatModal";
 import { UserModal } from "../components/modals/userModal";
 import { ChannelModal } from "../components/modals/channelModal";
+import { useSocket } from "../utils/hooks/useSocket";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -30,6 +31,7 @@ export default function Chat() {
 	const [openChannelModal, setChannelModal] = useState<boolean>(false);
 	const [userId, setUserId] = useState<number | null>(null);
 	const [channelId, setChannelId] = useState<number | null>(null);
+	//const { socket } = useSocket("chat");
 
 	async function handleOpenUserModal(id: number) {
 		setUserId(id);
@@ -54,7 +56,11 @@ export default function Chat() {
 						setChannelName={setChannelName}
 						setDmName={setDmName}
 					/>
-					<ChatDisplay channelName={channelName} dmName={dmName} />
+					<ChatDisplay
+						channelName={channelName}
+						dmName={dmName}
+						setChannelName={setChannelName}
+					/>
 					{channelName && (
 						<UserList
 							channelName={channelName}
