@@ -120,44 +120,40 @@ export function UserList({
 				{users.map((user: IUser) => (
 					<li key={user.id} className="d-flex center justify-start p-2 cursor">
 						<Avatar url={user.imageURL} status={user.status} size="sm" />
-						<div>
-							<div className="d-flex center justify-between">
-								<span className={`m-2 text-overflow ${validateConnection(user.chatSocket)}`}>{user.name}</span>
+						<span className={`m-2 text-overflow ${validateConnection(user.chatSocket)}`}>{user.name}</span>
+						<div className="d-flex justify-end icons">
+							{user.id && canGiveAdmin(user.id) && (
 								<div
-									className="icon-cont p-1"
-									onClick={() => openUserModal(user.id)}
+									className={`icon-cont p-1 ${channel && isAdmin(user.id!) ? "active" : ""
+										}`}
+									onClick={() => handleGiveAdmin(user.id!, user.name!)}
 								>
-									<FontAwesomeIcon icon="user" />
+									<FontAwesomeIcon icon={"hand"} />
+									{/*<FontAwesomeIcon icon={["far", "hand"]} />*/}
 								</div>
-							</div>
-							<div className="d-flex justify-end icons">
-								{user.id && canGiveAdmin(user.id) && (
-									<div
-										className={`icon-cont p-1 ${channel && isAdmin(user.id!) ? "active" : ""
-											}`}
-										onClick={() => handleGiveAdmin(user.id!, user.name!)}
-									>
-										<FontAwesomeIcon icon={"hand"} />
-										{/*<FontAwesomeIcon icon={["far", "hand"]} />*/}
+							)}
+							{user.id && canAdminAction(user.id) && (
+								<>
+									<div className="icon-cont p-1">
+										<FontAwesomeIcon icon="comment-slash" />
 									</div>
-								)}
-								{user.id && canAdminAction(user.id) && (
-									<>
-										<div className="icon-cont p-1">
-											<FontAwesomeIcon icon="comment-slash" />
-										</div>
-										<div className="icon-cont p-1" onClick={() => handleKickUser(user.id!, user.name!)}>
-											<FontAwesomeIcon icon="user-slash" />
-										</div>
-										<div
-											className={`icon-cont p-1 ${channel && isBanned(user.id!) ? "active" : ""
-												}`}
-											onClick={() => handleBanUser(user.id!, user.name!)}
-										>
-											<FontAwesomeIcon icon="ban" />
-										</div>
-									</>
-								)}
+									<div className="icon-cont p-1" onClick={() => handleKickUser(user.id!, user.name!)}>
+										<FontAwesomeIcon icon="user-slash" />
+									</div>
+									<div
+										className={`icon-cont p-1 ${channel && isBanned(user.id!) ? "active" : ""
+											}`}
+										onClick={() => handleBanUser(user.id!, user.name!)}
+									>
+										<FontAwesomeIcon icon="ban" />
+									</div>
+								</>
+							)}
+							<div
+								className="icon-cont p-1"
+								onClick={() => openUserModal(user.id)}
+							>
+								<FontAwesomeIcon icon="user" />
 							</div>
 						</div>
 					</li>
@@ -173,16 +169,22 @@ export function UserList({
 					flex-direction: column;
 					width: 160px;
 					min-width: 160px;
+					max-width: 160px;
 				}
 				span {
 					width: 80px;
-					/*display: block;*/
 				}
 				li {
 					border-radius: 8px;
 				}
 				li:hover {
 					background-color: var(--gray-light-1);
+				}
+				li .icons{
+					display:none;
+				}
+				li:hover .icons{
+					display:flex;
 				}
 				.non-connected {
 					color:var(--nav-font-color);

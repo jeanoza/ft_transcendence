@@ -4,7 +4,7 @@ import { useChannel } from "../../utils/hooks/swrHelper";
 import { InputField } from "../inputField";
 import { Loader } from "../loader";
 
-export function ChannelModal({ channelId, onClose }: { channelId: number, onClose: any }) {
+export function UpdateChatModal({ channelId, onClose }: { channelId: number, onClose: any }) {
 	const { channel, isLoading } = useChannel(channelId);
 	const [password, setPassword] = useState("")
 

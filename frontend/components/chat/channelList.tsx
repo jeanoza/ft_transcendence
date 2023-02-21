@@ -11,14 +11,14 @@ import { Avatar } from "../avatar";
 export function ChannelList({
 	openUserModal,
 	openNewChatModal,
-	openChannelModal,
+	openUpdateChatModal,
 	channelName,
 	setChannelName,
 	setDmName,
 }: {
 	openUserModal: any;
 	openNewChatModal: any;
-	openChannelModal: any;
+	openUpdateChatModal: any;
 	channelName: string | null;
 	setChannelName: any;
 	setDmName: any;
@@ -69,8 +69,10 @@ export function ChannelList({
 						<span>{channel.name}</span>
 						{channel.ownerId === user.id
 							&& (
-								<div className="icon-cont p-1" onClick={() => openChannelModal(channel.id)}>
-									<FontAwesomeIcon icon="gear" />
+								<div className="icons">
+									<div className="icon-cont p-1" onClick={() => openUpdateChatModal(channel.id)}>
+										<FontAwesomeIcon icon="gear" />
+									</div>
 								</div>
 							)
 						}
@@ -81,19 +83,20 @@ export function ChannelList({
 			<ul className="dms">
 				{dms?.map((user: IUser) => (
 					<li
-						className="d-flex center justify-between "
+						className="d-flex center justify-start"
 						key={user.id}
 						title={user.name}
 						onClick={onChangeDM}
 					>
 						<Avatar size="sm" status={user.status} url={user.imageURL} />
 						<span className="text-overflow mx-2">{user.name}</span>
-						<div
-							className="icon-cont p-1"
-							onClick={() => openUserModal(user.id)}
-						>
-							{/*<FontAwesomeIcon icon="circle-info" size="1x" />*/}
-							<FontAwesomeIcon icon="user" />
+						<div className="icons">
+							<div
+								className="icon-cont p-1"
+								onClick={() => openUserModal(user.id)}
+							>
+								<FontAwesomeIcon icon="user" />
+							</div>
 						</div>
 
 					</li>
@@ -116,13 +119,20 @@ export function ChannelList({
 					position: relative;
 					padding: 0.5rem;
 					border-radius: 8px;
+					min-height:3rem;
 					cursor: pointer;
 				}
 				li span {
 					width: 80px;
 				}
+				li .icons {
+					display:none;
+				}
 				li:hover {
 					background-color: var(--gray-light-1);
+				}
+				li:hover .icons {
+					display:block;
 				}
 				li.active span {
 					color: var(--accent);

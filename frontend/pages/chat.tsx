@@ -6,7 +6,7 @@ import { UserList } from "../components/chat/userList";
 import { ChatDisplay } from "../components/chat/chatDisplay";
 import { NewChatModal } from "../components/modals/newChatModal";
 import { UserModal } from "../components/modals/userModal";
-import { ChannelModal } from "../components/modals/channelModal";
+import { UpdateChatModal } from "../components/modals/updateChatModal";
 import { useSocket } from "../utils/hooks/useSocket";
 
 export function getServerSideProps({ req }: any) {
@@ -28,7 +28,7 @@ export default function Chat() {
 	const [dmName, setDmName] = useState<string | null>(null);
 	const [openNewChatModal, setNewChatModal] = useState<boolean>(false);
 	const [openUserModal, setUserModal] = useState<boolean>(false);
-	const [openChannelModal, setChannelModal] = useState<boolean>(false);
+	const [openUpdateChatModal, setUpdateChatModal] = useState<boolean>(false);
 	const [userId, setUserId] = useState<number | null>(null);
 	const [channelId, setChannelId] = useState<number | null>(null);
 	//const { socket } = useSocket("chat");
@@ -38,9 +38,9 @@ export default function Chat() {
 		setUserModal(true);
 	}
 
-	async function handleOpenChannelModal(channelId: number) {
+	async function handleOpenUpdateChatModal(channelId: number) {
 		setChannelId(channelId);
-		setChannelModal(true);
+		setUpdateChatModal(true);
 	}
 
 	return (
@@ -51,7 +51,7 @@ export default function Chat() {
 					<ChannelList
 						openUserModal={handleOpenUserModal}
 						openNewChatModal={() => setNewChatModal(true)}
-						openChannelModal={handleOpenChannelModal}
+						openUpdateChatModal={handleOpenUpdateChatModal}
 						channelName={channelName}
 						setChannelName={setChannelName}
 						setDmName={setDmName}
@@ -69,10 +69,10 @@ export default function Chat() {
 					)}
 				</div>
 			</main>
-			{openChannelModal && channelId && (
-				<ChannelModal
+			{openUpdateChatModal && channelId && (
+				<UpdateChatModal
 					channelId={channelId}
-					onClose={() => setChannelModal(false)}
+					onClose={() => setUpdateChatModal(false)}
 				/>
 			)}
 			{openNewChatModal && (
