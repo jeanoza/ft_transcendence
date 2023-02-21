@@ -6,6 +6,9 @@ import {
   Req,
   Param,
   Query,
+  Patch,
+  UnauthorizedException,
+  Body,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { ChannelService } from './channel.service';
@@ -35,6 +38,20 @@ export class ChannelController {
     if (!Number.isNaN(id)) return await this.channelService.findOne(id);
     if (name !== undefined) return await this.channelService.findByName(name);
     return await this.channelService.findAllByUserId(req.user.id);
+  }
+
+  @Patch()
+  async updateChannel(
+    @Req() req,
+    @Body('id') id: number,
+    @Body('password') password: string,
+  ) {
+    const channel = await this.channelService.findOne(id);
+    if (!channel || channel.ownerId !== req.user.id)
+      throw new UnauthorizedException(
+        'No channel or you are not channel owner!',
+      );
+    return await this.channelService.update(id, { password });
   }
 
   @Get(':name/user')

@@ -1,5 +1,6 @@
 import {
   Injectable,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -23,15 +24,20 @@ export class ChannelService {
     private userRepository: Repository<User>,
   ) {}
 
+  logger = new Logger('channelService');
+
   /**
    * create/register(if already exist) channel
    * @param data
    */
   async register({ channel, userId }) {
     //find a channel, if no channel => create with data received
-    let _channel = await this.findByName(channel.name);
-    if (_channel && channel.password !== channel.password)
+    let _channel = await this.findByNameWithPassword(channel.name);
+
+    if (_channel && _channel.password !== channel.password)
       throw new UnauthorizedException('wrong password');
+
+    // if no channel => create
     if (!_channel) _channel = await this.create({ channel, ownerId: userId });
 
     await this.registerMember(userId, _channel.id);
@@ -163,6 +169,16 @@ export class ChannelService {
     return await this.channelRepository.createQueryBuilder('channel').getMany();
   }
 
+  async findByNameWithPassword(name: string) {
+    const channel = await this.channelRepository
+      .createQueryBuilder('channels')
+      .where('channels.name = :name', { name })
+      .select(['channels.id', 'channels.name', 'channels.password'])
+      .getOne();
+    //if (!channel) throw new NotFoundException();
+    return channel;
+  }
+
   async findByName(name: string) {
     const channel = await this.channelRepository
       .createQueryBuilder('channels')
@@ -183,13 +199,13 @@ export class ChannelService {
 
   //update
   async update(id: number, data) {
-    await this.findOne(id);
     try {
+      await this.findOne(id);
       await this.channelRepository.update(id, { ...data });
       return { msg: 'updated' };
     } catch (e) {
       console.log(e);
-      throw new UnauthorizedException();
+      throw new UnauthorizedException(e);
     }
   }
 
@@ -197,7 +213,7 @@ export class ChannelService {
     await this.findOne(id);
     return await this.channelRepository.softDelete(id).catch((e) => {
       console.log(e);
-      throw new UnauthorizedException();
+      throw new UnauthorizedException(e);
     });
   }
 
