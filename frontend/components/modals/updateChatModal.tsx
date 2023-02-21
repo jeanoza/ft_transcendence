@@ -14,28 +14,29 @@ export function UpdateChatModal({ channelId, onClose }: { channelId: number, onC
 		if (e.target.classList.contains("modal-background")) onClose();
 	}
 	async function onSubmit() {
-		const channel = {
+		const _channel = {
 			id: channelId,
 			password,
 			isPublic: password.length ? false : true
 		}
-		//console.log(channel);
 		try {
-			const res = await axios.patch("channel", channel);
-			console.log(res);
+			await axios.patch("channel", _channel);
 			onClose();
+			window.alert("Channel password updated");
 		} catch (e) {
 			console.log(e);
 		}
-		//if (!name.length) return window.alert('Put channel name!')
-		//socket.emit('newChannel', { channel, userId: user.id })
 	}
 
 	if (isLoading) return <Loader />
 	return <div className="modal-background" onClick={handleClose}>
 		<div className="modal-container">
-			<h3>{channel.name}</h3>
+			<h3>Update chat</h3>
 			<form>
+				<div className="field">
+					<label>name </label>
+					<input value={channel.name} />
+				</div>
 				<InputField type="password" name="password" state={password} setState={setPassword} />
 				<div className="d-flex justify-between gap">
 					<button onClick={onSubmit}>Update</button>
