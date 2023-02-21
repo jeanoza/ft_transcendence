@@ -1,9 +1,10 @@
 import { Router, useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import { useAllDM, useIsBanned, useUser } from "../../utils/hooks/swrHelper";
+import { useAllBlocked, useAllDM, useBlocked, useIsBanned, useUser } from "../../utils/hooks/swrHelper";
 import { useSocket } from "../../utils/hooks/useSocket";
 import { Avatar } from "../avatar";
 import { InputField } from "../inputField";
+import axios from "axios";
 
 interface IChat {
 	sender: IUser;
@@ -28,11 +29,11 @@ export function ChatDisplay({
 
 	useEffect(() => {
 		socket.on("getAllChannelChat", async function (channelChats) {
-			setChats(channelChats);
+			setChats(await filterChatByBlocked(channelChats));
 			await ajustScroll();
 		});
 		socket.on("getAllDM", async function (dmChats) {
-			setChats(dmChats);
+			setChats(dmChats); //for DM, it's server who do blocked filter
 			await ajustScroll();
 		});
 		socket.on("banned", function (bannedChannel: string) {
@@ -62,7 +63,8 @@ export function ChatDisplay({
 		socket.on("recvMSG", async function (data) {
 			revalid();
 			if (data.chatName === channelName || data.chatName === dmName) {
-				setChats((prev) => [...prev, data]);
+				const filtered = await filterChatByBlocked([data]);
+				setChats((prev) => [...prev, ...filtered]);
 				await ajustScroll();
 			}
 		});
@@ -71,6 +73,14 @@ export function ChatDisplay({
 			socket.off("recvMSG");
 		};
 	}, [channelName, dmName]);
+
+	async function filterChatByBlocked(channelChats: IChat[]) {
+		const blockeds = await (await axios.get("blocked/")).data;
+		return channelChats.filter(
+			(chat) => !blockeds.find(
+				(blocked: IUser) => blocked.id === chat.sender.id)
+		);
+	}
 
 	async function ajustScroll() {
 		const dialogueCont: HTMLDivElement = dialogueRef.current as HTMLDivElement;

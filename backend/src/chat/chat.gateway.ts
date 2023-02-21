@@ -187,13 +187,18 @@ export class ChatGateway
   ): Promise<void> {
     const channel = await this.channelService.findByName(channelName);
     const bannedIds = channel.bannedIds;
-    if (!bannedIds.find((id) => id === userId)) {
-      bannedIds.push(userId);
-      const user = await this.userService.findOne(userId);
-      this.server.to(user.chatSocket).emit('banned', channelName);
-    } else bannedIds.splice(bannedIds.indexOf(userId), 1);
-    await this.channelService.update(channel.id, { bannedIds });
-    this.server.to(channelName).emit('revalidBanned');
+    try {
+      if (!bannedIds.find((id) => id === userId)) {
+        bannedIds.push(userId);
+        const user = await this.userService.findOne(userId);
+        this.server.to(user.chatSocket).emit('banned', channelName);
+      } else bannedIds.splice(bannedIds.indexOf(userId), 1);
+      await this.channelService.update(channel.id, { bannedIds });
+      this.server.to(channelName).emit('revalidBanned');
+    } catch (e) {
+      this.logger.log(e);
+      client.emit('error', e);
+    }
   }
   @SubscribeMessage('kickUser')
   async handleKickUser(
@@ -201,8 +206,13 @@ export class ChatGateway
     @MessageBody('channelName') channelName: string,
     @MessageBody('userId') userId: number,
   ): Promise<void> {
-    const user = await this.userService.findOne(userId);
-    this.server.to(user.chatSocket).emit('kicked', channelName);
+    try {
+      const user = await this.userService.findOne(userId);
+      this.server.to(user.chatSocket).emit('kicked', channelName);
+    } catch (e) {
+      this.logger.log(e);
+      client.emit('error', e);
+    }
   }
   //#endregion
 
