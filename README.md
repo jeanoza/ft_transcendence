@@ -29,23 +29,7 @@ make fclean
 
 - Frontend:
 
-  - [x] edit profile => username
-
-  - [x] chat page
-
-    - [x] ChannelSettingModal(only creator)
-
-      - [x] update password
-
-      - [ ] not yet update with db
-
-    - [ ] User list(admin and creator)
-
-      - [ ] ban: users in channel
-
-      - [ ] mute: mutted user can't send message (with time determinated)
-
-      - [x] give admin right
+  - [ ] mute: mutted user can't send message (with time determinated)
 
   - [ ] Match History => after
 

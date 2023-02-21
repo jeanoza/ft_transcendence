@@ -38,23 +38,39 @@
 
       - [x] blokced list
 
-    - [ ] Edit Modal
+    - [x] Edit Modal
 
       - [x] two factor
 
       - [x] change avatar photo
 
-    - [ ] chat page
+    - [x] ChannelSettingModal(only creator)
 
-      - [x] left
+      - [x] update password
 
-        - [x] channelList
+  - [x] edit profile => username
 
-        - [x] DM list
+  - [ ] chat page
 
-      - [x] center(dialogue pannel) + messageInput
+    - [x] left
 
-      - [x] right(currenteUserList)
+      - [x] channelList
+
+      - [x] DM list
+
+    - [x] center(dialogue pannel) + messageInput
+
+    - [x] right(currenteUserList)
+
+    - [x] edit profile => username
+
+  - [x] User list(admin and creator)
+
+    - [x] ban: users in channel
+
+    - [x] give admin right
+
+  - [x] manage channel msg sent by blocked user for some user
 
 - Backend:
 
