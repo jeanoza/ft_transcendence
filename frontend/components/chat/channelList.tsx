@@ -34,11 +34,13 @@ export function ChannelList({
 
 		const target = e.currentTarget;
 		//FIXME: this is a js method but another way with react?
-		document.querySelector("li.active")?.classList.remove("active");
-		target?.classList?.add("active");
-		if (channelName) socket.emit("leaveChannel", { channelName });
-		setChannelName(target?.title);
-		setDmName(null);
+		if (channelName !== target?.title) {
+			document.querySelector("li.active")?.classList.remove("active");
+			target?.classList?.add("active");
+			socket.emit("leaveChannel", { channelName });
+			setChannelName(target?.title);
+			setDmName(null);
+		}
 	}
 
 	function onChangeDM(e: any) {

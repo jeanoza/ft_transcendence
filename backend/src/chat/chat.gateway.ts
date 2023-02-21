@@ -111,14 +111,12 @@ export class ChatGateway
       const isBanned = await this.channelService.isBanned(user.id, channelName);
       if (isBanned) {
         this.logger.debug(`${user.name} tries to connect to ${channelName}`);
-        return client.emit(
-          'banned',
-          `You are banned in ${channelName} [sent by joinChannel]`,
-        );
+        return client.emit('banned', channelName);
       }
-
       client.join(channelName);
-      this.server.to(channelName).emit('revalidUsers');
+      const sockets = this.server.adapter['rooms'].get(channelName);
+      if (sockets)
+        this.server.to(channelName).emit('revalidUsers', Array.from(sockets));
       client.emit(
         'getAllChannelChat',
         await this.channelService.findAllChannelChat(channelName),
@@ -136,6 +134,9 @@ export class ChatGateway
     @MessageBody('channelName') channelName: string,
   ) {
     client.leave(channelName);
+    const sockets = this.server.adapter['rooms'].get(channelName);
+    if (sockets)
+      this.server.to(channelName).emit('revalidUsers', Array.from(sockets));
     this.logger.debug(`[leaveChannel]: ${client.id} leaves ${channelName}`);
   }
 
@@ -189,12 +190,19 @@ export class ChatGateway
     if (!bannedIds.find((id) => id === userId)) {
       bannedIds.push(userId);
       const user = await this.userService.findOne(userId);
-      this.server
-        .to(user.chatSocket)
-        .emit('banned', `Your are banned in ${channelName} BANUSER`);
+      this.server.to(user.chatSocket).emit('banned', channelName);
     } else bannedIds.splice(bannedIds.indexOf(userId), 1);
     await this.channelService.update(channel.id, { bannedIds });
     this.server.to(channelName).emit('revalidBanned');
+  }
+  @SubscribeMessage('kickUser')
+  async handleKickUser(
+    @ConnectedSocket() client: Socket,
+    @MessageBody('channelName') channelName: string,
+    @MessageBody('userId') userId: number,
+  ): Promise<void> {
+    const user = await this.userService.findOne(userId);
+    this.server.to(user.chatSocket).emit('kicked', channelName);
   }
   //#endregion
 

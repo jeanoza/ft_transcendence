@@ -35,8 +35,15 @@ export function ChatDisplay({
 			setChats(dmChats);
 			await ajustScroll();
 		});
-		socket.on("banned", function (msg) {
-			window.alert(msg);
+		socket.on("banned", function (bannedChannel: string) {
+			window.alert(`Your are banned in ${bannedChannel} `);
+			socket.emit("leaveChannel", { channelName: bannedChannel })
+			setChannelName(null);
+			setChats([]);
+		});
+		socket.on("kicked", function (kickedChannel: string) {
+			window.alert(`Your are kicked in ${kickedChannel} `);
+			socket.emit("leaveChannel", { channelName: kickedChannel })
 			setChannelName(null);
 			setChats([]);
 		});
@@ -44,6 +51,7 @@ export function ChatDisplay({
 			socket.off("getAllChannelChat");
 			socket.off("getAllDM");
 			socket.off("banned");
+			socket.off("kicked");
 		};
 	}, []);
 

@@ -31,6 +31,7 @@ export function UserList({
 	const { isBanned: currentIsBanned, revalid: revalidBanned } = useIsBanned(
 		channelName!
 	);
+	const [socketsInChannel, setSocketsInChannel] = useState<string[] | null>(null);
 
 	useEffect(() => {
 		socket.on("revalidBanned", function () {
@@ -49,7 +50,8 @@ export function UserList({
 	}, [channel]);
 
 	useEffect(() => {
-		socket.on("revalidUsers", function () {
+		socket.on("revalidUsers", function (sockets) {
+			setSocketsInChannel(sockets);
 			revalid();
 		});
 		return () => {
@@ -101,8 +103,14 @@ export function UserList({
 
 	function handleKickUser(userId: number, userName: string) {
 		if (window.confirm(`Do you wanna kick ${userName}?`)) {
-			socket.emit("banUser", { channelName, userId });
+			socket.emit("kickUser", { channelName, userId });
 		}
+	}
+
+	function validateConnection(socketName?: string) {
+		if (socketName && socketsInChannel?.find(el => el === socketName))
+			return "connected"
+		return "non-connected"
 	}
 
 	if (!users || !channel || !currentUser || currentIsBanned) return null;
@@ -114,7 +122,7 @@ export function UserList({
 						<Avatar url={user.imageURL} status={user.status} size="sm" />
 						<div>
 							<div className="d-flex center justify-between">
-								<span className="m-2 text-overflow">{user.name}</span>
+								<span className={`m-2 text-overflow ${validateConnection(user.chatSocket)}`}>{user.name}</span>
 								<div
 									className="icon-cont p-1"
 									onClick={() => openUserModal(user.id)}
@@ -125,9 +133,8 @@ export function UserList({
 							<div className="d-flex justify-end icons">
 								{user.id && canGiveAdmin(user.id) && (
 									<div
-										className={`icon-cont p-1 ${
-											channel && isAdmin(user.id!) ? "active" : ""
-										}`}
+										className={`icon-cont p-1 ${channel && isAdmin(user.id!) ? "active" : ""
+											}`}
 										onClick={() => handleGiveAdmin(user.id!, user.name!)}
 									>
 										<FontAwesomeIcon icon={"hand"} />
@@ -139,13 +146,12 @@ export function UserList({
 										<div className="icon-cont p-1">
 											<FontAwesomeIcon icon="comment-slash" />
 										</div>
-										<div className="icon-cont p-1">
+										<div className="icon-cont p-1" onClick={() => handleKickUser(user.id!, user.name!)}>
 											<FontAwesomeIcon icon="user-slash" />
 										</div>
 										<div
-											className={`icon-cont p-1 ${
-												channel && isBanned(user.id!) ? "active" : ""
-											}`}
+											className={`icon-cont p-1 ${channel && isBanned(user.id!) ? "active" : ""
+												}`}
 											onClick={() => handleBanUser(user.id!, user.name!)}
 										>
 											<FontAwesomeIcon icon="ban" />
@@ -177,6 +183,9 @@ export function UserList({
 				}
 				li:hover {
 					background-color: var(--gray-light-1);
+				}
+				.non-connected {
+					color:var(--nav-font-color);
 				}
 				.active {
 					color: var(--accent);
