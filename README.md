@@ -41,6 +41,12 @@ make fclean
 
   - [ ] to implement swagger to make simple dto code
 
+  - See schedule to set time for ban/mute
+
+    - [ ] to fix ban(In current system, it doesn't depend on time fixed)
+
+    - [ ] feat mute
+
 - Database:
 
   - [ ] db table draw.io => to update with recent db
