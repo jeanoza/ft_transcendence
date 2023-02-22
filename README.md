@@ -47,6 +47,9 @@ make fclean
 
     - [ ] feat mute
 
+    => Maybe, when ban or mute, set timeout with callback which will unban or unmute. (with schedulerRegistry)
+    https://docs.nestjs.com/techniques/task-scheduling
+
 - Database:
 
   - [ ] db table draw.io => to update with recent db

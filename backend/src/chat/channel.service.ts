@@ -175,7 +175,6 @@ export class ChannelService {
       .where('channels.name = :name', { name })
       .select(['channels.id', 'channels.name', 'channels.password'])
       .getOne();
-    //if (!channel) throw new NotFoundException();
     return channel;
   }
 
@@ -184,7 +183,6 @@ export class ChannelService {
       .createQueryBuilder('channels')
       .where('channels.name = :name', { name })
       .getOne();
-    //if (!channel) throw new NotFoundException();
     return channel;
   }
 
