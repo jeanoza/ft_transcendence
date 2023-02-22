@@ -9,7 +9,6 @@ import { Avatar } from "../avatar";
 
 export function Setting() {
 	const { user } = useUser();
-	const [dropdown, setDropdown] = useState<boolean>(false);
 	const [openEditModal, setEditModal] = useState<boolean>(false);
 	const [openFriendsModal, setFriendsModal] = useState<boolean>(false);
 	const router = useRouter();
@@ -22,29 +21,25 @@ export function Setting() {
 			throw err;
 		}
 	}
-	function onToggle(e: any) {
-		setDropdown((prev) => !prev);
-	}
+
 	return (
 		<div className="setting d-flex center gap justify-end">
-			<div className="icon" onClick={onToggle}>
+			<div className="icon">
 				<FontAwesomeIcon icon="gear" size="lg" />
 			</div>
-			{dropdown && (
-				<div className="nav-dropdown-menu">
-					<div className="user-resume d-flex column center gap">
-						<Avatar url={user.imageURL} status={user.status} />
-						<h3>{user.name}</h3>
-						<span>{user.email}</span>
-					</div>
-					<ul>
-						<li onClick={() => setEditModal(true)}>Edit</li>
-						<li>Match History</li>
-						<li onClick={() => setFriendsModal(true)}>Friends</li>
-						<li onClick={onLogout}>Logout</li>
-					</ul>
+			<div className="nav-dropdown-menu">
+				<div className="user-resume d-flex column center gap">
+					<Avatar url={user.imageURL} status={user.status} />
+					<h3>{user.name}</h3>
+					<span>{user.email}</span>
 				</div>
-			)}
+				<ul>
+					<li onClick={() => setEditModal(true)}>Edit</li>
+					<li>Match History</li>
+					<li onClick={() => setFriendsModal(true)}>Friends</li>
+					<li onClick={onLogout}>Logout</li>
+				</ul>
+			</div>
 			{openEditModal && <EditModal onClose={() => setEditModal(false)} />}
 			{openFriendsModal && (
 				<FriendsModal onClose={() => setFriendsModal(false)} />
@@ -61,9 +56,18 @@ export function Setting() {
 				.nav-dropdown-menu {
 					top: 42px;
 					right:1rem;
+					visibility:hidden;
+					opacity:0;
+					transition: opacity 0.3s linear;
 				}
+				.setting:hover > .nav-dropdown-menu {
+					visibility:visible;
+					opacity:1;
+				}
+				
 				.nav-dropdown-menu li {
 					text-align: center;
+
 				}
 				.user-resume {
 					padding: 1rem;
