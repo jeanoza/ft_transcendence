@@ -50,6 +50,16 @@ make fclean
     => Maybe, when ban or mute, set timeout with callback which will unban or unmute. (with schedulerRegistry)
     https://docs.nestjs.com/techniques/task-scheduling
 
+  [ ] create a function specialised for ban/mute instead of using channelService.update();
+  => ex:
+
+  ```js
+  updateBan(channelId:string, userId:number) {
+  	//verify already banned
+  	// settime to unban.... etc
+  }
+  ```
+
 - Database:
 
   - [ ] db table draw.io => to update with recent db
