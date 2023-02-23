@@ -38,7 +38,8 @@ import { DM } from './chat/entities/dm.entity';
         Blocked,
         DM,
       ],
-      logging: process.env.NODE_ENV !== 'production', // logging only on dev
+      //logging: process.env.NODE_ENV !== 'production', // logging only on dev
+      logging: false, // logging only on dev
       keepConnectionAlive: true, //hot-reloading disconnect db when code change
     }),
     UserModule,

@@ -33,8 +33,6 @@ export function UserList({
 	);
 	const [socketsInChannel, setSocketsInChannel] = useState<string[] | null>(null);
 
-	console.log(channel);
-
 	useEffect(() => {
 		socket.on("revalidBanned", function () {
 			revalidBanned();

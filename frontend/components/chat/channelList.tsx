@@ -37,7 +37,8 @@ export function ChannelList({
 		if (channelName !== target?.title) {
 			document.querySelector("li.active")?.classList.remove("active");
 			target?.classList?.add("active");
-			socket.emit("leaveChannel", { channelName });
+			if (channelName)
+				socket.emit("leaveChannel", { channelName });
 			setChannelName(target?.title);
 			setDmName(null);
 		}
