@@ -72,6 +72,8 @@
 
   - [x] manage channel msg sent by blocked user for some user
 
+  - [x] mute: mutted user can't send message (with time determinated)
+
 - Backend:
 
   - [x] connect Postgresql with typeorm
@@ -117,6 +119,12 @@
   - SocketIO
 
     - [x] save ChannelChat in db
+
+  - See schedule to set time for ban/mute
+
+  - [x] to fix ban(In current system, it doesn't depend on time fixed)
+
+  - [x] feat mute
 
 - Database:
 

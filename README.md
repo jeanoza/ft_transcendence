@@ -29,8 +29,6 @@ make fclean
 
 - Frontend:
 
-  - [ ] mute: mutted user can't send message (with time determinated)
-
   - [ ] Match History => after
 
   - [ ] Home page
@@ -40,25 +38,6 @@ make fclean
 - Backend:
 
   - [ ] to implement swagger to make simple dto code
-
-  - See schedule to set time for ban/mute
-
-    - [ ] to fix ban(In current system, it doesn't depend on time fixed)
-
-    - [ ] feat mute
-
-    => Maybe, when ban or mute, set timeout with callback which will unban or unmute. (with schedulerRegistry)
-    https://docs.nestjs.com/techniques/task-scheduling
-
-  [ ] create a function specialised for ban/mute instead of using channelService.update();
-  => ex:
-
-  ```js
-  updateBan(channelId:string, userId:number) {
-  	//verify already banned
-  	// settime to unban.... etc
-  }
-  ```
 
 - Database:
 
