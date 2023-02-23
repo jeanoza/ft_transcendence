@@ -22,6 +22,7 @@ export function Setting() {
 		}
 	}
 
+	if (!user) return null;
 	return (
 		<div className="setting d-flex center gap justify-end">
 			<div className="icon">
@@ -29,6 +30,7 @@ export function Setting() {
 			</div>
 			<div className="nav-dropdown-menu">
 				<div className="user-resume d-flex column center gap">
+
 					<Avatar url={user.imageURL} status={user.status} />
 					<h3>{user.name}</h3>
 					<span>{user.email}</span>

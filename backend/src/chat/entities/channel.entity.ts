@@ -27,6 +27,9 @@ export class Channel {
   @Column('int', { name: 'banned_ids', array: true })
   bannedIds: number[];
 
+  @Column('int', { name: 'muted_ids', array: true })
+  mutedIds: number[];
+
   @Column('varchar', {
     name: 'password',
     length: 100,

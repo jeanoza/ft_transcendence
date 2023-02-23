@@ -71,4 +71,8 @@ export class ChannelController {
   async isBanned(@Param('name') name: string, @Req() req) {
     return await this.channelService.isBanned(req.user.id, name);
   }
+  @Get(':name/is_muted')
+  async isMuted(@Param('name') name: string, @Req() req) {
+    return await this.channelService.isMuted(req.user.id, name);
+  }
 }

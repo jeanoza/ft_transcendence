@@ -1,8 +1,4 @@
-import {
-  ForbiddenException,
-  Logger,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -21,6 +17,9 @@ import { DMService } from './dm.service';
 import { User } from 'src/user/entities/user.entity';
 import { BlockedService } from 'src/user/services/blocked.service';
 import { Channel } from './entities/channel.entity';
+
+const BAN_TIME_MS = 10000; //10s
+const MUTE_TIME_MS = 10000; //10s
 
 @WebSocketGateway({
   namespace: 'ws-chat',
@@ -185,21 +184,39 @@ export class ChatGateway
     @MessageBody('channelName') channelName: string,
     @MessageBody('userId') userId: number,
   ): Promise<void> {
-    const channel = await this.channelService.findByName(channelName);
-    const bannedIds = channel.bannedIds;
     try {
-      if (!bannedIds.find((id) => id === userId)) {
-        bannedIds.push(userId);
-        const user = await this.userService.findOne(userId);
-        this.server.to(user.chatSocket).emit('banned', channelName);
-      } else bannedIds.splice(bannedIds.indexOf(userId), 1);
-      await this.channelService.update(channel.id, { bannedIds });
+      //ban user in channel and emit to all user in channel
+      await this.channelService.banUser(userId, channelName, BAN_TIME_MS);
       this.server.to(channelName).emit('revalidBanned');
+
+      //emit to banned user
+      const user = await this.userService.findOne(userId);
+      this.server.to(user.chatSocket).emit('banned', channelName);
     } catch (e) {
       this.logger.log(e);
       client.emit('error', e);
     }
   }
+  @SubscribeMessage('muteUser')
+  async handleMuteUser(
+    @ConnectedSocket() client: Socket,
+    @MessageBody('channelName') channelName: string,
+    @MessageBody('userId') userId: number,
+  ): Promise<void> {
+    try {
+      //ban user in channel and emit to all user in channel
+      await this.channelService.muteUser(userId, channelName, MUTE_TIME_MS);
+      this.server.to(channelName).emit('revalidMuted');
+
+      //emit to banned user
+      const user = await this.userService.findOne(userId);
+      this.server.to(user.chatSocket).emit('muted', channelName, MUTE_TIME_MS);
+    } catch (e) {
+      this.logger.log(e);
+      client.emit('error', e);
+    }
+  }
+
   @SubscribeMessage('kickUser')
   async handleKickUser(
     @ConnectedSocket() client: Socket,

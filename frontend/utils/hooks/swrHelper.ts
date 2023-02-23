@@ -434,6 +434,37 @@ export function useIsBanned(channel: string) {
 	};
 }
 
+export function useIsMuted(channel: string) {
+	const { data, error, mutate, isLoading } = useSWR(
+		`channel/${channel}/is_muted`,
+		fetcher,
+		{
+			onError: (e) => {
+				console.log("useIsMuted", e);
+			},
+			onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+				// Never retry on 404.
+				if (error?.response?.status === 404) return;
+
+				// Never retry for a specific key.
+				if (key === `${channel}/is_muted`) return;
+
+				// Only retry up to 10 times.
+				if (retryCount >= 10) return;
+
+				// Retry after 5 seconds.
+				setTimeout(() => revalidate({ retryCount }), 5000);
+			},
+		}
+	);
+	return {
+		isMuted: data,
+		revalid: mutate,
+		isLoading,
+		error,
+	};
+}
+
 export function useAllDM() {
 	const { data, error, mutate, isLoading } = useSWR(`dm`, fetcher, {
 		onError: (e) => {

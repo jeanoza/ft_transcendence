@@ -10,6 +10,7 @@ import { Channel } from './entities/channel.entity';
 import { ChannelMember } from './entities/channelMember.entity';
 import { User } from 'src/user/entities/user.entity';
 import { ChannelChat } from './entities/channelChat.entity';
+import { SchedulerRegistry } from '@nestjs/schedule';
 
 @Injectable()
 export class ChannelService {
@@ -22,6 +23,7 @@ export class ChannelService {
     private channelChatRepository: Repository<ChannelChat>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private readonly schedulerRegistry: SchedulerRegistry,
   ) {}
 
   logger = new Logger('channelService');
@@ -72,6 +74,7 @@ export class ChannelService {
         'channels.ownerId',
         'channels.adminIds',
         'channels.bannedIds',
+        'channels.mutedIds',
       ])
       .getMany();
   }
@@ -160,6 +163,7 @@ export class ChannelService {
     _channel.ownerId = ownerId;
     _channel.adminIds = [];
     _channel.bannedIds = [];
+    _channel.mutedIds = [];
     return await this.channelRepository.save(_channel);
   }
 
@@ -215,6 +219,70 @@ export class ChannelService {
     });
   }
 
+  async muteUser(userId: number, channelName: string, milliseconds: number) {
+    try {
+      const channel = await this.findByName(channelName);
+      const mutedIds = channel.mutedIds;
+      if (!mutedIds.find((id) => id === userId)) {
+        const name = `mute_${userId}_${channelName}`;
+
+        const callback = async () => {
+          this.logger.warn(
+            `Timeout [${name}] executing after ${milliseconds}!`,
+          );
+          mutedIds.splice(mutedIds.indexOf(userId), 1);
+          try {
+            await this.update(channel.id, { mutedIds });
+            this.schedulerRegistry.deleteTimeout(name);
+          } catch (e) {
+            this.logger.log(e);
+            throw new UnauthorizedException(e);
+          }
+        };
+        const timeout = setTimeout(callback, milliseconds);
+        this.schedulerRegistry.addTimeout(name, timeout);
+
+        mutedIds.push(userId);
+        await this.update(channel.id, { mutedIds });
+      }
+    } catch (e) {
+      this.logger.log(e);
+      throw new UnauthorizedException(e);
+    }
+  }
+
+  async banUser(userId: number, channelName: string, milliseconds: number) {
+    try {
+      const channel = await this.findByName(channelName);
+      const bannedIds = channel.bannedIds;
+      if (!bannedIds.find((id) => id === userId)) {
+        const name = `ban_${userId}_${channelName}`;
+
+        const callback = async () => {
+          this.logger.warn(
+            `Timeout [${name}] executing after ${milliseconds}!`,
+          );
+          bannedIds.splice(bannedIds.indexOf(userId), 1);
+          try {
+            await this.update(channel.id, { bannedIds });
+            this.schedulerRegistry.deleteTimeout(name);
+          } catch (e) {
+            this.logger.log(e);
+            throw new UnauthorizedException(e);
+          }
+        };
+        const timeout = setTimeout(callback, milliseconds);
+        this.schedulerRegistry.addTimeout(name, timeout);
+
+        bannedIds.push(userId);
+        await this.update(channel.id, { bannedIds });
+      }
+    } catch (e) {
+      this.logger.log(e);
+      throw new UnauthorizedException(e);
+    }
+  }
+
   async isAdmin(userId: number, channelName: string) {
     const channel = await this.findByName(channelName);
     if (channel.adminIds.find((adminId) => adminId === userId)) return true;
@@ -229,6 +297,12 @@ export class ChannelService {
   async isBanned(userId: number, channelName: string) {
     const channel = await this.findByName(channelName);
     if (channel?.bannedIds.find((bannedId) => bannedId === userId)) return true;
+    return false;
+  }
+
+  async isMuted(userId: number, channelName: string) {
+    const channel = await this.findByName(channelName);
+    if (channel?.mutedIds.find((mutedId) => mutedId === userId)) return true;
     return false;
   }
 }

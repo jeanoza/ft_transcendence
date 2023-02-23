@@ -33,6 +33,7 @@ export class UserController {
 
   @Get('current')
   async getCurrentUser(@Req() req) {
+    this.logger.log(req.user);
     return req.user;
   }
   @Post('avatar')

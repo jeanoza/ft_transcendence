@@ -33,9 +33,15 @@ export function UserList({
 	);
 	const [socketsInChannel, setSocketsInChannel] = useState<string[] | null>(null);
 
+	console.log(channel);
+
 	useEffect(() => {
 		socket.on("revalidBanned", function () {
 			revalidBanned();
+			revalidChannel();
+		});
+		socket.on("revalidMuted", function () {
+			//revalidMuted();
 			revalidChannel();
 		});
 		socket.on("revalidAdmin", function () {
@@ -46,6 +52,7 @@ export function UserList({
 			//clean up socket event
 			socket.off("revalidAdmin");
 			socket.off("revalidBanned");
+			socket.off("revalidMuted");
 		};
 	}, [channel]);
 
@@ -59,6 +66,12 @@ export function UserList({
 			socket.off("revalidUsers");
 		};
 	}, []);
+
+	function isMuted(userId: number): boolean {
+		if (channel.mutedIds.find((mutedId: number) => mutedId === userId))
+			return true;
+		return false;
+	}
 
 	function isBanned(userId: number): boolean {
 		if (channel.bannedIds.find((bannedId: number) => bannedId === userId))
@@ -95,10 +108,18 @@ export function UserList({
 	}
 
 	function handleBanUser(userId: number, userName: string) {
-		const message = isBanned(userId) ? "give access to channel to" : "ban";
-
-		if (window.confirm(`Do you wanna ${message} ${userName}?`))
+		//const message = isBanned(userId) ? "give access to channel to" : "ban";
+		if (isBanned(userId))
+			return window.alert(`${userName} is already banned!`)
+		if (window.confirm(`Do you wanna ban ${userName}?`))
 			socket.emit("banUser", { channelName, userId });
+	}
+
+	function handleMuteUser(userId: number, userName: string) {
+		if (isMuted(userId))
+			return window.alert(`${userName} is already muted!`)
+		if (window.confirm(`Do you wanna mute ${userName}?`))
+			socket.emit("muteUser", { channelName, userId });
 	}
 
 	function handleKickUser(userId: number, userName: string) {
@@ -134,15 +155,15 @@ export function UserList({
 							)}
 							{user.id && canAdminAction(user.id) && (
 								<>
-									<div className="icon-cont p-1">
+									<div className={`icon-cont p-1 ${channel && isMuted(user.id!) ? "active" : ""}`}
+										onClick={() => handleMuteUser(user.id!, user.name!)} >
 										<FontAwesomeIcon icon="comment-slash" />
 									</div>
 									<div className="icon-cont p-1" onClick={() => handleKickUser(user.id!, user.name!)}>
 										<FontAwesomeIcon icon="user-slash" />
 									</div>
 									<div
-										className={`icon-cont p-1 ${channel && isBanned(user.id!) ? "active" : ""
-											}`}
+										className={`icon-cont p-1 ${channel && isBanned(user.id!) ? "active" : ""}`}
 										onClick={() => handleBanUser(user.id!, user.name!)}
 									>
 										<FontAwesomeIcon icon="ban" />
@@ -193,6 +214,6 @@ export function UserList({
 					color: var(--accent);
 				}
 			`}</style>
-		</div>
+		</div >
 	);
 }

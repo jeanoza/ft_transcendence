@@ -1,10 +1,11 @@
 import { Router, useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import { useAllBlocked, useAllDM, useBlocked, useIsBanned, useUser } from "../../utils/hooks/swrHelper";
+import { useAllBlocked, useAllDM, useBlocked, useIsBanned, useIsMuted, useUser } from "../../utils/hooks/swrHelper";
 import { useSocket } from "../../utils/hooks/useSocket";
 import { Avatar } from "../avatar";
 import { InputField } from "../inputField";
 import axios from "axios";
+import { Loader } from "../loader";
 
 interface IChat {
 	sender: IUser;
@@ -26,6 +27,8 @@ export function ChatDisplay({
 	const [chats, setChats] = useState<IChat[]>([]);
 	const { revalid } = useAllDM();
 	const dialogueRef = useRef<HTMLDivElement>(null);
+	const { isBanned } = useIsBanned(channelName!);
+	const { isMuted, revalid: revalidMuted } = useIsMuted(channelName!);
 
 	useEffect(() => {
 		socket.on("getAllChannelChat", async function (channelChats) {
@@ -36,8 +39,14 @@ export function ChatDisplay({
 			setChats(dmChats); //for DM, it's server who do blocked filter
 			await ajustScroll();
 		});
+		socket.on("muted", async function (mutedChannel: string, mutedTime) {
+			window.alert(`Your are muted in ${mutedChannel}`);
+			setTimeout(() => {
+				revalidMuted();
+			}, mutedTime)
+		});
 		socket.on("banned", function (bannedChannel: string) {
-			window.alert(`Your are banned in ${bannedChannel} `);
+			window.alert(`Your are banned in ${bannedChannel}`);
 			socket.emit("leaveChannel", { channelName: bannedChannel })
 			setChannelName(null);
 			setChats([]);
@@ -53,6 +62,7 @@ export function ChatDisplay({
 			socket.off("getAllDM");
 			socket.off("banned");
 			socket.off("kicked");
+			socket.off("muted");
 		};
 	}, []);
 
@@ -112,7 +122,7 @@ export function ChatDisplay({
 			setContent("");
 		}
 	}
-	if (!channelName && !dmName) return null;
+	if ((!channelName && !dmName) || isBanned) return null
 	return (
 		<div className="chat-display d-flex column justify-between">
 			<h3>
@@ -145,13 +155,21 @@ export function ChatDisplay({
 			</div>
 			{(channelName || dmName) && (
 				<div className="message">
-					<InputField
-						type="text"
-						name="message"
-						state={content}
-						setState={setContent}
-						onKeyUp={onKeyUp}
-					/>
+					{
+						isMuted
+							? <div className="field">
+								<label>message</label>
+								<input type="text" placeholder="You are muted" readOnly />
+							</div >
+							:
+							<InputField
+								type="text"
+								name="message"
+								state={content}
+								setState={setContent}
+								onKeyUp={onKeyUp}
+							/>
+					}
 				</div>
 			)}
 			<style jsx>{`
