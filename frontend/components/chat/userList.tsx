@@ -31,7 +31,9 @@ export function UserList({
 	const { isBanned: currentIsBanned, revalid: revalidBanned } = useIsBanned(
 		channelName!
 	);
-	const [socketsInChannel, setSocketsInChannel] = useState<string[] | null>(null);
+	const [socketsInChannel, setSocketsInChannel] = useState<string[] | null>(
+		null
+	);
 
 	useEffect(() => {
 		socket.on("revalidBanned", function () {
@@ -107,15 +109,13 @@ export function UserList({
 
 	function handleBanUser(userId: number, userName: string) {
 		//const message = isBanned(userId) ? "give access to channel to" : "ban";
-		if (isBanned(userId))
-			return window.alert(`${userName} is already banned!`)
+		if (isBanned(userId)) return window.alert(`${userName} is already banned!`);
 		if (window.confirm(`Do you wanna ban ${userName}?`))
 			socket.emit("banUser", { channelName, userId });
 	}
 
 	function handleMuteUser(userId: number, userName: string) {
-		if (isMuted(userId))
-			return window.alert(`${userName} is already muted!`)
+		if (isMuted(userId)) return window.alert(`${userName} is already muted!`);
 		if (window.confirm(`Do you wanna mute ${userName}?`))
 			socket.emit("muteUser", { channelName, userId });
 	}
@@ -127,9 +127,9 @@ export function UserList({
 	}
 
 	function validateConnection(socketName?: string) {
-		if (socketName && socketsInChannel?.find(el => el === socketName))
-			return "connected"
-		return "non-connected"
+		if (socketName && socketsInChannel?.find((el) => el === socketName))
+			return "connected";
+		return "non-connected";
 	}
 
 	if (!users || !channel || !currentUser || currentIsBanned) return null;
@@ -139,12 +139,19 @@ export function UserList({
 				{users.map((user: IUser) => (
 					<li key={user.id} className="d-flex center justify-start p-2 cursor">
 						<Avatar url={user.imageURL} status={user.status} size="sm" />
-						<span className={`m-2 text-overflow ${validateConnection(user.chatSocket)}`}>{user.name}</span>
+						<span
+							className={`m-2 text-overflow ${validateConnection(
+								user.chatSocket
+							)} ${user.id === currentUser.id ? "me" : ""}`}
+						>
+							{user.name}
+						</span>
 						<div className="d-flex justify-end icons">
 							{user.id && canGiveAdmin(user.id) && (
 								<div
-									className={`icon-cont p-1 ${channel && isAdmin(user.id!) ? "active" : ""
-										}`}
+									className={`icon-cont p-1 ${
+										channel && isAdmin(user.id!) ? "active" : ""
+									}`}
 									onClick={() => handleGiveAdmin(user.id!, user.name!)}
 								>
 									<FontAwesomeIcon icon={"hand"} />
@@ -153,15 +160,24 @@ export function UserList({
 							)}
 							{user.id && canAdminAction(user.id) && (
 								<>
-									<div className={`icon-cont p-1 ${channel && isMuted(user.id!) ? "active" : ""}`}
-										onClick={() => handleMuteUser(user.id!, user.name!)} >
+									<div
+										className={`icon-cont p-1 ${
+											channel && isMuted(user.id!) ? "active" : ""
+										}`}
+										onClick={() => handleMuteUser(user.id!, user.name!)}
+									>
 										<FontAwesomeIcon icon="comment-slash" />
 									</div>
-									<div className="icon-cont p-1" onClick={() => handleKickUser(user.id!, user.name!)}>
+									<div
+										className="icon-cont p-1"
+										onClick={() => handleKickUser(user.id!, user.name!)}
+									>
 										<FontAwesomeIcon icon="user-slash" />
 									</div>
 									<div
-										className={`icon-cont p-1 ${channel && isBanned(user.id!) ? "active" : ""}`}
+										className={`icon-cont p-1 ${
+											channel && isBanned(user.id!) ? "active" : ""
+										}`}
 										onClick={() => handleBanUser(user.id!, user.name!)}
 									>
 										<FontAwesomeIcon icon="ban" />
@@ -193,25 +209,29 @@ export function UserList({
 				span {
 					width: 80px;
 				}
+				span.me {
+					font-weight: 500;
+					color: var(--accent);
+				}
 				li {
 					border-radius: 8px;
 				}
 				li:hover {
 					background-color: var(--gray-light-1);
 				}
-				li .icons{
-					display:none;
+				li .icons {
+					display: none;
 				}
-				li:hover .icons{
-					display:flex;
+				li:hover .icons {
+					display: flex;
 				}
 				.non-connected {
-					color:var(--nav-font-color);
+					color: var(--nav-font-color);
 				}
 				.active {
 					color: var(--accent);
 				}
 			`}</style>
-		</div >
+		</div>
 	);
 }
