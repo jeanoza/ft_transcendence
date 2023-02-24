@@ -15,7 +15,6 @@ import { ChannelController } from './controllers/channel.controller';
 import { DMController } from './controllers/dm.controller';
 import { BlockedService } from 'src/user/services/blocked.service';
 import { ScheduleModule } from '@nestjs/schedule';
-import { EventsGateway } from 'src/events/events.gateway';
 
 @Module({
   imports: [

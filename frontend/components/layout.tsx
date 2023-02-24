@@ -3,26 +3,32 @@ import { use2fa, useUser } from "../utils/hooks/swrHelper";
 import { useSocket } from "../utils/hooks/useSocket";
 import { Loader } from "./loader";
 import { Navbar } from "./navbar";
+import { useRouter } from "next/router";
 
 let userConnected = false;
 
 export function AuthLayout({ children }: React.PropsWithChildren) {
 	const { user, revalid, isLoading } = useUser();
 	const { socket: chatSocket } = useSocket("chat");
-	//const { socket: gameSocket } = useSocket("game");
+	const { socket: gameSocket } = useSocket("game");
 	const { isLoading: is2faLoading } = use2fa();
+	const router = useRouter();
+
 
 	useEffect(() => {
 		//update chat socket
 		if (user && !userConnected) {
 			chatSocket.emit("connectUser", user.id);
+			gameSocket.emit("connectUser", user.id);
 			userConnected = true;
 			chatSocket.on("connected", function () {
 				revalid();
 			});
-			return () => {
-				chatSocket.off("connected");
-			};
+			gameSocket.on("invitedGame", function ({ senderId, receiverId }: { senderId: number, receiverId: number }) {
+				//gameSocket.on("invitedGame", async function (data) {
+				router.push("/game");
+				console.log(senderId, receiverId);
+			})
 		}
 	}, [user]);
 

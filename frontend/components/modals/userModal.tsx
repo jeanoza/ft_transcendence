@@ -21,6 +21,7 @@ export function UserModal({
 	onClose: any;
 }) {
 	const { user } = useUser();
+	const { socket } = useSocket('game');
 	const { userData } = useUserById(userId);
 	const { friend, revalid: revalidFriend } = useFriend(userId);
 	const { blocked, revalid: revalidBlocked } = useBlocked(userId);
@@ -68,7 +69,9 @@ export function UserModal({
 		}
 	}
 
-
+	async function inviteGame(receiverId: number) {
+		socket.emit('inviteGame', { senderId: user.id, receiverId });
+	}
 
 	if (!user) return null;
 	return (
@@ -105,7 +108,7 @@ export function UserModal({
 								</div>
 								<div className="d-flex center gap">
 									<button className="btn" onClick={() => setDmModal(true)}>DM</button>
-									<button className="btn">Play</button>
+									<button className="btn" onClick={() => inviteGame(userData.id)}>Play</button>
 								</div>
 							</div>
 						)}

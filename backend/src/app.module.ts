@@ -14,6 +14,7 @@ import { Friend } from './user/entities/friend.entity';
 import { Blocked } from './user/entities/blocked.entity';
 import { AppController } from './app.controller';
 import { DM } from './chat/entities/dm.entity';
+import { GameModule } from './game/game.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { DM } from './chat/entities/dm.entity';
     NoteModule,
     ChatModule,
     AuthModule,
+    GameModule,
   ],
   controllers: [AppController],
   providers: [],

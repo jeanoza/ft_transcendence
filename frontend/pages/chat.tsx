@@ -8,6 +8,7 @@ import { NewChatModal } from "../components/modals/newChatModal";
 import { UserModal } from "../components/modals/userModal";
 import { UpdateChatModal } from "../components/modals/updateChatModal";
 import { useSocket } from "../utils/hooks/useSocket";
+import { useRouter } from "next/router";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -31,7 +32,7 @@ export default function Chat() {
 	const [openUpdateChatModal, setUpdateChatModal] = useState<boolean>(false);
 	const [userId, setUserId] = useState<number | null>(null);
 	const [channelId, setChannelId] = useState<number | null>(null);
-	//const { socket } = useSocket("chat");
+
 
 	async function handleOpenUserModal(id: number) {
 		setUserId(id);

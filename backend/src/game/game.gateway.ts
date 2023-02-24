@@ -19,7 +19,7 @@ import { UserService } from 'src/user/services/user.service';
     origin: '*',
   },
 })
-export class ChatGateway
+export class GameGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
   constructor(private readonly userService: UserService) {}
@@ -28,6 +28,7 @@ export class ChatGateway
   server: Server;
 
   private logger: Logger = new Logger('GameGateway');
+  private online = new Map();
 
   afterInit(server: Server): any {
     this.logger.log('after init');
@@ -39,7 +40,30 @@ export class ChatGateway
   }
 
   async handleDisconnect(@ConnectedSocket() client: Socket) {
-    await this.userService.handleDisconnectSocket(client.id);
+    this.online.delete(client.id);
     this.logger.log(`Game socket id:${client.id} disconnected`);
+  }
+
+  @SubscribeMessage('connectUser')
+  async handleConnectUser(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() userId: number,
+  ) {
+    this.online.set(client.id, userId);
+    this.logger.debug(Array.from(this.online));
+  }
+  @SubscribeMessage('inviteGame')
+  async inviteGame(
+    @ConnectedSocket() client: Socket,
+    @MessageBody('senderId') senderId: number,
+    @MessageBody('receiverId') receiverId: number,
+  ) {
+    this.online.forEach((id, socket, map) => {
+      if (id === receiverId) {
+        console.log(id, receiverId, socket, map);
+        console.log(senderId, receiverId);
+        this.server.to(socket).emit('invitedGame', { senderId, receiverId });
+      }
+    });
   }
 }
