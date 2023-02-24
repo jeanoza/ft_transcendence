@@ -21,7 +21,7 @@ export class _2faController {
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService,
-    private readonly _2faService: _2faService,
+    private readonly twofactorService: _2faService,
   ) {}
   logger = new Logger('2fa.controller');
 
@@ -34,8 +34,10 @@ export class _2faController {
   @Get('generate')
   @UseGuards(JwtAuthGuard) //FIXME: put gaurd after implement on frontend
   async register(@Req() req, @Res() res) {
-    const { otpauthUrl } = await this._2faService.generate2faSecret(req.user);
-    return this._2faService.pipeQrCodeStream(res, otpauthUrl);
+    const { otpauthUrl } = await this.twofactorService.generate2faSecret(
+      req.user,
+    );
+    return this.twofactorService.pipeQrCodeStream(res, otpauthUrl);
   }
 
   @Post('enable')
@@ -46,10 +48,13 @@ export class _2faController {
     @Res({ passthrough: true }) res,
     @Body('_2faCode') _2faCode,
   ) {
-    const isCodeValid = this._2faService.validate2faCode(_2faCode, req.user);
+    const isCodeValid = this.twofactorService.validate2faCode(
+      _2faCode,
+      req.user,
+    );
     if (!isCodeValid)
       throw new UnauthorizedException('Wrong authentication code');
-    await this._2faService.enable2fa(req.user.id);
+    await this.twofactorService.enable2fa(req.user.id);
     res.cookie(
       'accessToken',
       this.authService.getAccessToken(req.user.id, true),
@@ -65,10 +70,13 @@ export class _2faController {
     @Res({ passthrough: true }) res,
     @Body('_2faCode') _2faCode,
   ) {
-    const isCodeValid = this._2faService.validate2faCode(_2faCode, req.user);
+    const isCodeValid = this.twofactorService.validate2faCode(
+      _2faCode,
+      req.user,
+    );
     if (!isCodeValid)
       throw new UnauthorizedException('Wrong authentication code');
-    await this._2faService.disable2fa(req.user.id);
+    await this.twofactorService.disable2fa(req.user.id);
     res.cookie('accessToken', this.authService.getAccessToken(req.user.id), {
       httpOnly: true,
       maxAge: process.env.JWT_MAX_AGE,
@@ -83,7 +91,10 @@ export class _2faController {
     @Res({ passthrough: true }) res,
     @Body('_2faCode') _2faCode,
   ) {
-    const isValid2faCode = this._2faService.validate2faCode(_2faCode, req.user);
+    const isValid2faCode = this.twofactorService.validate2faCode(
+      _2faCode,
+      req.user,
+    );
     if (!isValid2faCode)
       throw new UnauthorizedException('Wrong authentication code');
 
