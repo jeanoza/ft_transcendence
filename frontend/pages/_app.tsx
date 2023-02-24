@@ -23,6 +23,8 @@ import {
 	faHand,
 	faCommentSlash,
 	faUserSlash,
+	faCrown,
+	faHammer,
 } from "@fortawesome/free-solid-svg-icons";
 import {
 	faPaperPlane,
@@ -31,6 +33,8 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 
 library.add(
+	faHammer,
+	faCrown,
 	faUserSlash,
 	faCommentSlash,
 	faUser,
