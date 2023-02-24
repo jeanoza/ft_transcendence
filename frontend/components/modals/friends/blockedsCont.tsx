@@ -11,10 +11,11 @@ export function BlockedsCont() {
 	async function unblock(e: any, userName: string) {
 		const { id } = e.currentTarget;
 		try {
-			if (window.confirm(`Do you wanna really unblock ${userName}?`))
+			if (window.confirm(`Do you wanna really unblock ${userName}?`)) {
 				await axios.delete(`blocked/${id}`);
-			window.alert(`user is unblocked`);
-			revalid();
+				window.alert(`user is unblocked`);
+				revalid();
+			}
 		} catch (e: any) {
 			window.alert(e.response.data.message);
 		}
@@ -23,18 +24,23 @@ export function BlockedsCont() {
 		<div className="item-cont">
 			<ul className="d-flex column">
 				{blockeds?.map((blocked: any) => (
-					<li key={blocked.id} className="d-flex center gap p-2">
+					<li key={blocked.id} className="d-flex center justify-start p-2">
 						<Avatar url={blocked.image_url} size="sm" status={blocked.status} />
-						<span className="username">{blocked.name}</span>
-						<div id={blocked.id} onClick={(e) => unblock(e, blocked.name)}>
-							<FontAwesomeIcon icon="lock-open" />
+						<span className="username m-2">{blocked.name}</span>
+						<div className="d-flex gap icons px-2">
+							<div id={blocked.id} className="iconCont" onClick={(e) => unblock(e, blocked.name)}>
+								<FontAwesomeIcon icon="lock-open" />
+							</div>
 						</div>
 					</li>
 				))}
 			</ul>
 			<style jsx>{`
+				div.iconCont:hover{
+					color:var(--accent);
+				}
 				.username {
-					width: 120px;
+					width: 100%;
 				}
 			`}</style>
 		</div>

@@ -10,10 +10,11 @@ export function FriendsCont() {
 	async function deleteFriend(e: any, userName: string) {
 		const { id } = e.currentTarget;
 		try {
-			if (window.confirm(`Do you really want delete ${userName}?`))
+			if (window.confirm(`Do you really want delete ${userName}?`)) {
 				await axios.delete(`friend/${id}`);
-			window.alert(`user is deleted`);
-			revalid();
+				window.alert(`user is deleted`);
+				revalid();
+			}
 		} catch (e: any) {
 			window.alert(e.response.data.message);
 		}
@@ -22,9 +23,10 @@ export function FriendsCont() {
 	async function blockFriend(e: any, userName: string) {
 		const { id } = e.currentTarget;
 		try {
-			if (window.confirm(`Do you really want block ${userName}?`))
+			if (window.confirm(`Do you really want block ${userName}?`)) {
 				await axios.post(`blocked`, { userId: id });
-			window.alert(`user is blocked`);
+				window.alert(`user is blocked`);
+			}
 		} catch (e: any) {
 			window.alert(e.response.data.message);
 		}
@@ -36,14 +38,14 @@ export function FriendsCont() {
 		<div className="item-cont">
 			<ul className="d-flex column">
 				{friends?.map((friend: any) => (
-					<li key={friend.id} className="d-flex center justify-between gap p-2">
+					<li key={friend.id} className="d-flex center justify-start p-2">
 						<Avatar url={friend.image_url} size="sm" status={friend.status} />
-						<span className="username">{friend.name}</span>
-						<div className="d-flex gap">
-							<div id={friend.id} onClick={(e) => deleteFriend(e, friend.name)}>
+						<span className="username m-2">{friend.name}</span>
+						<div className="d-flex gap icons px-2">
+							<div id={friend.id} className="iconCont" onClick={(e) => deleteFriend(e, friend.name)}>
 								<FontAwesomeIcon icon="user-minus" />
 							</div>
-							<div id={friend.id} onClick={(e) => blockFriend(e, friend.name)}>
+							<div id={friend.id} className="iconCont" onClick={(e) => blockFriend(e, friend.name)}>
 								<FontAwesomeIcon icon="ban" />
 							</div>
 						</div>
@@ -51,8 +53,11 @@ export function FriendsCont() {
 				))}
 			</ul>
 			<style jsx>{`
+				div.iconCont:hover{
+					color:var(--accent);
+				}
 				.username {
-					width: 96px;
+					width: 100%;
 				}
 			`}</style>
 		</div>

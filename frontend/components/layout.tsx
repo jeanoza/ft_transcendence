@@ -9,19 +9,20 @@ let userConnected = false;
 
 export function AuthLayout({ children }: React.PropsWithChildren) {
 	const { user, revalid, isLoading } = useUser();
-	const { socket } = useSocket("chat");
+	const { socket: chatSocket } = useSocket("chat");
+	//const { socket: gameSocket } = useSocket("game");
 	const { isLoading: is2faLoading } = use2fa();
 
 	useEffect(() => {
 		//update chat socket
 		if (user && !userConnected) {
-			socket.emit("connectUser", user.id);
+			chatSocket.emit("connectUser", user.id);
 			userConnected = true;
-			socket.on("connected", function () {
+			chatSocket.on("connected", function () {
 				revalid();
 			});
 			return () => {
-				socket.off("connected");
+				chatSocket.off("connected");
 			};
 		}
 	}, [user]);
