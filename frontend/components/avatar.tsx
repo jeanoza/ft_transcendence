@@ -5,10 +5,12 @@ export function Avatar({
 	url,
 	status,
 	size,
+	children,
 }: {
 	url?: string;
 	status?: number;
 	size?: string;
+	children?: any;
 }) {
 	return (
 		<div
@@ -17,6 +19,7 @@ export function Avatar({
 		>
 			{status === null && <div className="status offline" />}
 			{status && <div className={`status ${STATUS[status]}`} />}
+			{children}
 			<style jsx>{`
 				.avatar {
 					position: relative;

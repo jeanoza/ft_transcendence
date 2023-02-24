@@ -138,11 +138,17 @@ export function UserList({
 			<ul>
 				{users.map((user: IUser) => (
 					<li key={user.id} className="d-flex center justify-start p-2 cursor">
-						<Avatar url={user.imageURL} status={user.status} size="sm" />
+						<Avatar url={user.imageURL} status={user.status} size="sm">
+							{/*<div>
+								<FontAwesomeIcon 
+							</div>*/}
+						</Avatar>
 						<span
 							className={`m-2 text-overflow ${validateConnection(
 								user.chatSocket
-							)} ${user.id === currentUser.id ? "me" : ""}`}
+							)} ${user.id === currentUser.id ? "me" : ""} ${
+								user.id === channel.ownerId ? "owner" : ""
+							}`}
 						>
 							{user.name}
 						</span>
@@ -212,6 +218,9 @@ export function UserList({
 				span.me {
 					font-weight: 500;
 					color: var(--accent);
+				}
+				span.owner {
+					font-weight: 600;
 				}
 				li {
 					border-radius: 8px;
