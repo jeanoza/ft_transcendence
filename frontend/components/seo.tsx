@@ -1,7 +1,6 @@
 import Head from "next/head";
 
-//FIXEME: change name by project
-const APP_NAME = "BoilerPlate";
+const APP_NAME = "ft_transcendence";
 
 type props = {
 	title: string;
