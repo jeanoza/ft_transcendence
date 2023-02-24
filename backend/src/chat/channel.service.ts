@@ -11,6 +11,7 @@ import { ChannelMember } from './entities/channelMember.entity';
 import { User } from 'src/user/entities/user.entity';
 import { ChannelChat } from './entities/channelChat.entity';
 import { SchedulerRegistry } from '@nestjs/schedule';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class ChannelService {
@@ -36,7 +37,10 @@ export class ChannelService {
     //find a channel, if no channel => create with data received
     let _channel = await this.findByNameWithPassword(channel.name);
 
-    if (_channel && _channel.password !== channel.password)
+    if (
+      _channel &&
+      !(await bcrypt.compare(channel.password, _channel.password))
+    )
       throw new UnauthorizedException('wrong password');
 
     // if no channel => create
@@ -156,10 +160,12 @@ export class ChannelService {
   //CRUD
   //create
   async create({ channel: { name, isPublic, password }, ownerId }) {
+    const hashedPassword = await bcrypt.hash(password, 12);
+
     const _channel = new Channel();
     _channel.name = name;
     _channel.isPublic = isPublic;
-    _channel.password = password;
+    _channel.password = hashedPassword;
     _channel.ownerId = ownerId;
     _channel.adminIds = [];
     _channel.bannedIds = [];
