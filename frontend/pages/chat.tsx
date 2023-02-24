@@ -7,8 +7,6 @@ import { ChatDisplay } from "../components/chat/chatDisplay";
 import { NewChatModal } from "../components/modals/newChatModal";
 import { UserModal } from "../components/modals/userModal";
 import { UpdateChatModal } from "../components/modals/updateChatModal";
-import { useSocket } from "../utils/hooks/useSocket";
-import { useRouter } from "next/router";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;

@@ -7,6 +7,11 @@ import { useRouter } from "next/router";
 
 let userConnected = false;
 
+interface IGame {
+	senderId: number;
+	receiverId: number;
+}
+
 export function AuthLayout({ children }: React.PropsWithChildren) {
 	const { user, revalid, isLoading } = useUser();
 	const { socket: chatSocket } = useSocket("chat");
@@ -24,11 +29,15 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 			chatSocket.on("connected", function () {
 				revalid();
 			});
-			gameSocket.on("invitedGame", function ({ senderId, receiverId }: { senderId: number, receiverId: number }) {
-				//gameSocket.on("invitedGame", async function (data) {
+			gameSocket.on("invitedGame", function ({ senderId, receiverId }: IGame) {
 				router.push("/game");
 				console.log(senderId, receiverId);
 			})
+			//FIXME: need to clean up or not?
+			return () => {
+				chatSocket.off("connected");
+				//gameSocket.off("invitedGame");
+			}
 		}
 	}, [user]);
 

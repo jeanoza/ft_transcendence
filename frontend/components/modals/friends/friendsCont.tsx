@@ -10,7 +10,7 @@ export function FriendsCont() {
 	async function deleteFriend(e: any, userName: string) {
 		const { id } = e.currentTarget;
 		try {
-			if (window.confirm(`Do you really want delete ${userName}?`)) {
+			if (window.confirm(`Do you want to delete ${userName}?`)) {
 				await axios.delete(`friend/${id}`);
 				window.alert(`user is deleted`);
 				revalid();
@@ -23,7 +23,7 @@ export function FriendsCont() {
 	async function blockFriend(e: any, userName: string) {
 		const { id } = e.currentTarget;
 		try {
-			if (window.confirm(`Do you really want block ${userName}?`)) {
+			if (window.confirm(`Do you want to block ${userName}?`)) {
 				await axios.post(`blocked`, { userId: id });
 				window.alert(`user is blocked`);
 			}

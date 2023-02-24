@@ -11,7 +11,7 @@ export function BlockedsCont() {
 	async function unblock(e: any, userName: string) {
 		const { id } = e.currentTarget;
 		try {
-			if (window.confirm(`Do you wanna really unblock ${userName}?`)) {
+			if (window.confirm(`Do you want to unblock ${userName}?`)) {
 				await axios.delete(`blocked/${id}`);
 				window.alert(`user is unblocked`);
 				revalid();
