@@ -4,10 +4,15 @@ import { useChannel } from "../../utils/hooks/swrHelper";
 import { InputField } from "../inputField";
 import { Loader } from "../loader";
 
-export function UpdateChatModal({ channelId, onClose }: { channelId: number, onClose: any }) {
+export function UpdateChatModal({
+	channelId,
+	onClose,
+}: {
+	channelId: number;
+	onClose: any;
+}) {
 	const { channel, isLoading } = useChannel(channelId);
-	const [password, setPassword] = useState("")
-
+	const [password, setPassword] = useState("");
 
 	function handleClose(e: any) {
 		e.preventDefault();
@@ -17,8 +22,8 @@ export function UpdateChatModal({ channelId, onClose }: { channelId: number, onC
 		const _channel = {
 			id: channelId,
 			password,
-			isPublic: password.length ? false : true
-		}
+			isPublic: password.length ? false : true,
+		};
 		try {
 			await axios.patch("channel", _channel);
 			onClose();
@@ -28,21 +33,28 @@ export function UpdateChatModal({ channelId, onClose }: { channelId: number, onC
 		}
 	}
 
-	if (isLoading) return <Loader />
-	return <div className="modal-background" onClick={handleClose}>
-		<div className="modal-container">
-			<h3>Update chat</h3>
-			<form>
-				<div className="field">
-					<label>name </label>
-					<input value={channel.name} />
-				</div>
-				<InputField type="password" name="password" state={password} setState={setPassword} />
-				<div className="d-flex justify-between gap">
-					<button onClick={onSubmit}>Update</button>
-					<button onClick={onClose}>Cancel</button>
-				</div>
-			</form>
+	if (isLoading) return <Loader />;
+	return (
+		<div className="modal-background" onClick={handleClose}>
+			<div className="modal-container">
+				<h3>Update chat</h3>
+				<form>
+					<div className="field">
+						<label>name </label>
+						<input value={channel.name} readOnly />
+					</div>
+					<InputField
+						type="password"
+						name="password"
+						state={password}
+						setState={setPassword}
+					/>
+					<div className="d-flex justify-between gap">
+						<button onClick={onSubmit}>Update</button>
+						<button onClick={onClose}>Cancel</button>
+					</div>
+				</form>
+			</div>
 		</div>
-	</div>
+	);
 }

@@ -41,7 +41,7 @@ export class ChannelController {
   }
 
   @Patch()
-  async updateChannel(
+  async updateChannelPassword(
     @Req() req,
     @Body('id') id: number,
     @Body('password') password: string,
@@ -51,7 +51,7 @@ export class ChannelController {
       throw new UnauthorizedException(
         'No channel or you are not channel owner!',
       );
-    return await this.channelService.update(id, { password });
+    return await this.channelService.updateChannelPassword(id, password);
   }
 
   @Get(':name/user')

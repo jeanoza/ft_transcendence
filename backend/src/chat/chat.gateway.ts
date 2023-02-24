@@ -208,7 +208,7 @@ export class ChatGateway
       await this.channelService.muteUser(userId, channelName, MUTE_TIME_MS);
       this.server.to(channelName).emit('revalidMuted');
 
-      //emit to banned user
+      //emit to muted user
       const user = await this.userService.findOne(userId);
       this.server.to(user.chatSocket).emit('muted', channelName, MUTE_TIME_MS);
     } catch (e) {

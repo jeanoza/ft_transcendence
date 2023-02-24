@@ -54,7 +54,7 @@ export function UserList({
 			socket.off("revalidBanned");
 			socket.off("revalidMuted");
 		};
-	}, [channel]);
+	}, []);
 
 	useEffect(() => {
 		socket.on("revalidUsers", function (sockets) {
