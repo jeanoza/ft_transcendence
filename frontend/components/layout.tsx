@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect } from "react";
 import { use2fa, useUser } from "../utils/hooks/swrHelper";
 import { useSocket } from "../utils/hooks/useSocket";
