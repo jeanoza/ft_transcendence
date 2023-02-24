@@ -1,10 +1,4 @@
-import axios from "axios";
-import {
-	useAllFriend,
-	useFriend,
-	useUser,
-	useUserById,
-} from "../../utils/hooks/swrHelper";
+import { useAllFriend, useUser } from "../../utils/hooks/swrHelper";
 import React, { useState } from "react";
 import { FriendsCont } from "./friends/friendsCont";
 import { BlockedsCont } from "./friends/blockedsCont";
