@@ -2,7 +2,7 @@ import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
-import { DM } from './entities/dm.entity';
+import { DM } from '../entities/dm.entity';
 import { Blocked } from 'src/user/entities/blocked.entity';
 
 @Injectable()

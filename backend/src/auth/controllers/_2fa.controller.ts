@@ -6,17 +6,15 @@ import {
   Logger,
   Post,
   Req,
-  Request,
   Res,
-  Response,
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
-import { _2faService } from './_2fa.service';
+import { JwtAuthGuard } from '../guard/jwt-auth.guard';
+import { _2faService } from '../services/_2fa.service';
 import { UserService } from 'src/user/services/user.service';
-import { AuthService } from './auth.service';
-import { Jwt2faGuard } from './guard/jwt-2fa.guard';
+import { AuthService } from '../services/auth.service';
+import { Jwt2faGuard } from '../guard/jwt-2fa.guard';
 
 @Controller('api/2fa')
 export class _2faController {

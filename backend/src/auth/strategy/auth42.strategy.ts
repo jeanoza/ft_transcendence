@@ -1,7 +1,7 @@
 import { Strategy } from 'passport-oauth2';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class Auth42Strategy extends PassportStrategy(Strategy, 'auth42') {

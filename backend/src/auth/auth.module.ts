@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { AuthService } from './services/auth.service';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
@@ -9,9 +9,9 @@ import { LocalStrategy } from './strategy/local.strategy';
 import { LocalSerializer } from './strategy/local-serializer';
 import { Auth42Strategy } from './strategy/auth42.strategy';
 import { UserModule } from 'src/user/user.module';
-import { AuthController } from './auth.controller';
-import { _2faService } from './_2fa.service';
-import { _2faController } from './_2fa.controller';
+import { AuthController } from './controllers/auth.controller';
+import { _2faService } from './services/_2fa.service';
+import { _2faController } from './controllers/_2fa.controller';
 import { Jwt2faStrategy } from './strategy/jwt-2fa.strategy';
 
 @Module({

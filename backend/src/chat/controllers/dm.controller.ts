@@ -1,6 +1,6 @@
 import { Controller, UseGuards, Logger, Get, Req } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
-import { DMService } from './dm.service';
+import { DMService } from '../services/dm.service';
 
 @Controller('api/dm')
 @UseGuards(JwtAuthGuard)

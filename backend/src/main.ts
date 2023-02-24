@@ -9,8 +9,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const logger = new Logger('Main');
 
-  //app.useWebSocketAdapter(new WsAdapter(app));
-
   app.enableCors({
     origin: process.env.CLIENT_URL,
     credentials: true,

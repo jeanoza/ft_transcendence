@@ -6,10 +6,10 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Channel } from './entities/channel.entity';
-import { ChannelMember } from './entities/channelMember.entity';
+import { Channel } from '../entities/channel.entity';
+import { ChannelMember } from '../entities/channelMember.entity';
 import { User } from 'src/user/entities/user.entity';
-import { ChannelChat } from './entities/channelChat.entity';
+import { ChannelChat } from '../entities/channelChat.entity';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import * as bcrypt from 'bcrypt';
 

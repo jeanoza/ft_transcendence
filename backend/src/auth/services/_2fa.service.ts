@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { authenticator } from 'otplib';
-import { User } from '../user/entities/user.entity';
+import { User } from '../../user/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { toFileStream } from 'qrcode';

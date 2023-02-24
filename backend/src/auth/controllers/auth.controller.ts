@@ -3,25 +3,19 @@ import {
   Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
   UseGuards,
   Request,
   Response,
   Redirect,
-  Req,
   Logger,
 } from '@nestjs/common';
-import { UserService } from '../user/services/user.service';
-import { CreateUserDto } from '../user/dto/create-user.dto';
-import { AuthService } from 'src/auth/auth.service';
+import { UserService } from '../../user/services/user.service';
+import { CreateUserDto } from '../../user/dto/create-user.dto';
+import { AuthService } from 'src/auth/services/auth.service';
 import { LocalAuthGuard } from 'src/auth/guard/local-auth.guard';
 import { LoggedInGuard } from 'src/auth/guard/logged-in.guard';
 import { NoLoggedInGuard } from 'src/auth/guard/no-logged-in.guard';
 import { Auth42Guard } from 'src/auth/guard/auth42.guard';
-import { Jwt2faGuard } from './guard/jwt-2fa.guard';
-import { JwtAuthGuard } from './guard/jwt-auth.guard';
 
 //FIXME: change after
 @Controller('api/auth')
