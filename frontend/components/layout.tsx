@@ -28,6 +28,7 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 			gameSocket.emit("connectUser", user.id);
 			userConnected = true;
 			chatSocket.on("connected", function () {
+				console.log("connected chat socket")
 				revalid();
 			});
 			gameSocket.on("invitedGame", function ({ name }: IGame) {
@@ -43,11 +44,11 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 				gameSocket.emit('leaveGame', { name })
 			})
 			//FIXME: need to clean up or not?
-			return () => {
-				chatSocket.off("connected");
-				//gameSocket.off("invitedGame");
-				//gameSocket.off("acceptedGame");
-			}
+			//return () => {
+			//	//chatSocket.off("connected");
+			//	//gameSocket.off("invitedGame");
+			//	//gameSocket.off("acceptedGame");
+			//}
 		}
 	}, [user]);
 

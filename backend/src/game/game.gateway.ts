@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Logger, UnauthorizedException } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -61,9 +61,13 @@ export class GameGateway
     @MessageBody('senderId') senderId: number,
     @MessageBody('receiverId') receiverId: number,
   ) {
-    const name = `game-${senderId}-${receiverId}`;
-    client.join(name);
-    this.server.to(this.online.get(receiverId)).emit('invitedGame', { name });
+    const receiverSocket = this.online.get(receiverId);
+    if (receiverSocket) {
+      const name = `game-${senderId}-${receiverId}`;
+      client.join(name);
+      this.server.to(receiverSocket).emit('invitedGame', { name });
+    } else
+      client.emit('error', new UnauthorizedException('The user is offline!'));
   }
   @SubscribeMessage('acceptGame')
   async acceptGame(
