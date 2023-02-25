@@ -10,6 +10,7 @@ let userConnected = false;
 interface IGame {
 	senderId: number;
 	receiverId: number;
+	name: string;
 }
 
 export function AuthLayout({ children }: React.PropsWithChildren) {
@@ -29,14 +30,23 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 			chatSocket.on("connected", function () {
 				revalid();
 			});
-			gameSocket.on("invitedGame", function ({ senderId, receiverId }: IGame) {
+			gameSocket.on("invitedGame", function ({ name }: IGame) {
+				if (window.confirm("Do you accept to join to game?")) {
+					gameSocket.emit("acceptGame", { name });
+				} else gameSocket.emit('refuseGame', { name });
+			})
+			gameSocket.on("acceptedGame", function () {
 				router.push("/game");
-				console.log(senderId, receiverId);
+			})
+			gameSocket.on("refusedGame", function ({ name }) {
+				window.alert("The user refused your invite")
+				gameSocket.emit('leaveGame', { name })
 			})
 			//FIXME: need to clean up or not?
 			return () => {
 				chatSocket.off("connected");
 				//gameSocket.off("invitedGame");
+				//gameSocket.off("acceptedGame");
 			}
 		}
 	}, [user]);

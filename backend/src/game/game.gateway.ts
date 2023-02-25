@@ -31,7 +31,7 @@ export class GameGateway
   private online = new Map();
 
   afterInit(server: Server): any {
-    this.logger.log('after init');
+    this.logger.debug('after init');
   }
 
   //#region Connection
@@ -40,7 +40,9 @@ export class GameGateway
   }
 
   async handleDisconnect(@ConnectedSocket() client: Socket) {
-    this.online.delete(client.id);
+    this.online.forEach((socket, userId) => {
+      if (socket === client.id) this.online.delete(userId);
+    });
     this.logger.log(`Game socket id:${client.id} disconnected`);
   }
 
@@ -49,7 +51,8 @@ export class GameGateway
     @ConnectedSocket() client: Socket,
     @MessageBody() userId: number,
   ) {
-    this.online.set(client.id, userId);
+    //this.online.set(client.id, userId);
+    this.online.set(userId, client.id);
     this.logger.debug(Array.from(this.online));
   }
   @SubscribeMessage('inviteGame')
@@ -58,12 +61,35 @@ export class GameGateway
     @MessageBody('senderId') senderId: number,
     @MessageBody('receiverId') receiverId: number,
   ) {
-    this.online.forEach((id, socket, map) => {
-      if (id === receiverId) {
-        console.log(id, receiverId, socket, map);
-        console.log(senderId, receiverId);
-        this.server.to(socket).emit('invitedGame', { senderId, receiverId });
-      }
-    });
+    const name = `game-${senderId}-${receiverId}`;
+    client.join(name);
+    this.server.to(this.online.get(receiverId)).emit('invitedGame', { name });
+  }
+  @SubscribeMessage('acceptGame')
+  async acceptGame(
+    @ConnectedSocket() client: Socket,
+    @MessageBody('name') name: string,
+  ) {
+    client.join(name);
+    console.log(this.server.adapter['rooms'].get(name));
+    this.server.to(name).emit('acceptedGame');
+  }
+  @SubscribeMessage('refuseGame')
+  async refuseGame(
+    @ConnectedSocket() client: Socket,
+    @MessageBody('name') name: string,
+  ) {
+    this.server.to(name).emit('refusedGame', { name });
+  }
+  @SubscribeMessage('leaveGame')
+  async leaveGame(
+    @ConnectedSocket() client: Socket,
+    @MessageBody('name') name: string,
+  ) {
+    //this.logger.debug('BEFORE');
+    //console.log(this.server.adapter['rooms']);
+    client.leave(name);
+    //this.logger.debug('AFTER LEAVE');
+    //console.log(this.server.adapter['rooms']);
   }
 }

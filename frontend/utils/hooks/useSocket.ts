@@ -9,7 +9,6 @@ export function useSocket(type: string) {
 			window.alert(e.message);
 		});
 	}
-
 	return {
 		socket: socket[type],
 		connected: socket[type].connected,
