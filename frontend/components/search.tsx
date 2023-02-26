@@ -76,6 +76,7 @@ export function Search() {
 					border: none;
 					outline: none;
 					width: 100%;
+					padding-right: 1.5rem;
 				}
 				.nav-dropdown-menu {
 					top: 30px;
