@@ -81,7 +81,7 @@ export class GameGateway
       setTimeout(() => {
         const [nsp, homeId, awayId] = name.split('-');
 
-        this.server.to(name).emit('roomInfo', { homeId, awayId });
+        this.server.to(name).emit('roomInfo', { homeId, awayId, name });
       }, 500);
     }
   }
@@ -101,11 +101,11 @@ export class GameGateway
     @ConnectedSocket() client: Socket,
     @MessageBody('name') name: string,
   ) {
-    //this.logger.debug('BEFORE');
-    //console.log(this.server.adapter['rooms']);
+    this.logger.debug('LEAVE-BEFORE');
+    console.log(this.server.adapter['rooms']);
     client.leave(name);
-    //this.logger.debug('AFTER LEAVE');
-    //console.log(this.server.adapter['rooms']);
+    this.logger.debug('AFTER LEAVE');
+    console.log(this.server.adapter['rooms']);
   }
 
   @SubscribeMessage('leaveGameWithoutName')
@@ -118,15 +118,14 @@ export class GameGateway
     for (let room of iter) if (room.includes('game')) client.leave(room);
   }
 
-  //@SubscribeMessage('joinRoom')
-  //async joinRoom(
-  //  @ConnectedSocket() client: Socket,
-  //  @MessageBody('name') name: string,
-  //) {
-  //  this.logger.debug('joinRoom');
-  //  console.log(name);
-  //  this.server.to(name).emit('test', name);
-  //  //console.log(this.server.adapter['rooms']);
-  //  //console.log(user);
-  //}
+  @SubscribeMessage('ready')
+  async changeReady(
+    @ConnectedSocket() client: Socket,
+    @MessageBody('home') home?: boolean,
+    @MessageBody('away') away?: boolean,
+    @MessageBody('name') name?: string,
+  ) {
+    if (home !== undefined) this.server.to(name).emit('homeReady', home);
+    else if (away !== undefined) this.server.to(name).emit('awayReady', away);
+  }
 }
