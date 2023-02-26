@@ -28,15 +28,15 @@ export default function Game() {
 	const [home, setHome] = useState<IUser | null>(null);
 	const [away, setAway] = useState<IUser | null>(null);
 
-	console.log(home, away);
 	useEffect(() => {
 		socket.on("roomInfo", async ({ homeId, awayId }) => {
+			console.log("[roomInfo] ", "homeId:", homeId, "awayId: ", awayId);
 			await axios.get("user/" + homeId).then((res) => setHome(res.data));
 			await axios.get("user/" + awayId).then((res) => setAway(res.data));
 			setLoading(false);
 		});
 		return () => {
-			socket.off("test");
+			socket.off("roomInfo");
 		};
 	}, []);
 
