@@ -20,7 +20,6 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 	const { isLoading: is2faLoading } = use2fa();
 	const router = useRouter();
 
-
 	useEffect(() => {
 		//update chat socket
 		if (user && !userConnected) {
@@ -28,27 +27,31 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 			gameSocket.emit("connectUser", user.id);
 			userConnected = true;
 			chatSocket.on("connected", function () {
-				console.log("connected chat socket")
+				console.log("connected chat socket");
 				revalid();
 			});
 			gameSocket.on("invitedGame", function ({ name }: IGame) {
 				if (window.confirm("Do you accept to join to game?")) {
+					//router.push("/game");
 					gameSocket.emit("acceptGame", { name });
-				} else gameSocket.emit('refuseGame', { name });
-			})
-			gameSocket.on("acceptedGame", function () {
+				} else gameSocket.emit("refuseGame", { name });
+			});
+			gameSocket.on("acceptedGame", function ({ name }) {
 				router.push("/game");
-			})
-			gameSocket.on("refusedGame", function ({ name }) {
-				window.alert("The user refused your invite")
-				gameSocket.emit('leaveGame', { name })
-			})
+			});
+			gameSocket.on("refusedGame", function ({ name }: IGame) {
+				window.alert("The user refused your invite");
+				gameSocket.emit("leaveGame", { name });
+			});
+			gameSocket.on("ownerLeft", function () {
+				window.alert("The game owner is already left");
+			});
 			//FIXME: need to clean up or not?
-			//return () => {
-			//	//chatSocket.off("connected");
-			//	//gameSocket.off("invitedGame");
-			//	//gameSocket.off("acceptedGame");
-			//}
+			return () => {
+				//	//chatSocket.off("connected");
+				//gameSocket.off("invitedGame");
+				//gameSocket.off("acceptedGame");
+			};
 		}
 	}, [user]);
 

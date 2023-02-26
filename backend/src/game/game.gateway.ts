@@ -11,6 +11,7 @@ import {
 } from '@nestjs/websockets';
 
 import { Server, Socket } from 'socket.io';
+import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/services/user.service';
 
 @WebSocketGateway({
@@ -51,9 +52,9 @@ export class GameGateway
     @ConnectedSocket() client: Socket,
     @MessageBody() userId: number,
   ) {
-    //this.online.set(client.id, userId);
     this.online.set(userId, client.id);
-    this.logger.debug(Array.from(this.online));
+    this.logger.debug('online users');
+    console.log(Array.from(this.online));
   }
   @SubscribeMessage('inviteGame')
   async inviteGame(
@@ -74,15 +75,25 @@ export class GameGateway
     @ConnectedSocket() client: Socket,
     @MessageBody('name') name: string,
   ) {
-    client.join(name);
-    console.log(this.server.adapter['rooms'].get(name));
-    this.server.to(name).emit('acceptedGame');
+    if (this.server.adapter['rooms'].get(name)) {
+      client.join(name);
+      this.server.to(name).emit('acceptedGame', { name });
+      setTimeout(() => {
+        const [nsp, homeId, awayId] = name.split('-');
+
+        this.server.to(name).emit('roomInfo', { homeId, awayId });
+      }, 500);
+    }
   }
   @SubscribeMessage('refuseGame')
   async refuseGame(
     @ConnectedSocket() client: Socket,
     @MessageBody('name') name: string,
   ) {
+    //const roomOwnerId = Number(name.split('-')[1]);
+    //const roomOwnerSocket = this.online.get(roomOwnerId);
+    //this.server.to(roomOwnerSocket).emit('refusedGame', { name });
+    console.log(this.server.adapter['rooms']);
     this.server.to(name).emit('refusedGame', { name });
   }
   @SubscribeMessage('leaveGame')
@@ -96,4 +107,26 @@ export class GameGateway
     //this.logger.debug('AFTER LEAVE');
     //console.log(this.server.adapter['rooms']);
   }
+
+  @SubscribeMessage('leaveGameWithoutName')
+  async leaveWithoutName(@ConnectedSocket() client: Socket) {
+    //this.logger.debug('BEFORE');
+    //console.log(this.server.adapter['rooms']);
+
+    // FIXME: normally, a client participate one room but see if another case and side effect commes.
+    const iter = client.rooms[Symbol.iterator]();
+    for (let room of iter) if (room.includes('game')) client.leave(room);
+  }
+
+  //@SubscribeMessage('joinRoom')
+  //async joinRoom(
+  //  @ConnectedSocket() client: Socket,
+  //  @MessageBody('name') name: string,
+  //) {
+  //  this.logger.debug('joinRoom');
+  //  console.log(name);
+  //  this.server.to(name).emit('test', name);
+  //  //console.log(this.server.adapter['rooms']);
+  //  //console.log(user);
+  //}
 }

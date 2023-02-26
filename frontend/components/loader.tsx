@@ -1,19 +1,33 @@
 export function Loader() {
 	return (
 		<div className="loader">
-			<div className="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+			<div className="lds-default">
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+			</div>
 			<style jsx>{`
 				.loader {
-					position:absolute;
-					top:0px;
-					left:0px;
-					width:100%;
-					height:100vh;
-					display:flex;
-					justify-content:center;
-					align-items:center;
-					background-color:var(--modal-bg-color);
-					overflow-y:fit;
+					z-index: 1;
+					position: absolute;
+					top: 0px;
+					left: 0px;
+					width: 100%;
+					height: 100vh;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					background-color: var(--modal-bg-color);
+					overflow-y: fit;
 				}
 				.lds-default {
 					display: inline-block;
@@ -25,7 +39,7 @@ export function Loader() {
 					position: absolute;
 					width: 6px;
 					height: 6px;
-					background: var(--gray-dark);
+					background: white;
 					border-radius: 50%;
 					animation: lds-default 1.2s linear infinite;
 				}
@@ -90,7 +104,10 @@ export function Loader() {
 					left: 62px;
 				}
 				@keyframes lds-default {
-					0%, 20%, 80%, 100% {
+					0%,
+					20%,
+					80%,
+					100% {
 						transform: scale(1);
 					}
 					50% {

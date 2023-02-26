@@ -12,6 +12,8 @@ import { UserInfo } from "../userInfo";
 import { useSocket } from "../../utils/hooks/useSocket";
 import { DmModal } from "./dmModal";
 import { useState } from "react";
+import { useRouter } from "next/router";
+import { WaitingModal } from "./watingModal";
 
 export function UserModal({
 	userId,
@@ -21,7 +23,7 @@ export function UserModal({
 	onClose: any;
 }) {
 	const { user } = useUser();
-	const { socket } = useSocket('game');
+	const { socket } = useSocket("game");
 	const { userData } = useUserById(userId);
 	const { friend, revalid: revalidFriend } = useFriend(userId);
 	const { blocked, revalid: revalidBlocked } = useBlocked(userId);
@@ -70,7 +72,8 @@ export function UserModal({
 	}
 
 	async function inviteGame(receiverId: number) {
-		socket.emit('inviteGame', { senderId: user.id, receiverId });
+		//router.push("/game");
+		socket.emit("inviteGame", { senderId: user.id, receiverId });
 	}
 
 	if (!user) return null;
@@ -107,8 +110,15 @@ export function UserModal({
 									)}
 								</div>
 								<div className="d-flex center gap">
-									<button className="btn" onClick={() => setDmModal(true)}>DM</button>
-									<button className="btn" onClick={() => inviteGame(userData.id)}>Play</button>
+									<button className="btn" onClick={() => setDmModal(true)}>
+										DM
+									</button>
+									<button
+										className="btn"
+										onClick={() => inviteGame(userData.id)}
+									>
+										Play
+									</button>
 								</div>
 							</div>
 						)}
@@ -116,7 +126,12 @@ export function UserModal({
 					<UserInfo user={userData} />
 				</div>
 			)}
-			{openDmModal && <DmModal receiverName={userData.name} onClose={() => setDmModal(false)} />}
+			{openDmModal && (
+				<DmModal
+					receiverName={userData.name}
+					onClose={() => setDmModal(false)}
+				/>
+			)}
 			<style jsx>{`
 				.btn {
 					width: 8rem;
