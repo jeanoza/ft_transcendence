@@ -128,4 +128,27 @@ export class GameGateway
     if (home !== undefined) this.server.to(name).emit('homeReady', home);
     else if (away !== undefined) this.server.to(name).emit('awayReady', away);
   }
+
+  @SubscribeMessage('updateHomePaddle')
+  updateHomePaddle(
+    @ConnectedSocket() client: Socket,
+    @MessageBody('paddlePos') paddlePos: number,
+    @MessageBody('channelName') channelName: string,
+  ) {
+    console.log(paddlePos);
+    this.server
+      .to(channelName)
+      .emit('updatedPaddle', { isHome: true, paddlePos });
+  }
+
+  @SubscribeMessage('updateAwayPaddle')
+  updateAwayPaddle(
+    @ConnectedSocket() client: Socket,
+    @MessageBody('paddlePos') paddlePos: number,
+    @MessageBody('channelName') channelName: string,
+  ) {
+    this.server
+      .to(channelName)
+      .emit('updatedPaddle', { isHome: false, paddlePos });
+  }
 }

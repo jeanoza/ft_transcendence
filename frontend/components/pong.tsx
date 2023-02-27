@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-//import './Pong.css';
 
-const Pong = ({ allPlayerReady }) => {
+const Pong = ({ allPlayerReady, isHome }: { allPlayerReady: boolean, isHome: boolean }) => {
 	const [score, setScore] = useState({
 		player1: 0,
 		player2: 0,
@@ -44,7 +43,7 @@ const Pong = ({ allPlayerReady }) => {
 		window.addEventListener("keydown", handleKeyDown);
 
 		return () => {
-			window.removeEventListener("keydown", handleKeyDown);
+			//window.removeEventListener("keydown", handleKeyDown);
 		};
 	}, []);
 
@@ -154,7 +153,6 @@ const Pong = ({ allPlayerReady }) => {
 					margin: 0 auto;
 					overflow: hidden;
 				}
-
 				.Paddle {
 					position: absolute;
 					width: 10px;
