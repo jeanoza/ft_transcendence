@@ -5,7 +5,7 @@ import { useAllBlocked } from "../../../utils/hooks/swrHelper";
 import { Avatar } from "../../avatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export function BlockedsCont() {
+export function BlockedsCont({ openUserModal }: { openUserModal: any }) {
 	const { blockeds, revalid } = useAllBlocked();
 
 	async function unblock(e: any, userName: string) {
@@ -28,6 +28,12 @@ export function BlockedsCont() {
 						<Avatar url={blocked.image_url} size="sm" status={blocked.status} />
 						<span className="username m-2">{blocked.name}</span>
 						<div className="d-flex gap icons px-2">
+							<div
+								className="icon-cont"
+								onClick={() => openUserModal(blocked.id)}
+							>
+								<FontAwesomeIcon icon="user" />
+							</div>
 							<div id={blocked.id} className="iconCont" onClick={(e) => unblock(e, blocked.name)}>
 								<FontAwesomeIcon icon="lock-open" />
 							</div>

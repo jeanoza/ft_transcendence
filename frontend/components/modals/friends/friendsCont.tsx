@@ -4,7 +4,7 @@ import { Avatar } from "../../avatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Loader } from "../../loader";
 
-export function FriendsCont() {
+export function FriendsCont({ openUserModal }: { openUserModal: any }) {
 	const { friends, revalid } = useAllFriend();
 
 	async function deleteFriend(e: any, userName: string) {
@@ -42,12 +42,20 @@ export function FriendsCont() {
 						<Avatar url={friend.image_url} size="sm" status={friend.status} />
 						<span className="username m-2">{friend.name}</span>
 						<div className="d-flex gap icons px-2">
+							<div
+								className="icon-cont"
+								onClick={() => openUserModal(friend.id)}
+							>
+								<FontAwesomeIcon icon="user" />
+							</div>
 							<div id={friend.id} className="iconCont" onClick={(e) => deleteFriend(e, friend.name)}>
-								<FontAwesomeIcon icon="user-minus" />
+								{/*<FontAwesomeIcon icon={["far", "trash-can"]} />*/}
+								<FontAwesomeIcon icon="trash" />
 							</div>
 							<div id={friend.id} className="iconCont" onClick={(e) => blockFriend(e, friend.name)}>
 								<FontAwesomeIcon icon="ban" />
 							</div>
+
 						</div>
 					</li>
 				))}

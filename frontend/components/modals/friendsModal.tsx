@@ -2,12 +2,15 @@ import { useAllFriend, useUser } from "../../utils/hooks/swrHelper";
 import React, { useState } from "react";
 import { FriendsCont } from "./friends/friendsCont";
 import { BlockedsCont } from "./friends/blockedsCont";
+import { UserModal } from "./userModal";
 
 export function FriendsModal({ onClose }: { onClose: any }) {
 	const { user } = useUser();
 	const { friends } = useAllFriend();
 	const [isFriendsTab, setFriendsTab] = useState<boolean>(true);
 	const [isBlockedsTab, setBlockedTab] = useState<boolean>(false);
+	const [openUserModal, setUserModal] = useState<boolean>(false);
+	const [userId, setUserId] = useState<number | null>(null);
 
 	function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
 		const { name } = e.currentTarget;
@@ -18,6 +21,10 @@ export function FriendsModal({ onClose }: { onClose: any }) {
 			setFriendsTab(false);
 			setBlockedTab(true);
 		}
+	}
+	function handleOpenUserModal(id: number) {
+		setUserId(id);
+		setUserModal(true);
 	}
 
 	function handleClose(e: any) {
@@ -44,8 +51,11 @@ export function FriendsModal({ onClose }: { onClose: any }) {
 						Blockeds
 					</button>
 				</div>
-				{friends && isFriendsTab && <FriendsCont />}
-				{isBlockedsTab && <BlockedsCont />}
+				{friends && isFriendsTab && <FriendsCont openUserModal={handleOpenUserModal} />}
+				{isBlockedsTab && <BlockedsCont openUserModal={handleOpenUserModal} />}
+				{openUserModal && userId && (
+					<UserModal userId={userId} onClose={() => setUserModal(false)} />
+				)}
 			</div>
 			<style jsx>{`
 				button.active {
