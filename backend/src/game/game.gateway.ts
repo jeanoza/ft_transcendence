@@ -115,7 +115,7 @@ export class GameGateway
 
     // FIXME: normally, a client participate one room but see if another case and side effect commes.
     const iter = client.rooms[Symbol.iterator]();
-    for (let room of iter) if (room.includes('game')) client.leave(room);
+    for (const room of iter) if (room.includes('game')) client.leave(room);
   }
 
   @SubscribeMessage('ready')

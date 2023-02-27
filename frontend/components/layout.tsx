@@ -4,6 +4,7 @@ import { useSocket } from "../utils/hooks/useSocket";
 import { Loader } from "./loader";
 import { Navbar } from "./navbar";
 import { useRouter } from "next/router";
+import axios from "axios";
 
 let userConnected = false;
 
@@ -21,49 +22,56 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 	const router = useRouter();
 
 	useEffect(() => {
+		updateStatus();
+		async function updateStatus() {
+			try {
+				const _user = (await axios.get("user/current")).data;
+				let status = 1;
+				if (router.pathname === "/game") status = 2;
+				chatSocket.emit("updateStatus", { userId: _user.id, status })
+			} catch (e) {
+				console.log(e);
+			}
+		}
+	}, [router])
+
+	useEffect(() => {
 		//update chat socket
 		if (user && !userConnected) {
 			chatSocket.emit("connectUser", user.id);
 			gameSocket.emit("connectUser", user.id);
 			userConnected = true;
-			chatSocket.on("connected", function () {
-				console.log("connected chat socket");
-				revalid();
-			});
-			//FIXME: need to clean up or not?
-			return () => {
-				chatSocket.off("connected");
-			};
 		}
 	}, [user]);
 
 	useEffect(() => {
-		if (user) {
-			gameSocket.on("invitedGame", function ({ name }: IGame) {
-				if (window.confirm("Do you accept to join to game?"))
-					gameSocket.emit("acceptGame", { name });
-				else gameSocket.emit("refuseGame", { name });
-			});
-			gameSocket.on("acceptedGame", function ({ name }) {
-				router.push("/game");
-			});
-			gameSocket.on("refusedGame", function ({ name }: IGame) {
-				window.alert("The user refused your invite");
-				gameSocket.emit("leaveGame", { name });
-			});
-			gameSocket.on("ownerLeft", function () {
-				window.alert("The game owner is already left");
-			});
+		chatSocket.on("updatedStatus", function () {
+			revalid();
+		});
+		gameSocket.on("invitedGame", function ({ name }: IGame) {
+			if (window.confirm("Do you accept to join to game?"))
+				gameSocket.emit("acceptGame", { name });
+			else gameSocket.emit("refuseGame", { name });
+		});
+		gameSocket.on("acceptedGame", function ({ name }) {
+			router.push("/game");
+		});
+		gameSocket.on("refusedGame", function ({ name }: IGame) {
+			window.alert("The user refused your invite");
+			gameSocket.emit("leaveGame", { name });
+		});
+		gameSocket.on("ownerLeft", function () {
+			window.alert("The game owner is already left");
+		});
 
-			return () => {
-				gameSocket.off("invitedGame");
-				gameSocket.off("acceptedGame");
-				gameSocket.off("refusedGame");
-				gameSocket.off("ownerLeft");
-			};
-		}
-
-	}, [user])
+		return () => {
+			gameSocket.off("invitedGame");
+			gameSocket.off("acceptedGame");
+			gameSocket.off("refusedGame");
+			gameSocket.off("ownerLeft");
+			chatSocket.off("connected");
+		};
+	}, [])
 
 	if (isLoading || is2faLoading)
 		return (

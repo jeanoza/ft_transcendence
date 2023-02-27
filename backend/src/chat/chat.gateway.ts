@@ -56,6 +56,21 @@ export class ChatGateway
     this.logger.log(`Chat socket id:${client.id} disconnected`);
   }
 
+  @SubscribeMessage('updateStatus')
+  async handleUpdateStatus(
+    @ConnectedSocket() client: Socket,
+    @MessageBody('userId') userId: number,
+    @MessageBody('status') status: number,
+  ) {
+    try {
+      await this.userService.update(userId, { status });
+      client.emit('updatedStatus');
+    } catch (e) {
+      this.logger.debug(e);
+      client.emit('error', e);
+    }
+  }
+
   @SubscribeMessage('connectUser')
   async handleConnectUser(
     @ConnectedSocket() client: Socket,
@@ -63,10 +78,10 @@ export class ChatGateway
   ) {
     try {
       await this.userService.update(userId, {
-        status: 1,
         chatSocket: client.id,
+        status: 1,
       });
-      client.emit('connected');
+      client.emit('updatedStatus');
     } catch (e) {
       this.logger.debug(e);
       client.emit('error', e);
