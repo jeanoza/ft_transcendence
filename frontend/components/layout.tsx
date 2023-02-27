@@ -30,11 +30,19 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 				console.log("connected chat socket");
 				revalid();
 			});
+			//FIXME: need to clean up or not?
+			return () => {
+				chatSocket.off("connected");
+			};
+		}
+	}, [user]);
+
+	useEffect(() => {
+		if (user) {
 			gameSocket.on("invitedGame", function ({ name }: IGame) {
-				if (window.confirm("Do you accept to join to game?")) {
-					//router.push("/game");
+				if (window.confirm("Do you accept to join to game?"))
 					gameSocket.emit("acceptGame", { name });
-				} else gameSocket.emit("refuseGame", { name });
+				else gameSocket.emit("refuseGame", { name });
 			});
 			gameSocket.on("acceptedGame", function ({ name }) {
 				router.push("/game");
@@ -46,14 +54,16 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 			gameSocket.on("ownerLeft", function () {
 				window.alert("The game owner is already left");
 			});
-			//FIXME: need to clean up or not?
+
 			return () => {
-				//	//chatSocket.off("connected");
-				//gameSocket.off("invitedGame");
-				//gameSocket.off("acceptedGame");
+				gameSocket.off("invitedGame");
+				gameSocket.off("acceptedGame");
+				gameSocket.off("refusedGame");
+				gameSocket.off("ownerLeft");
 			};
 		}
-	}, [user]);
+
+	}, [user])
 
 	if (isLoading || is2faLoading)
 		return (

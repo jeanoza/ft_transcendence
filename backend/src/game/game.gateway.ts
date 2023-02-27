@@ -82,7 +82,7 @@ export class GameGateway
         const [nsp, homeId, awayId] = name.split('-');
 
         this.server.to(name).emit('roomInfo', { homeId, awayId, name });
-      }, 500);
+      }, 1000);
     }
   }
   @SubscribeMessage('refuseGame')

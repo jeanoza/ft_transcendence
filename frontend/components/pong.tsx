@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 //import './Pong.css';
 
-const Pong = () => {
+const Pong = ({ allPlayerReady }) => {
 	const [score, setScore] = useState({
 		player1: 0,
 		player2: 0,
@@ -50,7 +50,7 @@ const Pong = () => {
 
 	useEffect(() => {
 		const intervalId = setInterval(() => {
-			if (gameOver) {
+			if (!allPlayerReady || gameOver) {
 				clearInterval(intervalId);
 				return;
 			}
@@ -112,7 +112,7 @@ const Pong = () => {
 		return () => {
 			clearInterval(intervalId);
 		};
-	}, [ballPosition, ballDirection, gameOver]);
+	}, [ballPosition, ballDirection, gameOver, allPlayerReady]);
 
 	const winner =
 		score.player1 >= 5 ? "Player 1" : score.player2 >= 5 ? "Player 2" : null;

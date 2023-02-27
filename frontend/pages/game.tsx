@@ -8,6 +8,7 @@ import { useUser } from "../utils/hooks/swrHelper";
 import { useSocket } from "../utils/hooks/useSocket";
 import axios from "axios";
 import { Avatar } from "../components/avatar";
+import { UserBoard } from "../components/game/userBoard";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -61,7 +62,7 @@ export default function Game() {
 		};
 	}, []);
 
-	function handleReady(e) {
+	function handleReady() {
 		if (user.id === home?.id)
 			socket.emit("ready", { name, home: !isHomeReady });
 		else if (user.id === away?.id)
@@ -74,39 +75,18 @@ export default function Game() {
 			<main className="d-flex column center">
 				{isLoading && <Loader />}
 				{home && away && (
-					<>
-						<div className="user-board d-flex center justify-between px-4">
-							<div className="user d-flex column center">
-								<h2 className="py-2">Home</h2>
-								<Avatar url={home.imageURL} />
-								<h3 className="text-overflow py-2">{home.name}</h3>
-								{isHomeReady && <h3>Ready</h3>}
-							</div>
-							<div className="user d-flex column center">
-								<h2 className="py-2">Away</h2>
-								<Avatar url={away.imageURL} />
-								<h3 className="text-overflow py-2">{away.name}</h3>
-								{isAwayReady && <h3>Ready</h3>}
-							</div>
-						</div>
-						{(home.id === user.id || away.id === user.id) && (
-							<button onClick={handleReady}>Ready</button>
-						)}
-					</>
+					<UserBoard
+						home={home}
+						away={away}
+						isHomeReady={isHomeReady}
+						isAwayReady={isAwayReady}
+						handleReady={handleReady} />
 				)}
-				{isHomeReady && isAwayReady && <Pong />}
-			</main>
+				<Pong allPlayerReady={isHomeReady && isAwayReady ? true : false} />
+			</main >
 			<style jsx>{`
-				.user-board {
-					width: 600px;
-					border: 1px solid var(--border-color);
-					margin-bottom: 1rem;
-					border-radius: 8px;
-				}
-				.user {
-					max-width: 7rem;
-				}
+				
 			`}</style>
-		</AuthLayout>
+		</AuthLayout >
 	);
 }
