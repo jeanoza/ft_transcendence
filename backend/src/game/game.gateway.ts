@@ -83,9 +83,8 @@ export class GameGateway
       console.log(this.server.adapter['rooms']);
       this.server.to(name).emit('acceptedGame', { name });
       setTimeout(() => {
-        const [nsp, homeId, awayId] = name.split('-');
-
-        this.server.to(name).emit('roomInfo', { homeId, awayId, name });
+        //const [nsp, homeId, awayId] = name.split('-');
+        this.server.to(name).emit('roomInfo', name);
       }, 1000);
     }
   }

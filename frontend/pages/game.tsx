@@ -52,7 +52,9 @@ export default function Game() {
 	const GAME_AREA = GAME_WIDTH * GAME_HEIGHT;
 
 	useEffect(() => {
-		socket.on("roomInfo", async ({ homeId, awayId, name }) => {
+		//socket.on("roomInfo", async ({ homeId, awayId, name }) => {
+		socket.on("roomInfo", async (name) => {
+			const [nsp, homeId, awayId] = name.split("-");
 			console.log(
 				"[roomInfo] ",
 				"homeId:",
@@ -140,7 +142,6 @@ export default function Game() {
 						away={away}
 						isHomeReady={isHomeReady}
 						isAwayReady={isAwayReady}
-						handleReady={handleReady}
 					/>
 				)}
 				{/*<Pong allPlayerReady={isHomeReady && isAwayReady ? true : false} isHome={isHome} />*/}
@@ -153,6 +154,11 @@ export default function Game() {
 						className="paddle away"
 						style={{ top: awayPaddlePos, right: 0 }}
 					/>
+					{role !== ROLE.Observer && (
+						<button className="readyBtn" onClick={handleReady}>
+							Ready
+						</button>
+					)}
 				</div>
 			</main>
 			<style jsx>{`
@@ -174,6 +180,12 @@ export default function Game() {
 				.paddle.away{
 					top:160px;
 				}*/
+				.readyBtn {
+					position: absolute;
+					top: 50%;
+					left: 50%;
+					transform: translate(-50%, -50%);
+				}
 			`}</style>
 		</AuthLayout>
 	);
