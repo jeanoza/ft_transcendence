@@ -144,7 +144,7 @@ export default function Game() {
 						isAwayReady={isAwayReady}
 					/>
 				)}
-				{/*<Pong allPlayerReady={isHomeReady && isAwayReady ? true : false} isHome={isHome} />*/}
+				{/*<Pong allPlayerReady={isHomeReady && isAwayReady ? true : false} />*/}
 				<div className="pong">
 					<div
 						className="paddle home"

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 
-const Pong = ({ allPlayerReady, isHome }: { allPlayerReady: boolean, isHome: boolean }) => {
+const Pong = ({ allPlayerReady }: { allPlayerReady: boolean }) => {
 	const [score, setScore] = useState({
 		player1: 0,
 		player2: 0,
