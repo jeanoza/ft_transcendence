@@ -23,6 +23,13 @@ export function getServerSideProps({ req }: any) {
 	}
 	return { props: {} };
 }
+
+enum ROLE {
+	Observer,
+	Home,
+	Away,
+}
+
 export default function Game() {
 	const [isLoading, setLoading] = useState<boolean>(true);
 	const { user } = useUser();
@@ -32,7 +39,7 @@ export default function Game() {
 	const [isHomeReady, setHomeReady] = useState<boolean>(false);
 	const [isAwayReady, setAwayReady] = useState<boolean>(false);
 	const [name, setName] = useState<string | null>(null);
-	const [isHome, setIsHome] = useState<boolean | null>(null);
+	const [role, setRole] = useState<ROLE>(ROLE.Observer);
 
 	const [homePaddlePos, setHomePaddlePos] = useState<number>(0);
 	const [awayPaddlePos, setAwayPaddlePos] = useState<number>(0);
@@ -56,13 +63,13 @@ export default function Game() {
 				name
 			);
 			setName(name);
-			await axios
-				.get("user/current")
-				.then((res) =>
-					setIsHome(
-						res.data.id == homeId ? true : res.data.id == awayId ? false : null
-					)
-				);
+			await axios.get("user/current").then((res) => {
+				const {
+					data: { id },
+				} = res;
+				if (id == homeId) setRole(ROLE.Home);
+				else if (id == awayId) setRole(ROLE.Away);
+			});
 			await axios.get("user/" + homeId).then((res) => setHome(res.data));
 			await axios.get("user/" + awayId).then((res) => setAway(res.data));
 			setLoading(false);
@@ -73,9 +80,9 @@ export default function Game() {
 		socket.on("awayReady", (ready) => {
 			setAwayReady(ready);
 		});
-		socket.on("updatedPaddle", ({ isHome, paddlePos }) => {
-			if (isHome === true) setHomePaddlePos(paddlePos);
-			else if (isHome === false) setAwayPaddlePos(paddlePos);
+		socket.on("updatedPaddle", ({ role, paddlePos }) => {
+			if (role === ROLE.Home) setHomePaddlePos(paddlePos);
+			else if (role === ROLE.Away) setAwayPaddlePos(paddlePos);
 		});
 
 		return () => {
@@ -88,37 +95,38 @@ export default function Game() {
 
 	useEffect(() => {
 		const handleKeyDown = (e: any) => {
-			let paddlePos = isHome ? homePaddlePos : awayPaddlePos;
-			if (e.code === "ArrowUp") {
-				socket.emit("updatePaddle", {
-					isHome,
-					roomName: name,
-					paddlePos: Math.max(paddlePos - 20, 0),
-				});
-			} else if (e.code === "ArrowDown") {
-				socket.emit("updatePaddle", {
-					isHome,
-					roomName: name,
-					paddlePos: Math.min(paddlePos + 20, GAME_HEIGHT - PADDLE_HEIGHT),
-				});
+			if (role !== ROLE.Observer) {
+				let paddlePos = homePaddlePos;
+				if (role === ROLE.Away) paddlePos = awayPaddlePos;
+				if (e.code === "ArrowUp") {
+					socket.emit("updatePaddle", {
+						role,
+						roomName: name,
+						paddlePos: Math.max(paddlePos - 20, 0),
+					});
+				} else if (e.code === "ArrowDown") {
+					socket.emit("updatePaddle", {
+						role,
+						roomName: name,
+						paddlePos: Math.min(paddlePos + 20, GAME_HEIGHT - PADDLE_HEIGHT),
+					});
+				}
 			}
 		};
-		// add event only isHome state is set
-		// true => Home
-		// false => away
-		if (typeof isHome === "boolean") {
+		if (role !== ROLE.Observer) {
 			window.addEventListener("keydown", handleKeyDown);
 			return () => {
 				//clean up event
 				window.removeEventListener("keydown", handleKeyDown);
 			};
 		}
-	}, [isHome, homePaddlePos, awayPaddlePos]);
+	}, [role, homePaddlePos, awayPaddlePos]);
 
 	function handleReady() {
-		if (isHome === true) socket.emit("ready", { name, home: !isHomeReady });
-		else if (isHome === false)
-			socket.emit("ready", { name, away: !isAwayReady });
+		if (role === ROLE.Home || role === ROLE.Away) {
+			const ready = role === ROLE.Home ? !isHomeReady : !isAwayReady;
+			socket.emit("ready", { name, role, ready });
+		}
 	}
 
 	return (

@@ -28,12 +28,12 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 				const _user = (await axios.get("user/current")).data;
 				let status = 1;
 				if (router.pathname === "/game") status = 2;
-				chatSocket.emit("updateStatus", { userId: _user.id, status })
+				chatSocket.emit("updateStatus", { userId: _user.id, status });
 			} catch (e) {
 				console.log(e);
 			}
 		}
-	}, [router])
+	}, [router]);
 
 	useEffect(() => {
 		//update chat socket
@@ -60,18 +60,18 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 			window.alert("The user refused your invite");
 			gameSocket.emit("leaveGame", { name });
 		});
-		gameSocket.on("ownerLeft", function () {
-			window.alert("The game owner is already left");
-		});
+		//gameSocket.on("ownerLeft", function () {
+		//	window.alert("The game owner is already left");
+		//});
 
 		return () => {
 			gameSocket.off("invitedGame");
 			gameSocket.off("acceptedGame");
 			gameSocket.off("refusedGame");
-			gameSocket.off("ownerLeft");
+			//gameSocket.off("ownerLeft");
 			chatSocket.off("connected");
 		};
-	}, [])
+	}, []);
 
 	if (isLoading || is2faLoading)
 		return (

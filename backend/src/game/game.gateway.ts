@@ -38,6 +38,8 @@ export class GameGateway
   //#region Connection
   async handleConnection(@ConnectedSocket() client: Socket) {
     this.logger.log(`Game socket id:${client.id} connected`);
+    this.logger.debug('[Room list]');
+    console.log(this.server.adapter['rooms']);
   }
 
   async handleDisconnect(@ConnectedSocket() client: Socket) {
@@ -77,6 +79,8 @@ export class GameGateway
   ) {
     if (this.server.adapter['rooms'].get(name)) {
       client.join(name);
+      this.logger.debug('[Room list]');
+      console.log(this.server.adapter['rooms']);
       this.server.to(name).emit('acceptedGame', { name });
       setTimeout(() => {
         const [nsp, homeId, awayId] = name.split('-');
@@ -121,43 +125,26 @@ export class GameGateway
   @SubscribeMessage('ready')
   async changeReady(
     @ConnectedSocket() client: Socket,
-    @MessageBody('home') home?: boolean,
-    @MessageBody('away') away?: boolean,
-    @MessageBody('name') name?: string,
+    @MessageBody('role') role: number,
+    @MessageBody('ready') ready: boolean,
+    @MessageBody('name') name: string,
   ) {
-    if (home !== undefined) this.server.to(name).emit('homeReady', home);
-    else if (away !== undefined) this.server.to(name).emit('awayReady', away);
+    // 1: Home, 2: Away
+    if (role !== 0) {
+      let query = 'homeReady';
+      if (role === 2) query = 'awayReady';
+      this.server.to(name).emit(query, ready);
+    }
   }
-
-  //@SubscribeMessage('updateHomePaddle')
-  //updateHomePaddle(
-  //  @ConnectedSocket() client: Socket,
-  //  @MessageBody('paddlePos') paddlePos: number,
-  //  @MessageBody('roomName') roomName: string,
-  //) {
-  //  console.log(paddlePos);
-  //  this.server.to(roomName).emit('updatedPaddle', { isHome: true, paddlePos });
-  //}
-
-  //@SubscribeMessage('updateAwayPaddle')
-  //updateAwayPaddle(
-  //  @ConnectedSocket() client: Socket,
-  //  @MessageBody('paddlePos') paddlePos: number,
-  //  @MessageBody('roomName') roomName: string,
-  //) {
-  //  this.server
-  //    .to(roomName)
-  //    .emit('updatedPaddle', { isHome: false, paddlePos });
-  //}
 
   @SubscribeMessage('updatePaddle')
   updateHomePaddle(
     @ConnectedSocket() client: Socket,
-    @MessageBody('isHome') isHome: boolean,
+    @MessageBody('role') role: number,
     @MessageBody('paddlePos') paddlePos: number,
     @MessageBody('roomName') roomName: string,
   ) {
-    console.log(isHome, paddlePos, roomName);
-    this.server.to(roomName).emit('updatedPaddle', { isHome, paddlePos });
+    //console.log(role, paddlePos, roomName);
+    this.server.to(roomName).emit('updatedPaddle', { role, paddlePos });
   }
 }
