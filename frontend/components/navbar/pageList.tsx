@@ -13,28 +13,28 @@ export function PageList() {
 			</li>
 			<li>
 				<Link href="/chat">
-					<span className={(router.pathname.includes("chat")) ? "active" : ""} >
+					<span className={router.pathname.includes("chat") ? "active" : ""}>
 						chat
 					</span>
 				</Link>
 			</li>
-			<li>
+			{/*<li>
 				<Link href="/game">
 					<span className={(router.pathname.includes("game")) ? "active" : ""} >
 						game
 					</span>
 				</Link>
-			</li>
+			</li>*/}
 			<style jsx>{`
-				img{
-					width:2rem;
-					height:auto;
+				img {
+					width: 2rem;
+					height: auto;
 				}
 				ul > li {
 					padding: 1.2rem;
 				}
 				ul > li:first-child {
-					padding:0 1.2rem;
+					padding: 0 1.2rem;
 				}
 				ul > li:hover {
 					color: white;
