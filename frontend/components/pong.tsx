@@ -20,7 +20,7 @@ const Pong = ({ allPlayerReady, isHome }: { allPlayerReady: boolean, isHome: boo
 	const GAME_AREA = GAME_WIDTH * GAME_HEIGHT;
 
 	useEffect(() => {
-		const handleKeyDown = (event) => {
+		const handleKeyDown = (event: any) => {
 			if (event.code === "KeyW") {
 				setPaddle1Position((paddle1Position) =>
 					Math.max(paddle1Position - 20, 0)
