@@ -66,56 +66,53 @@ export class GameGateway
   ) {
     const receiverSocket = this.online.get(receiverId);
     if (receiverSocket) {
-      const name = `game-${senderId}-${receiverId}`;
-      client.join(name);
-      this.server.to(receiverSocket).emit('invitedGame', { name });
+      const roomName = `game-${senderId}-${receiverId}`;
+      client.join(roomName);
+      this.server.to(receiverSocket).emit('invitedGame', { roomName });
     } else
       client.emit('error', new UnauthorizedException('The user is offline!'));
   }
   @SubscribeMessage('acceptGame')
   async acceptGame(
     @ConnectedSocket() client: Socket,
-    @MessageBody('name') name: string,
+    @MessageBody('roomName') roomName: string,
   ) {
-    if (this.server.adapter['rooms'].get(name)) {
-      client.join(name);
+    if (this.server.adapter['rooms'].get(roomName)) {
+      client.join(roomName);
       this.logger.debug('[Room list]');
       console.log(this.server.adapter['rooms']);
-      this.server.to(name).emit('acceptedGame', { name });
+      this.server.to(roomName).emit('acceptedGame', { roomName });
       setTimeout(() => {
-        //const [nsp, homeId, awayId] = name.split('-');
-        this.server.to(name).emit('roomInfo', name);
+        //const [nsp, homeId, awayId] = roomName.split('-');
+        this.server.to(roomName).emit('roomInfo', roomName);
       }, 1000);
     }
   }
   @SubscribeMessage('refuseGame')
   async refuseGame(
     @ConnectedSocket() client: Socket,
-    @MessageBody('name') name: string,
+    @MessageBody('roomName') roomName: string,
   ) {
-    //const roomOwnerId = Number(name.split('-')[1]);
+    //const roomOwnerId = Number(roomName.split('-')[1]);
     //const roomOwnerSocket = this.online.get(roomOwnerId);
-    //this.server.to(roomOwnerSocket).emit('refusedGame', { name });
+    //this.server.to(roomOwnerSocket).emit('refusedGame', { roomName });
     console.log(this.server.adapter['rooms']);
-    this.server.to(name).emit('refusedGame', { name });
+    this.server.to(roomName).emit('refusedGame', { roomName });
   }
   @SubscribeMessage('leaveGame')
   async leaveGame(
     @ConnectedSocket() client: Socket,
-    @MessageBody('name') name: string,
+    @MessageBody('roomName') roomName: string,
   ) {
     this.logger.debug('LEAVE-BEFORE');
     console.log(this.server.adapter['rooms']);
-    client.leave(name);
+    client.leave(roomName);
     this.logger.debug('AFTER LEAVE');
     console.log(this.server.adapter['rooms']);
   }
 
   @SubscribeMessage('leaveGameWithoutName')
   async leaveWithoutName(@ConnectedSocket() client: Socket) {
-    //this.logger.debug('BEFORE');
-    //console.log(this.server.adapter['rooms']);
-
     // FIXME: normally, a client participate one room but see if another case and side effect commes.
     const iter = client.rooms[Symbol.iterator]();
     for (const room of iter) if (room.includes('game')) client.leave(room);
@@ -126,13 +123,13 @@ export class GameGateway
     @ConnectedSocket() client: Socket,
     @MessageBody('role') role: number,
     @MessageBody('ready') ready: boolean,
-    @MessageBody('name') name: string,
+    @MessageBody('roomName') roomName: string,
   ) {
     // 1: Home, 2: Away
     if (role !== 0) {
       let query = 'homeReady';
       if (role === 2) query = 'awayReady';
-      this.server.to(name).emit(query, ready);
+      this.server.to(roomName).emit(query, ready);
     }
   }
 

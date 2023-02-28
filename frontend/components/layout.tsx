@@ -11,7 +11,7 @@ let userConnected = false;
 interface IGame {
 	senderId: number;
 	receiverId: number;
-	name: string;
+	roomName: string;
 }
 
 export function AuthLayout({ children }: React.PropsWithChildren) {
@@ -48,17 +48,17 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 		chatSocket.on("updatedStatus", function () {
 			revalid();
 		});
-		gameSocket.on("invitedGame", function ({ name }: IGame) {
+		gameSocket.on("invitedGame", function ({ roomName }: IGame) {
 			if (window.confirm("Do you accept to join to game?"))
-				gameSocket.emit("acceptGame", { name });
-			else gameSocket.emit("refuseGame", { name });
+				gameSocket.emit("acceptGame", { roomName });
+			else gameSocket.emit("refuseGame", { roomName });
 		});
-		gameSocket.on("acceptedGame", function ({ name }) {
+		gameSocket.on("acceptedGame", function ({ roomName }) {
 			router.push("/game");
 		});
-		gameSocket.on("refusedGame", function ({ name }: IGame) {
+		gameSocket.on("refusedGame", function ({ roomName }: IGame) {
 			window.alert("The user refused your invite");
-			gameSocket.emit("leaveGame", { name });
+			gameSocket.emit("leaveGame", { roomName });
 		});
 		//gameSocket.on("ownerLeft", function () {
 		//	window.alert("The game owner is already left");

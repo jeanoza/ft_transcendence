@@ -38,7 +38,7 @@ export default function Game() {
 	const [away, setAway] = useState<IUser | null>(null);
 	const [isHomeReady, setHomeReady] = useState<boolean>(false);
 	const [isAwayReady, setAwayReady] = useState<boolean>(false);
-	const [name, setName] = useState<string | null>(null);
+	const [roomName, setRoomName] = useState<string | null>(null);
 	const [role, setRole] = useState<ROLE>(ROLE.Observer);
 
 	const [homePaddlePos, setHomePaddlePos] = useState<number>(0);
@@ -52,19 +52,19 @@ export default function Game() {
 	const GAME_AREA = GAME_WIDTH * GAME_HEIGHT;
 
 	useEffect(() => {
-		//socket.on("roomInfo", async ({ homeId, awayId, name }) => {
-		socket.on("roomInfo", async (name) => {
-			const [nsp, homeId, awayId] = name.split("-");
+		//socket.on("roomInfo", async ({ homeId, awayId, roomName }) => {
+		socket.on("roomInfo", async (roomName) => {
+			const [nsp, homeId, awayId] = roomName.split("-");
 			console.log(
 				"[roomInfo] ",
 				"homeId:",
 				homeId,
 				"awayId: ",
 				awayId,
-				"name: ",
-				name
+				"roomName: ",
+				roomName
 			);
-			setName(name);
+			setRoomName(roomName);
 			await axios.get("user/current").then((res) => {
 				const {
 					data: { id },
@@ -103,13 +103,13 @@ export default function Game() {
 				if (e.code === "ArrowUp") {
 					socket.emit("updatePaddle", {
 						role,
-						roomName: name,
+						roomName,
 						paddlePos: Math.max(paddlePos - 20, 0),
 					});
 				} else if (e.code === "ArrowDown") {
 					socket.emit("updatePaddle", {
 						role,
-						roomName: name,
+						roomName,
 						paddlePos: Math.min(paddlePos + 20, GAME_HEIGHT - PADDLE_HEIGHT),
 					});
 				}
@@ -127,7 +127,7 @@ export default function Game() {
 	function handleReady() {
 		if (role === ROLE.Home || role === ROLE.Away) {
 			const ready = role === ROLE.Home ? !isHomeReady : !isAwayReady;
-			socket.emit("ready", { name, role, ready });
+			socket.emit("ready", { roomName, role, ready });
 		}
 	}
 
