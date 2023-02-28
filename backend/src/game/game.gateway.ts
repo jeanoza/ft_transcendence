@@ -129,26 +129,35 @@ export class GameGateway
     else if (away !== undefined) this.server.to(name).emit('awayReady', away);
   }
 
-  @SubscribeMessage('updateHomePaddle')
+  //@SubscribeMessage('updateHomePaddle')
+  //updateHomePaddle(
+  //  @ConnectedSocket() client: Socket,
+  //  @MessageBody('paddlePos') paddlePos: number,
+  //  @MessageBody('roomName') roomName: string,
+  //) {
+  //  console.log(paddlePos);
+  //  this.server.to(roomName).emit('updatedPaddle', { isHome: true, paddlePos });
+  //}
+
+  //@SubscribeMessage('updateAwayPaddle')
+  //updateAwayPaddle(
+  //  @ConnectedSocket() client: Socket,
+  //  @MessageBody('paddlePos') paddlePos: number,
+  //  @MessageBody('roomName') roomName: string,
+  //) {
+  //  this.server
+  //    .to(roomName)
+  //    .emit('updatedPaddle', { isHome: false, paddlePos });
+  //}
+
+  @SubscribeMessage('updatePaddle')
   updateHomePaddle(
     @ConnectedSocket() client: Socket,
+    @MessageBody('isHome') isHome: boolean,
     @MessageBody('paddlePos') paddlePos: number,
-    @MessageBody('channelName') channelName: string,
+    @MessageBody('roomName') roomName: string,
   ) {
-    console.log(paddlePos);
-    this.server
-      .to(channelName)
-      .emit('updatedPaddle', { isHome: true, paddlePos });
-  }
-
-  @SubscribeMessage('updateAwayPaddle')
-  updateAwayPaddle(
-    @ConnectedSocket() client: Socket,
-    @MessageBody('paddlePos') paddlePos: number,
-    @MessageBody('channelName') channelName: string,
-  ) {
-    this.server
-      .to(channelName)
-      .emit('updatedPaddle', { isHome: false, paddlePos });
+    console.log(isHome, paddlePos, roomName);
+    this.server.to(roomName).emit('updatedPaddle', { isHome, paddlePos });
   }
 }

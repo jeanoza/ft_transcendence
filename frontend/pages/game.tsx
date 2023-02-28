@@ -33,8 +33,6 @@ export default function Game() {
 	const [isAwayReady, setAwayReady] = useState<boolean>(false);
 	const [name, setName] = useState<string | null>(null);
 	const [isHome, setIsHome] = useState<boolean | null>(null);
-	const [homeId, setHomeId] = useState<number | null>(null)
-	const [awayId, setAwayId] = useState<number | null>(null)
 
 	const [homePaddlePos, setHomePaddlePos] = useState<number>(0);
 	const [awayPaddlePos, setAwayPaddlePos] = useState<number>(0);
@@ -45,8 +43,6 @@ export default function Game() {
 	const GAME_WIDTH = 600;
 	const GAME_HEIGHT = 400;
 	const GAME_AREA = GAME_WIDTH * GAME_HEIGHT;
-
-
 
 	useEffect(() => {
 		socket.on("roomInfo", async ({ homeId, awayId, name }) => {
@@ -60,9 +56,13 @@ export default function Game() {
 				name
 			);
 			setName(name);
-			//setHomeId(homeId);
-			//setAwayId(awayId);
-			await axios.get("user/current").then((res) => setIsHome(res.data.id == homeId))
+			await axios
+				.get("user/current")
+				.then((res) =>
+					setIsHome(
+						res.data.id == homeId ? true : res.data.id == awayId ? false : null
+					)
+				);
 			await axios.get("user/" + homeId).then((res) => setHome(res.data));
 			await axios.get("user/" + awayId).then((res) => setAway(res.data));
 			setLoading(false);
@@ -74,48 +74,51 @@ export default function Game() {
 			setAwayReady(ready);
 		});
 		socket.on("updatedPaddle", ({ isHome, paddlePos }) => {
-			if (isHome) setHomePaddlePos(paddlePos);
-			else setAwayPaddlePos(paddlePos);
-		})
-
-		const handleKeyDown = (e: any) => {
-			console.log(homeId, awayId)
-			if (e.code === "ArrowUp") {
-				if (isHome)
-					socket.emit("updateHomePaddle", { channelName: name, paddlePos: Math.max(homePaddlePos - 20, 0) })
-				else
-					socket.emit("updateAwayPaddle", { channelName: name, paddlePos: Math.max(awayPaddlePos - 20, 0) })
-			}
-			else if (e.code === "ArrowDown") {
-				if (isHome)
-					socket.emit("updateHomePaddle", { channelName: name, paddlePos: Math.min(homePaddlePos + 20, GAME_HEIGHT - PADDLE_HEIGHT) })
-				else
-					socket.emit("updateAwayPaddle", { channelName: name, paddlePos: Math.min(awayPaddlePos + 20, GAME_HEIGHT - PADDLE_HEIGHT) })
-			}
-		};
-
-		window.addEventListener("keydown", handleKeyDown);
-
+			if (isHome === true) setHomePaddlePos(paddlePos);
+			else if (isHome === false) setAwayPaddlePos(paddlePos);
+		});
 
 		return () => {
 			socket.off("roomInfo");
 			socket.off("homeReady");
 			socket.off("awayReady");
 			socket.off("updatedPaddle");
-			window.removeEventListener("keydown", handleKeyDown);
-
 		};
-	}, [homePaddlePos, awayPaddlePos]);
+	}, []);
+
+	useEffect(() => {
+		const handleKeyDown = (e: any) => {
+			let paddlePos = isHome ? homePaddlePos : awayPaddlePos;
+			if (e.code === "ArrowUp") {
+				socket.emit("updatePaddle", {
+					isHome,
+					roomName: name,
+					paddlePos: Math.max(paddlePos - 20, 0),
+				});
+			} else if (e.code === "ArrowDown") {
+				socket.emit("updatePaddle", {
+					isHome,
+					roomName: name,
+					paddlePos: Math.min(paddlePos + 20, GAME_HEIGHT - PADDLE_HEIGHT),
+				});
+			}
+		};
+		// add event only isHome state is set
+		// true => Home
+		// false => away
+		if (typeof isHome === "boolean") {
+			window.addEventListener("keydown", handleKeyDown);
+			return () => {
+				//clean up event
+				window.removeEventListener("keydown", handleKeyDown);
+			};
+		}
+	}, [isHome, homePaddlePos, awayPaddlePos]);
 
 	function handleReady() {
-		//if (user.id === home?.id)
-		if (isHome !== null) {
-			if (isHome)
-				socket.emit("ready", { name, home: !isHomeReady });
-			//else if (user.id === away?.id)
-			else
-				socket.emit("ready", { name, away: !isAwayReady });
-		}
+		if (isHome === true) socket.emit("ready", { name, home: !isHomeReady });
+		else if (isHome === false)
+			socket.emit("ready", { name, away: !isAwayReady });
 	}
 
 	return (
@@ -134,10 +137,16 @@ export default function Game() {
 				)}
 				{/*<Pong allPlayerReady={isHomeReady && isAwayReady ? true : false} isHome={isHome} />*/}
 				<div className="pong">
-					<div className="paddle home" style={{ top: homePaddlePos, left: 0 }} />
-					<div className="paddle away" style={{ top: awayPaddlePos, right: 0 }} />
+					<div
+						className="paddle home"
+						style={{ top: homePaddlePos, left: 0 }}
+					/>
+					<div
+						className="paddle away"
+						style={{ top: awayPaddlePos, right: 0 }}
+					/>
 				</div>
-			</main >
+			</main>
 			<style jsx>{`
 				.pong {
 					position: relative;
@@ -157,9 +166,7 @@ export default function Game() {
 				.paddle.away{
 					top:160px;
 				}*/
-
-
 			`}</style>
-		</AuthLayout >
+		</AuthLayout>
 	);
 }
