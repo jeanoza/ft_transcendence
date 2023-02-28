@@ -27,6 +27,15 @@ declare global {
 		ownerId: number;
 		adminIds: number[];
 	}
+
+	interface IBallPostion {
+		x: number;
+		y: number;
+	}
+	interface IBallDirection {
+		x: number;
+		y: number;
+	}
 }
 
 export { IUser, INote };

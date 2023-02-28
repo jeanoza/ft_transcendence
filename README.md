@@ -39,6 +39,8 @@ make fclean
 
   - [ ] to implement swagger to make simple dto code
 
+  - [ ] game to manage in server (to avoid synchronization problems!!)
+
 - Database:
 
   - [ ] db table draw.io => to update with recent db

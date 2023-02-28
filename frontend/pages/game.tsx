@@ -30,6 +30,13 @@ enum ROLE {
 	Away,
 }
 
+const BALL_SIZE = 20;
+const PADDLE_WIDTH = 10;
+const PADDLE_HEIGHT = 80;
+const GAME_WIDTH = 600;
+const GAME_HEIGHT = 400;
+const GAME_AREA = GAME_WIDTH * GAME_HEIGHT;
+
 export default function Game() {
 	const [isLoading, setLoading] = useState<boolean>(true);
 	const { user } = useUser();
@@ -43,13 +50,14 @@ export default function Game() {
 
 	const [homePaddlePos, setHomePaddlePos] = useState<number>(0);
 	const [awayPaddlePos, setAwayPaddlePos] = useState<number>(0);
-
-	const BALL_SIZE = 20;
-	const PADDLE_WIDTH = 10;
-	const PADDLE_HEIGHT = 80;
-	const GAME_WIDTH = 600;
-	const GAME_HEIGHT = 400;
-	const GAME_AREA = GAME_WIDTH * GAME_HEIGHT;
+	const [ballPosition, setBallPosition] = useState<IBallPostion>({
+		x: 50,
+		y: 50,
+	});
+	const [ballDirection, setBallDirection] = useState<IBallDirection>({
+		x: 1,
+		y: 1,
+	});
 
 	useEffect(() => {
 		//socket.on("roomInfo", async ({ homeId, awayId, roomName }) => {
@@ -124,6 +132,72 @@ export default function Game() {
 		}
 	}, [role, homePaddlePos, awayPaddlePos]);
 
+	useEffect(() => {
+		const intervalId = setInterval(() => {
+			if (!isHomeReady || !isAwayReady) {
+				clearInterval(intervalId);
+				return;
+			}
+
+			const nextX = ballPosition.x + ballDirection.x * 5;
+			const nextY = ballPosition.y + ballDirection.y * 5;
+
+			// Check for collision with walls
+			if (nextX < 0 || nextX > GAME_WIDTH - BALL_SIZE) {
+				setBallDirection((ballDirection) => ({
+					x: -ballDirection.x,
+					y: ballDirection.y,
+				}));
+			}
+			if (nextY < 0 || nextY > GAME_HEIGHT - BALL_SIZE) {
+				setBallDirection((ballDirection) => ({
+					x: ballDirection.x,
+					y: -ballDirection.y,
+				}));
+			}
+
+			// Check for collision with paddles
+			if (
+				(nextX < PADDLE_WIDTH &&
+					nextY >= homePaddlePos &&
+					nextY <= homePaddlePos + PADDLE_HEIGHT) ||
+				(nextX > GAME_WIDTH - PADDLE_WIDTH - BALL_SIZE &&
+					nextY >= awayPaddlePos &&
+					nextY <= awayPaddlePos + PADDLE_HEIGHT)
+			) {
+				setBallDirection((ballDirection) => ({
+					x: -ballDirection.x,
+					y: ballDirection.y,
+				}));
+			}
+
+			// Check for scoring
+			//if (nextX < 0) {
+			//	setScore((score) => ({
+			//		player1: score.player1 + 1,
+			//		player2: score.player2,
+			//	}));
+
+			//	setBallPosition({ x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 });
+			//	setBallDirection({ x: 1, y: 1 });
+			//}
+			//if (nextX > GAME_WIDTH - BALL_SIZE) {
+			//	setScore((score) => ({
+			//		player1: score.player1,
+			//		player2: score.player2 + 1,
+			//	}));
+			//	setBallPosition({ x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 });
+			//	setBallDirection({ x: -1, y: -1 });
+			//}
+
+			setBallPosition({ x: nextX, y: nextY });
+		}, 25);
+
+		return () => {
+			clearInterval(intervalId);
+		};
+	}, [ballPosition, ballDirection, isAwayReady, isHomeReady]);
+
 	function handleReady() {
 		if (role === ROLE.Home || role === ROLE.Away) {
 			const ready = role === ROLE.Home ? !isHomeReady : !isAwayReady;
@@ -154,6 +228,13 @@ export default function Game() {
 						className="paddle away"
 						style={{ top: awayPaddlePos, right: 0 }}
 					/>
+					<div
+						className="ball"
+						style={{
+							top: ballPosition.y,
+							left: ballPosition.x,
+						}}
+					/>
 					{role !== ROLE.Observer && (
 						<button className="readyBtn" onClick={handleReady}>
 							Ready
@@ -180,6 +261,13 @@ export default function Game() {
 				.paddle.away{
 					top:160px;
 				}*/
+				.ball {
+					position: absolute;
+					width: 20px;
+					height: 20px;
+					background: white;
+					border-radius: 50%;
+				}
 				.readyBtn {
 					position: absolute;
 					top: 50%;
