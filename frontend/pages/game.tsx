@@ -43,6 +43,10 @@ interface BallDir {
 	x: number;
 	y: number;
 }
+interface Score {
+	home: number;
+	away: number;
+}
 
 interface RoomInfo {
 	roomName: string;
@@ -54,14 +58,9 @@ interface RoomInfo {
 	awayPaddlePos: number;
 	ballPos: BallPos;
 	ballDir: BallDir;
+	score: Score;
 }
 
-const BALL_SIZE = 20;
-const PADDLE_WIDTH = 10;
-const PADDLE_HEIGHT = 80;
-const GAME_WIDTH = 600;
-const GAME_HEIGHT = 400;
-const GAME_AREA = GAME_WIDTH * GAME_HEIGHT;
 
 export default function Game() {
 	const [isLoading, setLoading] = useState<boolean>(true);
@@ -77,8 +76,7 @@ export default function Game() {
 	const [awayPaddlePos, setAwayPaddlePos] = useState<number | null>(null);
 	const [ballPos, setBallPos] = useState<BallPos | null>(null);
 	const [ballDir, setBallDir] = useState<BallDir | null>(null);
-
-
+	const [score, setScore] = useState<Score | null>(null);
 
 
 	useEffect(() => {
@@ -125,7 +123,8 @@ export default function Game() {
 			homePaddlePos,
 			awayPaddlePos,
 			ballPos,
-			ballDir
+			ballDir,
+			score,
 		}: RoomInfo) => {
 			setRoomName(roomName)
 			setHome(home);
@@ -136,6 +135,7 @@ export default function Game() {
 			setAwayPaddlePos(awayPaddlePos);
 			setBallPos(ballPos);
 			setBallDir(ballDir);
+			setScore(score);
 
 			setLoading(false)
 		})
@@ -165,6 +165,7 @@ export default function Game() {
 						away={away}
 						isHomeReady={isHomeReady}
 						isAwayReady={isAwayReady}
+						score={score}
 					/>
 				)}
 				{/*<Pong allPlayerReady={isHomeReady && isAwayReady ? true : false} />*/}

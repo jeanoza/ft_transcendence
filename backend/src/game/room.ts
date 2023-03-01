@@ -8,6 +8,10 @@ interface BallDir {
   x: number;
   y: number;
 }
+interface Score {
+  home: number;
+  away: number;
+}
 
 const BALL_SIZE = 20;
 const PADDLE_WIDTH = 10;
@@ -26,6 +30,7 @@ export class Room {
   private awayPaddlePos: number;
   private ballPos: BallPos;
   private ballDir: BallDir;
+  private score: Score;
 
   constructor(home: User, away: User, roomName: string) {
     this.home = home;
@@ -39,6 +44,7 @@ export class Room {
 
     this.ballPos = { x: 50, y: 50 };
     this.ballDir = { x: 1, y: 1 };
+    this.score = { home: 0, away: 0 };
   }
 
   //#region getter
@@ -60,6 +66,9 @@ export class Room {
   getBallDir(): BallDir {
     return this.ballDir;
   }
+  getScore(): Score {
+    return this.score;
+  }
   //#endregion
 
   //#region setter
@@ -80,6 +89,9 @@ export class Room {
   }
   setBallDir(ballDir: BallDir): void {
     this.ballDir = ballDir;
+  }
+  setScore(score: Score): void {
+    this.score = score;
   }
   //#endregion
 
@@ -108,24 +120,18 @@ export class Room {
     }
 
     // Check for scoring
-    //if (nextX < 0) {
-    //	setScore((score) => ({
-    //		player1: score.player1 + 1,
-    //		player2: score.player2,
-    //	}));
-
-    //	setBallPosition({ x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 });
-    //	setBallDirection({ x: 1, y: 1 });
-    //}
-    //if (nextX > GAME_WIDTH - BALL_SIZE) {
-    //	setScore((score) => ({
-    //		player1: score.player1,
-    //		player2: score.player2 + 1,
-    //	}));
-    //	setBallPosition({ x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 });
-    //	setBallDirection({ x: -1, y: -1 });
-    //}
-
+    if (nextX < 0) {
+      this.score.away += 1;
+      this.ballPos = { x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 };
+      this.ballDir = { x: 1, y: 1 };
+      return;
+    }
+    if (nextX > GAME_WIDTH - BALL_SIZE) {
+      this.score.home += 1;
+      this.ballPos = { x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 };
+      this.ballDir = { x: -1, y: -1 };
+      return;
+    }
     this.ballPos = { x: nextX, y: nextY };
   }
 }

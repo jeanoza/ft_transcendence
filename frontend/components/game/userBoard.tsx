@@ -7,6 +7,7 @@ interface IUserBoard {
 	away: IUser;
 	isHomeReady: boolean;
 	isAwayReady: boolean;
+	score: any
 }
 
 export function UserBoard({
@@ -14,9 +15,10 @@ export function UserBoard({
 	away,
 	isHomeReady,
 	isAwayReady,
+	score
 }: IUserBoard) {
 
-	useEffect(() => { }, [home, away, isHomeReady, isAwayReady]);
+	useEffect(() => { }, []);
 
 	return (
 		<div className="user-board d-flex center justify-between px-4">
@@ -26,6 +28,13 @@ export function UserBoard({
 				<h3 className="text-overflow py-2">{home.name}</h3>
 				{isHomeReady && <h2 className="ready">Ready</h2>}
 			</div>
+			{score && (
+				<div className="d-flex gap">
+					<h1>{score.home}</h1>
+					<h1>:</h1>
+					<h1>{score.away}</h1>
+				</div>
+			)}
 			<div className="user d-flex column center">
 				<h2 className="py-2">Away</h2>
 				<Avatar url={away.imageURL} />
