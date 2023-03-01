@@ -43,11 +43,11 @@ export default function Game() {
 	const { socket } = useSocket("game");
 	const [home, setHome] = useState<IUser | null>(null);
 	const [away, setAway] = useState<IUser | null>(null);
-	const [isHomeReady, setHomeReady] = useState<boolean>(false);
-	const [isAwayReady, setAwayReady] = useState<boolean>(false);
 	const [roomName, setRoomName] = useState<string | null>(null);
 	const [role, setRole] = useState<ROLE>(ROLE.Observer);
 
+	const [isHomeReady, setHomeReady] = useState<boolean>(false);
+	const [isAwayReady, setAwayReady] = useState<boolean>(false);
 	const [homePaddlePos, setHomePaddlePos] = useState<number>(0);
 	const [awayPaddlePos, setAwayPaddlePos] = useState<number>(0);
 	const [ballPosition, setBallPosition] = useState<IBallPostion>({
