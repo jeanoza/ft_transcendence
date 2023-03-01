@@ -8,6 +8,13 @@ interface BallDir {
   x: number;
   y: number;
 }
+
+const BALL_SIZE = 20;
+const PADDLE_WIDTH = 10;
+const PADDLE_HEIGHT = 80;
+const GAME_WIDTH = 600;
+const GAME_HEIGHT = 400;
+
 export class Room {
   private home: User;
   private away: User;
@@ -75,4 +82,50 @@ export class Room {
     this.ballDir = ballDir;
   }
   //#endregion
+
+  update() {
+    if (!this.isHomeReady || !this.isAwayReady) return;
+
+    const nextX = this.ballPos.x + this.ballDir.x * 5;
+    const nextY = this.ballPos.y + this.ballDir.y * 5;
+
+    // Check for collision with walls
+    if (nextX < 0 || nextX > GAME_WIDTH - BALL_SIZE)
+      this.ballDir.x = -this.ballDir.x;
+    if (nextY < 0 || nextY > GAME_HEIGHT - BALL_SIZE)
+      this.ballDir.y = -this.ballDir.y;
+
+    // Check for collision with paddles
+    if (
+      (nextX < PADDLE_WIDTH &&
+        nextY >= this.homePaddlePos &&
+        nextY <= this.homePaddlePos + PADDLE_HEIGHT) ||
+      (nextX > GAME_WIDTH - PADDLE_WIDTH - BALL_SIZE &&
+        nextY >= this.awayPaddlePos &&
+        nextY <= this.awayPaddlePos + PADDLE_HEIGHT)
+    ) {
+      this.ballDir.x = -this.ballDir.x;
+    }
+
+    // Check for scoring
+    //if (nextX < 0) {
+    //	setScore((score) => ({
+    //		player1: score.player1 + 1,
+    //		player2: score.player2,
+    //	}));
+
+    //	setBallPosition({ x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 });
+    //	setBallDirection({ x: 1, y: 1 });
+    //}
+    //if (nextX > GAME_WIDTH - BALL_SIZE) {
+    //	setScore((score) => ({
+    //		player1: score.player1,
+    //		player2: score.player2 + 1,
+    //	}));
+    //	setBallPosition({ x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 });
+    //	setBallDirection({ x: -1, y: -1 });
+    //}
+
+    this.ballPos = { x: nextX, y: nextY };
+  }
 }

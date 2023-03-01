@@ -65,7 +65,6 @@ const GAME_AREA = GAME_WIDTH * GAME_HEIGHT;
 
 export default function Game() {
 	const [isLoading, setLoading] = useState<boolean>(true);
-	const { user } = useUser();
 	const { socket } = useSocket("game");
 	const [home, setHome] = useState<IUser | null>(null);
 	const [away, setAway] = useState<IUser | null>(null);
@@ -90,7 +89,6 @@ export default function Game() {
 					socket.emit("updatePaddle", {
 						role,
 						roomName,
-						//paddlePos: Math.max(paddlePos! - 20, 0),
 						paddlePos,
 						move: PADDLE_MOVE.Up
 					});
@@ -98,7 +96,6 @@ export default function Game() {
 					socket.emit("updatePaddle", {
 						role,
 						roomName,
-						//paddlePos: Math.min(paddlePos! + 20, GAME_HEIGHT - PADDLE_HEIGHT),
 						paddlePos,
 						move: PADDLE_MOVE.Down
 					});
@@ -112,7 +109,7 @@ export default function Game() {
 				window.removeEventListener("keydown", handleKeyDown);
 			};
 		}
-	}, [isLoading, homePaddlePos, awayPaddlePos]);
+	}, [isLoading, homePaddlePos, awayPaddlePos, role]);
 
 
 	useEffect(() => {
@@ -127,7 +124,8 @@ export default function Game() {
 			isAwayReady,
 			homePaddlePos,
 			awayPaddlePos,
-			ballPos
+			ballPos,
+			ballDir
 		}: RoomInfo) => {
 			setRoomName(roomName)
 			setHome(home);

@@ -15,9 +15,8 @@ export function UserBoard({
 	isHomeReady,
 	isAwayReady,
 }: IUserBoard) {
-	const { user } = useUser();
 
-	useEffect(() => {}, [home, away, isHomeReady, isAwayReady]);
+	useEffect(() => { }, [home, away, isHomeReady, isAwayReady]);
 
 	return (
 		<div className="user-board d-flex center justify-between px-4">

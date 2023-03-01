@@ -21,6 +21,8 @@ const PADDLE_HEIGHT = 80;
 const GAME_WIDTH = 600;
 const GAME_HEIGHT = 400;
 
+const intervalIds = {};
+
 @WebSocketGateway({
   namespace: 'ws-game',
   cors: {
@@ -102,11 +104,18 @@ export class GameGateway
       this.rooms.set(roomName, room);
 
       setTimeout(() => {
+        // clearInterval if already exist interval set
+        if (intervalIds[roomName]) clearInterval(intervalIds[roomName]);
+
         if (home.id)
           this.server.to(this.online.get(home.id)).emit('updateRole', 1);
         if (away.id)
           this.server.to(this.online.get(away.id)).emit('updateRole', 2);
-        this.server.to(roomName).emit('roomInfo', this.rooms.get(roomName));
+        intervalIds[roomName] = setInterval(() => {
+          const room = this.rooms.get(roomName);
+          room.update();
+          this.server.to(roomName).emit('roomInfo', room);
+        }, 25);
       }, 1000);
     }
   }
@@ -150,7 +159,7 @@ export class GameGateway
     const room = this.rooms.get(roomName);
     if (role === 1) room.setIsHomeReady(ready);
     else room.setIsAwayReady(ready);
-    this.server.to(roomName).emit('roomInfo', room);
+    //this.server.to(roomName).emit('roomInfo', room);
   }
 
   @SubscribeMessage('updatePaddle')
@@ -170,6 +179,6 @@ export class GameGateway
 
     if (role === 1) room.setHomePaddlePos(_paddlePos);
     else room.setAwayPaddlePos(_paddlePos);
-    this.server.to(roomName).emit('roomInfo', room);
+    //this.server.to(roomName).emit('roomInfo', room);
   }
 }
