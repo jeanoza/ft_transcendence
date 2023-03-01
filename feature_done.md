@@ -126,6 +126,8 @@
 
   - [x] feat mute
 
+  - [x] game to manage in server (to avoid synchronization problems!!)
+
 - Database:
 
   - [x] config PostgreSQL and connect with nestJS server

@@ -39,11 +39,23 @@ make fclean
 
   - [ ] to implement swagger to make simple dto code
 
-  - [ ] game to manage in server (to avoid synchronization problems!!)
+  - Game:
+
+    - [ ] ready btn condition (1. not in game 2. home or away)
+
+    - [ ] when home or away has 11 scores => game over => send result to db(Match history and User.rank)
+
+    - [ ] when user quit => send result to db(AFK)
+
+    - [ ] random matching system
 
 - Database:
 
   - [ ] db table draw.io => to update with recent db
+
+  - [ ] Match history table : `id`, `user1(home)`, `user2(away)`, `winner`...
+
+  - [ ] rank to implement in User table
 
 - Docker:
 
