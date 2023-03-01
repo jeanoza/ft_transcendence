@@ -13,6 +13,13 @@ import {
 import { Server, Socket } from 'socket.io';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/services/user.service';
+import { Room } from './room';
+
+const BALL_SIZE = 20;
+const PADDLE_WIDTH = 10;
+const PADDLE_HEIGHT = 80;
+const GAME_WIDTH = 600;
+const GAME_HEIGHT = 400;
 
 @WebSocketGateway({
   namespace: 'ws-game',
@@ -30,6 +37,7 @@ export class GameGateway
 
   private logger: Logger = new Logger('GameGateway');
   private online = new Map();
+  private rooms = new Map<string, Room>();
 
   afterInit(server: Server): any {
     this.logger.debug('after init');
@@ -67,7 +75,10 @@ export class GameGateway
     const receiverSocket = this.online.get(receiverId);
     if (receiverSocket) {
       const roomName = `game-${senderId}-${receiverId}`;
+      //const roomName = `game-${senderId}`;
       client.join(roomName);
+
+      console.log(this.rooms);
       this.server.to(receiverSocket).emit('invitedGame', { roomName });
     } else
       client.emit('error', new UnauthorizedException('The user is offline!'));
@@ -82,9 +93,20 @@ export class GameGateway
       this.logger.debug('[Room list]');
       console.log(this.server.adapter['rooms']);
       this.server.to(roomName).emit('acceptedGame', { roomName });
+
+      const [game, senderId, receiverId] = roomName.split('-');
+      const home = await this.userService.findOne(Number(senderId));
+      const away = await this.userService.findOne(Number(receiverId));
+      const room = new Room(home, away, roomName);
+
+      this.rooms.set(roomName, room);
+
       setTimeout(() => {
-        //const [nsp, homeId, awayId] = roomName.split('-');
-        this.server.to(roomName).emit('roomInfo', roomName);
+        if (home.id)
+          this.server.to(this.online.get(home.id)).emit('updateRole', 1);
+        if (away.id)
+          this.server.to(this.online.get(away.id)).emit('updateRole', 2);
+        this.server.to(roomName).emit('roomInfo', this.rooms.get(roomName));
       }, 1000);
     }
   }
@@ -139,8 +161,17 @@ export class GameGateway
     @MessageBody('role') role: number,
     @MessageBody('paddlePos') paddlePos: number,
     @MessageBody('roomName') roomName: string,
+    @MessageBody('move') move: number,
   ) {
     //console.log(role, paddlePos, roomName);
-    this.server.to(roomName).emit('updatedPaddle', { role, paddlePos });
+    const room = this.rooms.get(roomName);
+    const _paddlePos =
+      move === 1
+        ? Math.max(paddlePos - 20, 0)
+        : Math.min(paddlePos + 20, GAME_HEIGHT - PADDLE_HEIGHT);
+
+    if (role === 1) room.setHomePaddlePos(_paddlePos);
+    else room.setAwayPaddlePos(_paddlePos);
+    this.server.to(roomName).emit('roomInfo', room);
   }
 }

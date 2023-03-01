@@ -30,6 +30,32 @@ enum ROLE {
 	Away,
 }
 
+enum PADDLE_MOVE {
+	Up = 1,
+	Down
+}
+
+interface BallPos {
+	x: number;
+	y: number;
+}
+interface BallDir {
+	x: number;
+	y: number;
+}
+
+interface RoomInfo {
+	roomName: string;
+	home: IUser;
+	away: IUser;
+	isHomeReady: boolean;
+	isAwayReady: boolean;
+	homePaddlePos: number;
+	awayPaddlePos: number;
+	ballPos: BallPos;
+	ballDir: BallDir;
+}
+
 const BALL_SIZE = 20;
 const PADDLE_WIDTH = 10;
 const PADDLE_HEIGHT = 80;
@@ -48,81 +74,37 @@ export default function Game() {
 
 	const [isHomeReady, setHomeReady] = useState<boolean>(false);
 	const [isAwayReady, setAwayReady] = useState<boolean>(false);
-	const [homePaddlePos, setHomePaddlePos] = useState<number>(0);
-	const [awayPaddlePos, setAwayPaddlePos] = useState<number>(0);
-	const [ballPosition, setBallPosition] = useState<IBallPostion>({
-		x: 50,
-		y: 50,
-	});
-	const [ballDirection, setBallDirection] = useState<IBallDirection>({
-		x: 1,
-		y: 1,
-	});
+	const [homePaddlePos, setHomePaddlePos] = useState<number | null>(null);
+	const [awayPaddlePos, setAwayPaddlePos] = useState<number | null>(null);
+	const [ballPos, setBallPos] = useState<BallPos | null>(null);
+	const [ballDir, setBallDir] = useState<BallDir | null>(null);
 
-	useEffect(() => {
-		//socket.on("roomInfo", async ({ homeId, awayId, roomName }) => {
-		socket.on("roomInfo", async (roomName) => {
-			const [nsp, homeId, awayId] = roomName.split("-");
-			console.log(
-				"[roomInfo] ",
-				"homeId:",
-				homeId,
-				"awayId: ",
-				awayId,
-				"roomName: ",
-				roomName
-			);
-			setRoomName(roomName);
-			await axios.get("user/current").then((res) => {
-				const {
-					data: { id },
-				} = res;
-				if (id == homeId) setRole(ROLE.Home);
-				else if (id == awayId) setRole(ROLE.Away);
-			});
-			await axios.get("user/" + homeId).then((res) => setHome(res.data));
-			await axios.get("user/" + awayId).then((res) => setAway(res.data));
-			setLoading(false);
-		});
-		socket.on("homeReady", (ready) => {
-			setHomeReady(ready);
-		});
-		socket.on("awayReady", (ready) => {
-			setAwayReady(ready);
-		});
-		socket.on("updatedPaddle", ({ role, paddlePos }) => {
-			if (role === ROLE.Home) setHomePaddlePos(paddlePos);
-			else if (role === ROLE.Away) setAwayPaddlePos(paddlePos);
-		});
 
-		return () => {
-			socket.off("roomInfo");
-			socket.off("homeReady");
-			socket.off("awayReady");
-			socket.off("updatedPaddle");
-		};
-	}, []);
-
-	useEffect(() => {
-		const handleKeyDown = (e: any) => {
-			if (role !== ROLE.Observer) {
-				let paddlePos = homePaddlePos;
-				if (role === ROLE.Away) paddlePos = awayPaddlePos;
-				if (e.code === "ArrowUp") {
-					socket.emit("updatePaddle", {
-						role,
-						roomName,
-						paddlePos: Math.max(paddlePos - 20, 0),
-					});
-				} else if (e.code === "ArrowDown") {
-					socket.emit("updatePaddle", {
-						role,
-						roomName,
-						paddlePos: Math.min(paddlePos + 20, GAME_HEIGHT - PADDLE_HEIGHT),
-					});
-				}
+	const handleKeyDown = (e: any) => {
+		if (role !== ROLE.Observer) {
+			let paddlePos = role === ROLE.Home ? homePaddlePos : awayPaddlePos;
+			if (e.code === "ArrowUp") {
+				socket.emit("updatePaddle", {
+					role,
+					roomName,
+					//paddlePos: Math.max(paddlePos! - 20, 0),
+					paddlePos,
+					move: PADDLE_MOVE.Up
+				});
+			} else if (e.code === "ArrowDown") {
+				socket.emit("updatePaddle", {
+					role,
+					roomName,
+					//paddlePos: Math.min(paddlePos! + 20, GAME_HEIGHT - PADDLE_HEIGHT),
+					paddlePos,
+					move: PADDLE_MOVE.Down
+				});
 			}
-		};
+		}
+	};
+
+	useEffect(() => {
+
 		if (role !== ROLE.Observer) {
 			window.addEventListener("keydown", handleKeyDown);
 			return () => {
@@ -130,73 +112,43 @@ export default function Game() {
 				window.removeEventListener("keydown", handleKeyDown);
 			};
 		}
-	}, [role, homePaddlePos, awayPaddlePos]);
+	}, [isLoading, homePaddlePos, awayPaddlePos]);
+
 
 	useEffect(() => {
-		const intervalId = setInterval(() => {
-			if (!isHomeReady || !isAwayReady) {
-				clearInterval(intervalId);
-				return;
-			}
+		socket.on("updateRole", (role: ROLE) => {
+			setRole(role);
+		})
+		socket.on("roomInfo", ({
+			roomName,
+			home,
+			away,
+			isHomeReady,
+			isAwayReady,
+			homePaddlePos,
+			awayPaddlePos,
+			ballPos
+		}: RoomInfo) => {
+			console.log(homePaddlePos)
+			setRoomName(roomName)
+			setHome(home);
+			setAway(away);
+			setHomeReady(isHomeReady)
+			setAwayReady(isAwayReady)
+			setHomePaddlePos(homePaddlePos);
+			setAwayPaddlePos(awayPaddlePos);
+			setBallPos(ballPos);
+			setBallDir(ballDir);
 
-			const nextX = ballPosition.x + ballDirection.x * 5;
-			const nextY = ballPosition.y + ballDirection.y * 5;
-
-			// Check for collision with walls
-			if (nextX < 0 || nextX > GAME_WIDTH - BALL_SIZE) {
-				setBallDirection((ballDirection) => ({
-					x: -ballDirection.x,
-					y: ballDirection.y,
-				}));
-			}
-			if (nextY < 0 || nextY > GAME_HEIGHT - BALL_SIZE) {
-				setBallDirection((ballDirection) => ({
-					x: ballDirection.x,
-					y: -ballDirection.y,
-				}));
-			}
-
-			// Check for collision with paddles
-			if (
-				(nextX < PADDLE_WIDTH &&
-					nextY >= homePaddlePos &&
-					nextY <= homePaddlePos + PADDLE_HEIGHT) ||
-				(nextX > GAME_WIDTH - PADDLE_WIDTH - BALL_SIZE &&
-					nextY >= awayPaddlePos &&
-					nextY <= awayPaddlePos + PADDLE_HEIGHT)
-			) {
-				setBallDirection((ballDirection) => ({
-					x: -ballDirection.x,
-					y: ballDirection.y,
-				}));
-			}
-
-			// Check for scoring
-			//if (nextX < 0) {
-			//	setScore((score) => ({
-			//		player1: score.player1 + 1,
-			//		player2: score.player2,
-			//	}));
-
-			//	setBallPosition({ x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 });
-			//	setBallDirection({ x: 1, y: 1 });
-			//}
-			//if (nextX > GAME_WIDTH - BALL_SIZE) {
-			//	setScore((score) => ({
-			//		player1: score.player1,
-			//		player2: score.player2 + 1,
-			//	}));
-			//	setBallPosition({ x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 });
-			//	setBallDirection({ x: -1, y: -1 });
-			//}
-
-			setBallPosition({ x: nextX, y: nextY });
-		}, 25);
-
+			setLoading(false)
+		})
 		return () => {
-			clearInterval(intervalId);
+			socket.off("roomInfo");
+			socket.off("updateRole");
 		};
-	}, [ballPosition, ballDirection, isAwayReady, isHomeReady]);
+	}, []);
+
+
 
 	function handleReady() {
 		if (role === ROLE.Home || role === ROLE.Away) {
@@ -220,21 +172,27 @@ export default function Game() {
 				)}
 				{/*<Pong allPlayerReady={isHomeReady && isAwayReady ? true : false} />*/}
 				<div className="pong">
-					<div
-						className="paddle home"
-						style={{ top: homePaddlePos, left: 0 }}
-					/>
-					<div
-						className="paddle away"
-						style={{ top: awayPaddlePos, right: 0 }}
-					/>
-					<div
-						className="ball"
-						style={{
-							top: ballPosition.y,
-							left: ballPosition.x,
-						}}
-					/>
+					{homePaddlePos !== null &&
+						<div
+							className="paddle home"
+							style={{ top: homePaddlePos, left: 0 }}
+						/>
+					}
+					{awayPaddlePos !== null &&
+						<div
+							className="paddle away"
+							style={{ top: awayPaddlePos, right: 0 }}
+						/>
+					}
+					{ballPos !== null && ballDir !== null &&
+						<div
+							className="ball"
+							style={{
+								top: ballPos.y,
+								left: ballPos.x,
+							}}
+						/>
+					}
 					{role !== ROLE.Observer && (
 						<button className="readyBtn" onClick={handleReady}>
 							Ready
