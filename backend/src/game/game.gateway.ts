@@ -78,7 +78,7 @@ export class GameGateway
       //const roomName = `game-${senderId}`;
       client.join(roomName);
 
-      console.log(this.rooms);
+      //console.log(this.rooms);
       this.server.to(receiverSocket).emit('invitedGame', { roomName });
     } else
       client.emit('error', new UnauthorizedException('The user is offline!'));
@@ -147,12 +147,10 @@ export class GameGateway
     @MessageBody('ready') ready: boolean,
     @MessageBody('roomName') roomName: string,
   ) {
-    // 1: Home, 2: Away
-    if (role !== 0) {
-      let query = 'homeReady';
-      if (role === 2) query = 'awayReady';
-      this.server.to(roomName).emit(query, ready);
-    }
+    const room = this.rooms.get(roomName);
+    if (role === 1) room.setIsHomeReady(ready);
+    else room.setIsAwayReady(ready);
+    this.server.to(roomName).emit('roomInfo', room);
   }
 
   @SubscribeMessage('updatePaddle')

@@ -80,31 +80,31 @@ export default function Game() {
 	const [ballDir, setBallDir] = useState<BallDir | null>(null);
 
 
-	const handleKeyDown = (e: any) => {
-		if (role !== ROLE.Observer) {
-			let paddlePos = role === ROLE.Home ? homePaddlePos : awayPaddlePos;
-			if (e.code === "ArrowUp") {
-				socket.emit("updatePaddle", {
-					role,
-					roomName,
-					//paddlePos: Math.max(paddlePos! - 20, 0),
-					paddlePos,
-					move: PADDLE_MOVE.Up
-				});
-			} else if (e.code === "ArrowDown") {
-				socket.emit("updatePaddle", {
-					role,
-					roomName,
-					//paddlePos: Math.min(paddlePos! + 20, GAME_HEIGHT - PADDLE_HEIGHT),
-					paddlePos,
-					move: PADDLE_MOVE.Down
-				});
-			}
-		}
-	};
+
 
 	useEffect(() => {
-
+		const handleKeyDown = (e: any) => {
+			if (role !== ROLE.Observer) {
+				let paddlePos = role === ROLE.Home ? homePaddlePos : awayPaddlePos;
+				if (e.code === "ArrowUp") {
+					socket.emit("updatePaddle", {
+						role,
+						roomName,
+						//paddlePos: Math.max(paddlePos! - 20, 0),
+						paddlePos,
+						move: PADDLE_MOVE.Up
+					});
+				} else if (e.code === "ArrowDown") {
+					socket.emit("updatePaddle", {
+						role,
+						roomName,
+						//paddlePos: Math.min(paddlePos! + 20, GAME_HEIGHT - PADDLE_HEIGHT),
+						paddlePos,
+						move: PADDLE_MOVE.Down
+					});
+				}
+			}
+		};
 		if (role !== ROLE.Observer) {
 			window.addEventListener("keydown", handleKeyDown);
 			return () => {
@@ -129,7 +129,6 @@ export default function Game() {
 			awayPaddlePos,
 			ballPos
 		}: RoomInfo) => {
-			console.log(homePaddlePos)
 			setRoomName(roomName)
 			setHome(home);
 			setAway(away);

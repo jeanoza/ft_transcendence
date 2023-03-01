@@ -60,7 +60,7 @@ export class Room {
     this.isHomeReady = isHomeReady;
   }
   setIsAwayReady(isAwayReady: boolean): void {
-    this.isHomeReady = isAwayReady;
+    this.isAwayReady = isAwayReady;
   }
   setHomePaddlePos(homePaddlePos: number): void {
     this.homePaddlePos = homePaddlePos;
