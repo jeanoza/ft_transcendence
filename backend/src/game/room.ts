@@ -5,11 +5,17 @@ enum ROLE {
   Home,
   Away,
 }
-
 enum PADDLE_MOVE {
   Up = 1,
   Down,
 }
+
+enum GAME_STATUS {
+  Waiting = 1,
+  Playing,
+  End,
+}
+
 interface BallPos {
   x: number;
   y: number;
@@ -38,11 +44,14 @@ const PADDLE_WIDTH = 10;
 const PADDLE_HEIGHT = 80;
 const GAME_WIDTH = 600;
 const GAME_HEIGHT = 400;
+const SCORE_TO_WIN = 1;
 
 export class Room {
   private home: User;
   private away: User;
   private roomName: string;
+
+  private status: GAME_STATUS;
 
   private ready: Ready;
   private paddlePos: PaddlePos;
@@ -55,13 +64,8 @@ export class Room {
     this.home = home;
     this.away = away;
     this.roomName = roomName;
-
-    this.ready = { home: false, away: false };
-    this.paddlePos = { home: 160, away: 160 };
-
-    this.ballPos = { x: 50, y: 50 };
-    this.ballDir = { x: 1, y: 1 };
-    this.score = { home: 0, away: 0 };
+    this.status = GAME_STATUS.Waiting;
+    this.init();
   }
 
   //#region getter
@@ -81,6 +85,9 @@ export class Room {
   getScore(): Score {
     return this.score;
   }
+  getStatus(): GAME_STATUS {
+    return this.status;
+  }
   //#endregion
 
   //#region setter
@@ -98,6 +105,9 @@ export class Room {
   }
   setScore(score: Score): void {
     this.score = score;
+  }
+  setStatus(status: GAME_STATUS): void {
+    this.status = status;
   }
   //#endregion
 
@@ -120,8 +130,25 @@ export class Room {
     }
   }
 
+  init() {
+    this.ready = { home: false, away: false };
+    this.paddlePos = { home: 160, away: 160 };
+
+    this.ballPos = { x: 50, y: 50 };
+    this.ballDir = { x: 1, y: 1 };
+    this.score = { home: 0, away: 0 };
+  }
+
   update() {
-    if (!this.ready.home || !this.ready.home) return;
+    if (this.ready.home && this.ready.away) {
+      this.status = GAME_STATUS.Playing;
+      this.init();
+    }
+    if (this.score.home === SCORE_TO_WIN || this.score.away === SCORE_TO_WIN)
+      this.status = GAME_STATUS.End;
+    //// if wating status or end status, do not move ball
+    if (this.status === GAME_STATUS.Waiting || this.status === GAME_STATUS.End)
+      return;
 
     const nextX = this.ballPos.x + this.ballDir.x * 5;
     const nextY = this.ballPos.y + this.ballDir.y * 5;

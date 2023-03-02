@@ -1,13 +1,8 @@
 import { Seo } from "../components/seo";
 import { AuthLayout } from "../components/layout";
-import { useCallback, useEffect, useState } from "react";
-import Pong from "../components/pong";
+import { useEffect, useState } from "react";
 import { Loader } from "../components/loader";
-import { WaitingModal } from "../components/modals/watingModal";
-import { useUser } from "../utils/hooks/swrHelper";
 import { useSocket } from "../utils/hooks/useSocket";
-import axios from "axios";
-import { Avatar } from "../components/avatar";
 import { UserBoard } from "../components/game/userBoard";
 
 export function getServerSideProps({ req }: any) {
@@ -33,6 +28,12 @@ enum ROLE {
 enum PADDLE_MOVE {
 	Up = 1,
 	Down
+}
+
+enum GAME_STATUS {
+	Waiting = 1,
+	Playing,
+	End,
 }
 
 interface BallPos {
@@ -66,9 +67,8 @@ interface RoomInfo {
 	ballPos: BallPos;
 	ballDir: BallDir;
 	score: Score;
+	status: GAME_STATUS;
 }
-
-
 
 
 export default function Game() {
@@ -78,6 +78,7 @@ export default function Game() {
 	const [away, setAway] = useState<IUser | null>(null);
 	const [roomName, setRoomName] = useState<string | null>(null);
 	const [role, setRole] = useState<ROLE>(ROLE.Observer);
+	const [status, setStatus] = useState<GAME_STATUS>(GAME_STATUS.Waiting);
 
 	const [ready, setReady] = useState<Ready>({ home: false, away: false });
 	const [paddlePos, setPaddlePos] = useState<PaddlePos | null>(null);
@@ -115,6 +116,7 @@ export default function Game() {
 			home,
 			away,
 			ready,
+			status,
 			paddlePos,
 			ballPos,
 			ballDir,
@@ -124,6 +126,7 @@ export default function Game() {
 			setHome(home);
 			setAway(away);
 			setReady(ready);
+			setStatus(status);
 			setPaddlePos(paddlePos);
 			setBallPos(ballPos);
 			setBallDir(ballDir);
@@ -184,7 +187,7 @@ export default function Game() {
 							}}
 						/>
 					}
-					{role !== ROLE.Observer && (
+					{(role !== ROLE.Observer && status !== GAME_STATUS.Playing) && (
 						<button className="readyBtn" onClick={handleReady}>
 							Ready
 						</button>

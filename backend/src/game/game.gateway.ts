@@ -13,7 +13,6 @@ import {
 import { Server, Socket } from 'socket.io';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/services/user.service';
-import { Room } from './room';
 import { GameService } from './game.service';
 
 const intervalIds = {};
@@ -157,7 +156,6 @@ export class GameGateway
     @MessageBody('roomName') roomName: string,
     @MessageBody('move') move: number,
   ) {
-    //console.log(role, paddlePos, roomName);
     const room = this.gameService.rooms.get(roomName);
     room.updatePaddles(role, move);
   }

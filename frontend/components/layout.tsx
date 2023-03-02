@@ -54,7 +54,7 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 			else gameSocket.emit("refuseGame", { roomName });
 		});
 		gameSocket.on("acceptedGame", function ({ roomName }) {
-			router.push("/game");
+			if (router) router.push("/game");
 		});
 		gameSocket.on("refusedGame", function ({ roomName }: IGame) {
 			window.alert("The user refused your invite");
