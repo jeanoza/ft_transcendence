@@ -60,15 +60,11 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 			window.alert("The user refused your invite");
 			gameSocket.emit("leaveGame", { roomName });
 		});
-		//gameSocket.on("ownerLeft", function () {
-		//	window.alert("The game owner is already left");
-		//});
 
 		return () => {
 			gameSocket.off("invitedGame");
 			gameSocket.off("acceptedGame");
 			gameSocket.off("refusedGame");
-			//gameSocket.off("ownerLeft");
 			chatSocket.off("connected");
 		};
 	}, []);

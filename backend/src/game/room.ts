@@ -1,5 +1,15 @@
 import { User } from '../user/entities/user.entity';
 
+enum ROLE {
+  Observer,
+  Home,
+  Away,
+}
+
+enum PADDLE_MOVE {
+  Up = 1,
+  Down,
+}
 interface BallPos {
   x: number;
   y: number;
@@ -9,6 +19,16 @@ interface BallDir {
   y: number;
 }
 interface Score {
+  home: number;
+  away: number;
+}
+
+interface Ready {
+  home: boolean;
+  away: boolean;
+}
+
+interface PaddlePos {
   home: number;
   away: number;
 }
@@ -24,10 +44,9 @@ export class Room {
   private away: User;
   private roomName: string;
 
-  private isHomeReady: boolean;
-  private isAwayReady: boolean;
-  private homePaddlePos: number;
-  private awayPaddlePos: number;
+  private ready: Ready;
+  private paddlePos: PaddlePos;
+
   private ballPos: BallPos;
   private ballDir: BallDir;
   private score: Score;
@@ -37,10 +56,8 @@ export class Room {
     this.away = away;
     this.roomName = roomName;
 
-    this.isHomeReady = false;
-    this.isAwayReady = false;
-    this.homePaddlePos = 160;
-    this.awayPaddlePos = 160;
+    this.ready = { home: false, away: false };
+    this.paddlePos = { home: 160, away: 160 };
 
     this.ballPos = { x: 50, y: 50 };
     this.ballDir = { x: 1, y: 1 };
@@ -48,17 +65,12 @@ export class Room {
   }
 
   //#region getter
-  getIsHomeReady(): boolean {
-    return this.isHomeReady;
+
+  getReady(): Ready {
+    return this.ready;
   }
-  getIsAwayReady(): boolean {
-    return this.isAwayReady;
-  }
-  getHomePaddlePos(): number {
-    return this.homePaddlePos;
-  }
-  getAwayPaddlePos(): number {
-    return this.awayPaddlePos;
+  getPaddlePos(): PaddlePos {
+    return this.paddlePos;
   }
   getBallPos(): BallPos {
     return this.ballPos;
@@ -72,17 +84,11 @@ export class Room {
   //#endregion
 
   //#region setter
-  setIsHomeReady(isHomeReady: boolean): void {
-    this.isHomeReady = isHomeReady;
+  setReady(ready: Ready): void {
+    this.ready = ready;
   }
-  setIsAwayReady(isAwayReady: boolean): void {
-    this.isAwayReady = isAwayReady;
-  }
-  setHomePaddlePos(homePaddlePos: number): void {
-    this.homePaddlePos = homePaddlePos;
-  }
-  setAwayPaddlePos(awayPaddlePos: number): void {
-    this.awayPaddlePos = awayPaddlePos;
+  setPaddlePos(paddlePos: PaddlePos): void {
+    this.paddlePos = paddlePos;
   }
   setBallPos(ballPos: BallPos): void {
     this.ballPos = ballPos;
@@ -95,8 +101,27 @@ export class Room {
   }
   //#endregion
 
+  paddleUp(posY: number) {
+    return Math.max(posY - 20, 0);
+  }
+  paddleDown(posY: number) {
+    return Math.min(posY + 20, GAME_HEIGHT - PADDLE_HEIGHT);
+  }
+
+  updatePaddles(role: ROLE, move: PADDLE_MOVE) {
+    const posY = role === ROLE.Home ? this.paddlePos.home : this.paddlePos.away;
+
+    if (move === PADDLE_MOVE.Up) {
+      this.paddlePos[role === ROLE.Home ? 'home' : 'away'] =
+        this.paddleUp(posY);
+    } else {
+      this.paddlePos[role === ROLE.Home ? 'home' : 'away'] =
+        this.paddleDown(posY);
+    }
+  }
+
   update() {
-    if (!this.isHomeReady || !this.isAwayReady) return;
+    if (!this.ready.home || !this.ready.home) return;
 
     const nextX = this.ballPos.x + this.ballDir.x * 5;
     const nextY = this.ballPos.y + this.ballDir.y * 5;
@@ -110,11 +135,11 @@ export class Room {
     // Check for collision with paddles
     if (
       (nextX < PADDLE_WIDTH &&
-        nextY >= this.homePaddlePos &&
-        nextY <= this.homePaddlePos + PADDLE_HEIGHT) ||
+        nextY >= this.paddlePos.home &&
+        nextY <= this.paddlePos.home + PADDLE_HEIGHT) ||
       (nextX > GAME_WIDTH - PADDLE_WIDTH - BALL_SIZE &&
-        nextY >= this.awayPaddlePos &&
-        nextY <= this.awayPaddlePos + PADDLE_HEIGHT)
+        nextY >= this.paddlePos.away &&
+        nextY <= this.paddlePos.away + PADDLE_HEIGHT)
     ) {
       this.ballDir.x = -this.ballDir.x;
     }

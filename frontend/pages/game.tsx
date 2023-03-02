@@ -47,19 +47,28 @@ interface Score {
 	home: number;
 	away: number;
 }
+interface Ready {
+	home: boolean;
+	away: boolean;
+}
+
+interface PaddlePos {
+	home: number;
+	away: number;
+}
 
 interface RoomInfo {
 	roomName: string;
 	home: IUser;
 	away: IUser;
-	isHomeReady: boolean;
-	isAwayReady: boolean;
-	homePaddlePos: number;
-	awayPaddlePos: number;
+	ready: Ready;
+	paddlePos: PaddlePos;
 	ballPos: BallPos;
 	ballDir: BallDir;
 	score: Score;
 }
+
+
 
 
 export default function Game() {
@@ -70,10 +79,8 @@ export default function Game() {
 	const [roomName, setRoomName] = useState<string | null>(null);
 	const [role, setRole] = useState<ROLE>(ROLE.Observer);
 
-	const [isHomeReady, setHomeReady] = useState<boolean>(false);
-	const [isAwayReady, setAwayReady] = useState<boolean>(false);
-	const [homePaddlePos, setHomePaddlePos] = useState<number | null>(null);
-	const [awayPaddlePos, setAwayPaddlePos] = useState<number | null>(null);
+	const [ready, setReady] = useState<Ready>({ home: false, away: false });
+	const [paddlePos, setPaddlePos] = useState<PaddlePos | null>(null);
 	const [ballPos, setBallPos] = useState<BallPos | null>(null);
 	const [ballDir, setBallDir] = useState<BallDir | null>(null);
 	const [score, setScore] = useState<Score | null>(null);
@@ -81,23 +88,12 @@ export default function Game() {
 
 	useEffect(() => {
 		const handleKeyDown = (e: any) => {
-			if (role !== ROLE.Observer) {
-				let paddlePos = role === ROLE.Home ? homePaddlePos : awayPaddlePos;
-				if (e.code === "ArrowUp") {
-					socket.emit("updatePaddle", {
-						role,
-						roomName,
-						paddlePos,
-						move: PADDLE_MOVE.Up
-					});
-				} else if (e.code === "ArrowDown") {
-					socket.emit("updatePaddle", {
-						role,
-						roomName,
-						paddlePos,
-						move: PADDLE_MOVE.Down
-					});
-				}
+			if (role !== ROLE.Observer && (e.code === "ArrowUp" || e.code === "ArrowDown")) {
+				socket.emit("updatePaddle", {
+					role,
+					roomName,
+					move: (e.code === "ArrowUp") ? PADDLE_MOVE.Up : PADDLE_MOVE.Down
+				});
 			}
 		};
 		if (role !== ROLE.Observer) {
@@ -107,22 +103,19 @@ export default function Game() {
 				window.removeEventListener("keydown", handleKeyDown);
 			};
 		}
-	}, [isLoading, homePaddlePos, awayPaddlePos, role]);
+	}, [isLoading, paddlePos, role]);
 
 
 	useEffect(() => {
 		socket.on("updateRole", (role: ROLE) => {
-			console.log(role);
 			setRole(role);
 		})
 		socket.on("roomInfo", ({
 			roomName,
 			home,
 			away,
-			isHomeReady,
-			isAwayReady,
-			homePaddlePos,
-			awayPaddlePos,
+			ready,
+			paddlePos,
 			ballPos,
 			ballDir,
 			score,
@@ -130,14 +123,11 @@ export default function Game() {
 			setRoomName(roomName)
 			setHome(home);
 			setAway(away);
-			setHomeReady(isHomeReady)
-			setAwayReady(isAwayReady)
-			setHomePaddlePos(homePaddlePos);
-			setAwayPaddlePos(awayPaddlePos);
+			setReady(ready);
+			setPaddlePos(paddlePos);
 			setBallPos(ballPos);
 			setBallDir(ballDir);
 			setScore(score);
-
 			setLoading(false)
 		})
 		return () => {
@@ -149,11 +139,14 @@ export default function Game() {
 
 
 	function handleReady() {
-		if (role === ROLE.Home || role === ROLE.Away) {
-			const ready = role === ROLE.Home ? !isHomeReady : !isAwayReady;
-			socket.emit("ready", { roomName, role, ready });
+		if (role !== ROLE.Observer) {
+			const _ready = { ...ready }
+			if (role === ROLE.Home) _ready.home = !ready.home;
+			else _ready.away = !ready.away;
+			socket.emit("ready", { roomName, ready: _ready });
 		}
 	}
+
 
 	return (
 		<AuthLayout>
@@ -164,24 +157,23 @@ export default function Game() {
 					<UserBoard
 						home={home}
 						away={away}
-						isHomeReady={isHomeReady}
-						isAwayReady={isAwayReady}
+						ready={ready}
 						score={score}
 					/>
 				)}
 				{/*<Pong allPlayerReady={isHomeReady && isAwayReady ? true : false} />*/}
 				<div className="pong">
-					{homePaddlePos !== null &&
-						<div
-							className="paddle home"
-							style={{ top: homePaddlePos, left: 0 }}
-						/>
-					}
-					{awayPaddlePos !== null &&
-						<div
-							className="paddle away"
-							style={{ top: awayPaddlePos, right: 0 }}
-						/>
+					{paddlePos !== null &&
+						<>
+							<div
+								className="paddle home"
+								style={{ top: paddlePos?.home, left: 0 }}
+							/>
+							<div
+								className="paddle away"
+								style={{ top: paddlePos?.away, right: 0 }}
+							/>
+						</>
 					}
 					{ballPos !== null && ballDir !== null &&
 						<div

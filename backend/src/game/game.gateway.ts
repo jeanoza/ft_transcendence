@@ -16,12 +16,6 @@ import { UserService } from 'src/user/services/user.service';
 import { Room } from './room';
 import { GameService } from './game.service';
 
-const BALL_SIZE = 20;
-const PADDLE_WIDTH = 10;
-const PADDLE_HEIGHT = 80;
-const GAME_WIDTH = 600;
-const GAME_HEIGHT = 400;
-
 const intervalIds = {};
 
 @WebSocketGateway({
@@ -124,9 +118,6 @@ export class GameGateway
     @ConnectedSocket() client: Socket,
     @MessageBody('roomName') roomName: string,
   ) {
-    //const roomOwnerId = Number(roomName.split('-')[1]);
-    //const roomOwnerSocket = this.online.get(roomOwnerId);
-    //this.server.to(roomOwnerSocket).emit('refusedGame', { roomName });
     console.log(this.server.adapter['rooms']);
     this.server.to(roomName).emit('refusedGame', { roomName });
   }
@@ -152,31 +143,22 @@ export class GameGateway
   @SubscribeMessage('ready')
   async changeReady(
     @ConnectedSocket() client: Socket,
-    @MessageBody('role') role: number,
-    @MessageBody('ready') ready: boolean,
+    @MessageBody('ready') ready: any,
     @MessageBody('roomName') roomName: string,
   ) {
     const room = this.gameService.rooms.get(roomName);
-    if (role === 1) room.setIsHomeReady(ready);
-    else room.setIsAwayReady(ready);
+    room.setReady(ready);
   }
 
   @SubscribeMessage('updatePaddle')
   updateHomePaddle(
     @ConnectedSocket() client: Socket,
     @MessageBody('role') role: number,
-    @MessageBody('paddlePos') paddlePos: number,
     @MessageBody('roomName') roomName: string,
     @MessageBody('move') move: number,
   ) {
     //console.log(role, paddlePos, roomName);
     const room = this.gameService.rooms.get(roomName);
-    const _paddlePos =
-      move === 1
-        ? Math.max(paddlePos - 20, 0)
-        : Math.min(paddlePos + 20, GAME_HEIGHT - PADDLE_HEIGHT);
-    if (role === 1) room.setHomePaddlePos(_paddlePos);
-    else room.setAwayPaddlePos(_paddlePos);
-    //this.server.to(roomName).emit('roomInfo', room);
+    room.updatePaddles(role, move);
   }
 }
