@@ -94,6 +94,7 @@ export class GameGateway
       room.update();
       if (room.getStatus() === 3) {
         clearInterval(intervalIds[roomName]);
+        this.logger.debug('FIN interval'); // FIXME: ici send match history and renouvel rank point
       }
       this.server.to(roomName).emit('roomInfo', room);
     }, 25);
@@ -156,7 +157,7 @@ export class GameGateway
     //this.logger.debug('LEAVE-BEFORE');
     //console.log(this.server.adapter['rooms']);
     client.leave(roomName);
-    this.logger.debug(`AFTER LEAVE: ${role}`);
+    //this.logger.debug(`AFTER LEAVE: ${role}`);
     //console.log(this.server.adapter['rooms']);
 
     if (role && (role === 1 || role === 2)) {

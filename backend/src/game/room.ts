@@ -44,7 +44,7 @@ const PADDLE_WIDTH = 10;
 const PADDLE_HEIGHT = 80;
 const GAME_WIDTH = 600;
 const GAME_HEIGHT = 400;
-const SCORE_TO_WIN = 1;
+const SCORE_TO_WIN = 3;
 
 export class Room {
   private home: User;
