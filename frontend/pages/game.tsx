@@ -112,6 +112,7 @@ export default function Game() {
 
 	useEffect(() => {
 		socket.on("updateRole", (role: ROLE) => {
+			console.log(role);
 			setRole(role);
 		})
 		socket.on("roomInfo", ({

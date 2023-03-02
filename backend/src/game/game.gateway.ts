@@ -14,6 +14,7 @@ import { Server, Socket } from 'socket.io';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/services/user.service';
 import { Room } from './room';
+import { GameService } from './game.service';
 
 const BALL_SIZE = 20;
 const PADDLE_WIDTH = 10;
@@ -32,14 +33,16 @@ const intervalIds = {};
 export class GameGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly gameService: GameService,
+  ) {}
 
   @WebSocketServer()
   server: Server;
 
   private logger: Logger = new Logger('GameGateway');
   private online = new Map();
-  private rooms = new Map<string, Room>();
 
   afterInit(server: Server): any {
     this.logger.debug('after init');
@@ -80,7 +83,6 @@ export class GameGateway
       //const roomName = `game-${senderId}`;
       client.join(roomName);
 
-      //console.log(this.rooms);
       this.server.to(receiverSocket).emit('invitedGame', { roomName });
     } else
       client.emit('error', new UnauthorizedException('The user is offline!'));
@@ -96,23 +98,21 @@ export class GameGateway
       console.log(this.server.adapter['rooms']);
       this.server.to(roomName).emit('acceptedGame', { roomName });
 
-      const [game, senderId, receiverId] = roomName.split('-');
-      const home = await this.userService.findOne(Number(senderId));
-      const away = await this.userService.findOne(Number(receiverId));
-      const room = new Room(home, away, roomName);
+      const _splitted = roomName.split('-');
+      const homeId = Number(_splitted[1]);
+      const awayId = Number(_splitted[2]);
 
-      this.rooms.set(roomName, room);
+      await this.gameService.createRoom(roomName, homeId, awayId);
 
       setTimeout(() => {
         // clearInterval if already exist interval set
         if (intervalIds[roomName]) clearInterval(intervalIds[roomName]);
-
-        if (home.id)
-          this.server.to(this.online.get(home.id)).emit('updateRole', 1);
-        if (away.id)
-          this.server.to(this.online.get(away.id)).emit('updateRole', 2);
+        if (homeId)
+          this.server.to(this.online.get(homeId)).emit('updateRole', 1);
+        if (awayId)
+          this.server.to(this.online.get(awayId)).emit('updateRole', 2);
         intervalIds[roomName] = setInterval(() => {
-          const room = this.rooms.get(roomName);
+          const room = this.gameService.rooms.get(roomName);
           room.update();
           this.server.to(roomName).emit('roomInfo', room);
         }, 25);
@@ -156,10 +156,9 @@ export class GameGateway
     @MessageBody('ready') ready: boolean,
     @MessageBody('roomName') roomName: string,
   ) {
-    const room = this.rooms.get(roomName);
+    const room = this.gameService.rooms.get(roomName);
     if (role === 1) room.setIsHomeReady(ready);
     else room.setIsAwayReady(ready);
-    //this.server.to(roomName).emit('roomInfo', room);
   }
 
   @SubscribeMessage('updatePaddle')
@@ -171,12 +170,11 @@ export class GameGateway
     @MessageBody('move') move: number,
   ) {
     //console.log(role, paddlePos, roomName);
-    const room = this.rooms.get(roomName);
+    const room = this.gameService.rooms.get(roomName);
     const _paddlePos =
       move === 1
         ? Math.max(paddlePos - 20, 0)
         : Math.min(paddlePos + 20, GAME_HEIGHT - PADDLE_HEIGHT);
-
     if (role === 1) room.setHomePaddlePos(_paddlePos);
     else room.setAwayPaddlePos(_paddlePos);
     //this.server.to(roomName).emit('roomInfo', room);
