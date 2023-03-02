@@ -94,7 +94,8 @@ export class GameGateway
       room.update();
       if (room.getStatus() === 3) {
         clearInterval(intervalIds[roomName]);
-        this.logger.debug('FIN interval'); // FIXME: ici send match history and renouvel rank point
+        // FIXME: ici send match history and renouvel rank point
+        this.logger.debug('FIN interval');
       }
       this.server.to(roomName).emit('roomInfo', room);
     }, 25);
