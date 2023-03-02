@@ -59,6 +59,7 @@ export class Room {
   private ballPos: BallPos;
   private ballDir: BallDir;
   private score: Score;
+  private winner: string | null;
 
   constructor(home: User, away: User, roomName: string) {
     this.home = home;
@@ -109,6 +110,13 @@ export class Room {
   setStatus(status: GAME_STATUS): void {
     this.status = status;
   }
+
+  setHome(home: User | null): void {
+    this.home = home;
+  }
+  setAway(away: User | null): void {
+    this.away = away;
+  }
   //#endregion
 
   paddleUp(posY: number) {
@@ -137,6 +145,7 @@ export class Room {
     this.ballPos = { x: 50, y: 50 };
     this.ballDir = { x: 1, y: 1 };
     this.score = { home: 0, away: 0 };
+    this.winner = null;
   }
 
   update() {
@@ -144,8 +153,11 @@ export class Room {
       this.status = GAME_STATUS.Playing;
       this.init();
     }
-    if (this.score.home === SCORE_TO_WIN || this.score.away === SCORE_TO_WIN)
+    if (this.score.home === SCORE_TO_WIN || this.score.away === SCORE_TO_WIN) {
       this.status = GAME_STATUS.End;
+      this.winner =
+        this.score.home > this.score.away ? this.home.name : this.away.name;
+    }
     //// if wating status or end status, do not move ball
     if (this.status === GAME_STATUS.Waiting || this.status === GAME_STATUS.End)
       return;

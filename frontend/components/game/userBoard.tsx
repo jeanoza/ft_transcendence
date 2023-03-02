@@ -3,27 +3,25 @@ import { Avatar } from "../avatar";
 import { useUser } from "../../utils/hooks/swrHelper";
 
 interface IUserBoard {
-	home: IUser;
-	away: IUser;
+	home: IUser | null;
+	away: IUser | null;
 	ready: any;
 	score: any;
 }
 
-export function UserBoard({
-	home,
-	away,
-	ready,
-	score
-}: IUserBoard) {
-
-	useEffect(() => { }, []);
+export function UserBoard({ home, away, ready, score }: IUserBoard) {
+	useEffect(() => {}, []);
 
 	return (
 		<div className="user-board d-flex center justify-between px-4">
-			<div className="user d-flex column center">
+			<div className="user d-flex column center justify-start">
 				<h2 className="py-2">Home</h2>
-				<Avatar url={home.imageURL} />
-				<h3 className="text-overflow py-2">{home.name}</h3>
+				{home && (
+					<>
+						<Avatar url={home.imageURL} />
+						<h3 className="text-overflow py-2">{home.name}</h3>
+					</>
+				)}
 				{ready.home && <h2 className="ready">Ready</h2>}
 			</div>
 			{score && (
@@ -33,10 +31,14 @@ export function UserBoard({
 					<h1>{score.away}</h1>
 				</div>
 			)}
-			<div className="user d-flex column center">
+			<div className="user d-flex column center justify-start">
 				<h2 className="py-2">Away</h2>
-				<Avatar url={away.imageURL} />
-				<h3 className="text-overflow py-2">{away.name}</h3>
+				{away && (
+					<>
+						<Avatar url={away?.imageURL} />
+						<h3 className="text-overflow py-2">{away?.name}</h3>
+					</>
+				)}
 				{ready.away && <h2 className="ready">Ready</h2>}
 			</div>
 
@@ -49,8 +51,12 @@ export function UserBoard({
 					position: relative;
 				}
 				.user {
-					max-width: 7rem;
+					width: 7rem;
 					position: relative;
+					height: 100%;
+				}
+				.user > h3 {
+					max-width: 7rem;
 				}
 				.ready {
 					position: absolute;

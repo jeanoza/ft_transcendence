@@ -13,6 +13,7 @@ import {
 import { Server, Socket } from 'socket.io';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/services/user.service';
+import { clearInterval } from 'timers';
 import { GameService } from './game.service';
 
 const intervalIds = {};
@@ -80,6 +81,34 @@ export class GameGateway
     } else
       client.emit('error', new UnauthorizedException('The user is offline!'));
   }
+
+  @SubscribeMessage('startInterval')
+  async startInterval(
+    @ConnectedSocket() client: Socket,
+    @MessageBody('roomName') roomName: string,
+  ) {
+    // clearInterval if already exist interval set
+    if (intervalIds[roomName]) clearInterval(intervalIds[roomName]);
+    intervalIds[roomName] = setInterval(() => {
+      const room = this.gameService.rooms.get(roomName);
+      room.update();
+      if (room.getStatus() === 3) {
+        clearInterval(intervalIds[roomName]);
+      }
+      this.server.to(roomName).emit('roomInfo', room);
+    }, 25);
+  }
+
+  @SubscribeMessage('onWait')
+  async restart(
+    @ConnectedSocket() client: Socket,
+    @MessageBody('roomName') roomName: string,
+  ) {
+    const room = this.gameService.rooms.get(roomName);
+    room.setStatus(1);
+    client.emit('roomInfo', room);
+  }
+
   @SubscribeMessage('acceptGame')
   async acceptGame(
     @ConnectedSocket() client: Socket,
@@ -98,17 +127,15 @@ export class GameGateway
       await this.gameService.createRoom(roomName, homeId, awayId);
 
       setTimeout(() => {
-        // clearInterval if already exist interval set
-        if (intervalIds[roomName]) clearInterval(intervalIds[roomName]);
+        //console.log('here', homeId, awayId);
         if (homeId)
-          this.server.to(this.online.get(homeId)).emit('updateRole', 1);
+          this.server
+            .to(this.online.get(homeId))
+            .emit('enterRoom', 1, roomName);
         if (awayId)
-          this.server.to(this.online.get(awayId)).emit('updateRole', 2);
-        intervalIds[roomName] = setInterval(() => {
-          const room = this.gameService.rooms.get(roomName);
-          room.update();
-          this.server.to(roomName).emit('roomInfo', room);
-        }, 25);
+          this.server
+            .to(this.online.get(awayId))
+            .emit('enterRoom', 2, roomName);
       }, 1000);
     }
   }
@@ -124,12 +151,26 @@ export class GameGateway
   async leaveGame(
     @ConnectedSocket() client: Socket,
     @MessageBody('roomName') roomName: string,
+    @MessageBody('role') role: number,
   ) {
-    this.logger.debug('LEAVE-BEFORE');
-    console.log(this.server.adapter['rooms']);
+    //this.logger.debug('LEAVE-BEFORE');
+    //console.log(this.server.adapter['rooms']);
     client.leave(roomName);
-    this.logger.debug('AFTER LEAVE');
-    console.log(this.server.adapter['rooms']);
+    this.logger.debug(`AFTER LEAVE: ${role}`);
+    //console.log(this.server.adapter['rooms']);
+
+    if (role && (role === 1 || role === 2)) {
+      const room = this.gameService.rooms.get(roomName);
+      if (role === 1) room.setHome(null);
+      else if (role === 2) room.setAway(null);
+      this.server.to(roomName).emit('roomInfo', room);
+    }
+    if (!this.server.adapter['rooms'].get(roomName)) {
+      // FIXME: see side effect for observers....
+      //console.log('before', this.gameService.rooms.get(roomName));
+      this.gameService.rooms.delete(roomName);
+      //console.log('after', this.gameService.rooms.get(roomName));
+    }
   }
 
   @SubscribeMessage('leaveGameWithoutName')
@@ -147,6 +188,7 @@ export class GameGateway
   ) {
     const room = this.gameService.rooms.get(roomName);
     room.setReady(ready);
+    this.server.to(roomName).emit('roomInfo', room);
   }
 
   @SubscribeMessage('updatePaddle')

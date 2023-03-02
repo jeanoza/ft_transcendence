@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { Loader } from "../components/loader";
 import { useSocket } from "../utils/hooks/useSocket";
 import { UserBoard } from "../components/game/userBoard";
+import { ResultModal } from "../components/modals/game/resultModal";
+import { useRouter } from "next/router";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -27,7 +29,7 @@ enum ROLE {
 
 enum PADDLE_MOVE {
 	Up = 1,
-	Down
+	Down,
 }
 
 enum GAME_STATUS {
@@ -68,8 +70,8 @@ interface RoomInfo {
 	ballDir: BallDir;
 	score: Score;
 	status: GAME_STATUS;
+	winner: string | null;
 }
-
 
 export default function Game() {
 	const [isLoading, setLoading] = useState<boolean>(true);
@@ -79,6 +81,8 @@ export default function Game() {
 	const [roomName, setRoomName] = useState<string | null>(null);
 	const [role, setRole] = useState<ROLE>(ROLE.Observer);
 	const [status, setStatus] = useState<GAME_STATUS>(GAME_STATUS.Waiting);
+	const [winner, setWinner] = useState<string | null>(null);
+	const router = useRouter();
 
 	const [ready, setReady] = useState<Ready>({ home: false, away: false });
 	const [paddlePos, setPaddlePos] = useState<PaddlePos | null>(null);
@@ -86,14 +90,16 @@ export default function Game() {
 	const [ballDir, setBallDir] = useState<BallDir | null>(null);
 	const [score, setScore] = useState<Score | null>(null);
 
-
 	useEffect(() => {
 		const handleKeyDown = (e: any) => {
-			if (role !== ROLE.Observer && (e.code === "ArrowUp" || e.code === "ArrowDown")) {
+			if (
+				role !== ROLE.Observer &&
+				(e.code === "ArrowUp" || e.code === "ArrowDown")
+			) {
 				socket.emit("updatePaddle", {
 					role,
 					roomName,
-					move: (e.code === "ArrowUp") ? PADDLE_MOVE.Up : PADDLE_MOVE.Down
+					move: e.code === "ArrowUp" ? PADDLE_MOVE.Up : PADDLE_MOVE.Down,
 				});
 			}
 		};
@@ -106,67 +112,70 @@ export default function Game() {
 		}
 	}, [isLoading, paddlePos, role]);
 
-
 	useEffect(() => {
-		socket.on("updateRole", (role: ROLE) => {
+		socket.on("enterRoom", (role: ROLE, roomName: string) => {
 			setRole(role);
-		})
-		socket.on("roomInfo", ({
-			roomName,
-			home,
-			away,
-			ready,
-			status,
-			paddlePos,
-			ballPos,
-			ballDir,
-			score,
-		}: RoomInfo) => {
-			setRoomName(roomName)
-			setHome(home);
-			setAway(away);
-			setReady(ready);
-			setStatus(status);
-			setPaddlePos(paddlePos);
-			setBallPos(ballPos);
-			setBallDir(ballDir);
-			setScore(score);
-			setLoading(false)
-		})
+			socket.emit("startInterval", { roomName });
+			setLoading(false);
+		});
+		socket.on(
+			"roomInfo",
+			({
+				roomName,
+				home,
+				away,
+				ready,
+				status,
+				paddlePos,
+				ballPos,
+				ballDir,
+				score,
+				winner,
+			}: RoomInfo) => {
+				setRoomName(roomName);
+				if (!home || !away) {
+					window.alert("A player has leaved. You will redirect to home");
+					socket.emit("leaveGame", { roomName });
+					router.push("/");
+				}
+				setHome(home);
+				setAway(away);
+				if (ready.home && ready.away)
+					socket.emit("startInterval", { roomName });
+				setReady(ready);
+				//if (status === GAME_STATUS.End) window.alert("finished");
+				setStatus(status);
+				setPaddlePos(paddlePos);
+				setBallPos(ballPos);
+				setBallDir(ballDir);
+				setScore(score);
+				setWinner(winner);
+			}
+		);
 		return () => {
 			socket.off("roomInfo");
-			socket.off("updateRole");
+			socket.off("enterRoom");
 		};
 	}, []);
 
-
-
 	function handleReady() {
 		if (role !== ROLE.Observer) {
-			const _ready = { ...ready }
+			const _ready = { ...ready };
 			if (role === ROLE.Home) _ready.home = !ready.home;
 			else _ready.away = !ready.away;
 			socket.emit("ready", { roomName, ready: _ready });
 		}
 	}
 
-
 	return (
 		<AuthLayout>
 			<Seo title="Game" />
 			<main className="d-flex column center">
 				{isLoading && <Loader />}
-				{home && away && (
-					<UserBoard
-						home={home}
-						away={away}
-						ready={ready}
-						score={score}
-					/>
-				)}
+				<UserBoard home={home} away={away} ready={ready} score={score} />
 				{/*<Pong allPlayerReady={isHomeReady && isAwayReady ? true : false} />*/}
 				<div className="pong">
-					{paddlePos !== null &&
+					{paddlePos !== null && (
 						<>
 							<div
 								className="paddle home"
@@ -177,8 +186,8 @@ export default function Game() {
 								style={{ top: paddlePos?.away, right: 0 }}
 							/>
 						</>
-					}
-					{ballPos !== null && ballDir !== null &&
+					)}
+					{ballPos !== null && ballDir !== null && (
 						<div
 							className="ball"
 							style={{
@@ -186,12 +195,25 @@ export default function Game() {
 								left: ballPos.x,
 							}}
 						/>
-					}
-					{(role !== ROLE.Observer && status !== GAME_STATUS.Playing) && (
+					)}
+					{role !== ROLE.Observer && status !== GAME_STATUS.Playing && (
 						<button className="readyBtn" onClick={handleReady}>
 							Ready
 						</button>
 					)}
+					{roomName &&
+						score &&
+						winner &&
+						role !== undefined &&
+						role !== ROLE.Observer &&
+						status === GAME_STATUS.End && (
+							<ResultModal roomName={roomName} role={role}>
+								<h2>Winner : {winner}</h2>
+								<h2>
+									{score.home} : {score.away}
+								</h2>
+							</ResultModal>
+						)}
 				</div>
 			</main>
 			<style jsx>{`
