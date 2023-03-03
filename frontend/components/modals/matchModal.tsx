@@ -6,7 +6,6 @@ export function MatchModal({ onClose }: { onClose: any }) {
 	const { user } = useUser();
 
 	useEffect(() => {
-
 		getMatch();
 		async function getMatch() {
 			axios.get("match").then(res => {

@@ -44,9 +44,32 @@ export class UserService {
   async findAll() {
     return await this.userRepository
       .createQueryBuilder('users')
-      .select(['users.id', 'users.name'])
+      .select(['users.id', 'users.name', 'users.rank'])
       .getMany();
   }
+
+  async findAllByRank() {
+    return await this.userRepository
+      .createQueryBuilder('users')
+      .select(['users.id', 'users.name', 'users.imageURL', 'users.rank'])
+      .orderBy('users.rank', 'DESC')
+      .getMany();
+  }
+
+  //chatSocket: 'UaaDVPB7mhxC6M5_AAAK';
+  //createdAt: '2023-03-03T12:38:21.973Z';
+  //deletedAt: null;
+  //email: 'test@42.fr';
+  //id: 3;
+  //imageURL: '/default_profile.png';
+  //login: null;
+  //name: 'test';
+  //rank: 1055;
+  //status: 1;
+  //updatedAt: '2023-03-03T14:11:52.847Z';
+  //_2faEnabled: false;
+  //_2faSecret: null;
+  //[[Prototype]]: Object;
 
   async findOne(id: number) {
     return await this.userRepository.findOne({

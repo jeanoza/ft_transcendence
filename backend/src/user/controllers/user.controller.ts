@@ -31,6 +31,11 @@ export class UserController {
     return await this.userService.update(req.user.id, { name });
   }
 
+  @Get('rank')
+  async getAllUserByRank() {
+    return await this.userService.findAllByRank();
+  }
+
   @Get('current')
   async getCurrentUser(@Req() req) {
     return req.user;
