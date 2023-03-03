@@ -15,6 +15,7 @@ import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/services/user.service';
 import { clearInterval } from 'timers';
 import { GameService } from './game.service';
+import { GAME_STATUS, ROLE } from './room';
 
 const intervalIds = {};
 
@@ -92,7 +93,7 @@ export class GameGateway
     intervalIds[roomName] = setInterval(() => {
       const room = this.gameService.rooms.get(roomName);
       room.update();
-      if (room.getStatus() === 3) {
+      if (room.getStatus() === GAME_STATUS.End) {
         clearInterval(intervalIds[roomName]);
         // FIXME: ici send match history and renouvel rank point
         this.logger.debug('FIN interval');
@@ -107,7 +108,7 @@ export class GameGateway
     @MessageBody('roomName') roomName: string,
   ) {
     const room = this.gameService.rooms.get(roomName);
-    room.setStatus(1);
+    room.setStatus(GAME_STATUS.Waiting);
     client.emit('roomInfo', room);
   }
 
@@ -133,11 +134,11 @@ export class GameGateway
         if (homeId)
           this.server
             .to(this.online.get(homeId))
-            .emit('enterRoom', 1, roomName);
+            .emit('enterRoom', ROLE.Home, roomName);
         if (awayId)
           this.server
             .to(this.online.get(awayId))
-            .emit('enterRoom', 2, roomName);
+            .emit('enterRoom', ROLE.Away, roomName);
       }, 1000);
     }
   }
@@ -161,10 +162,10 @@ export class GameGateway
     //this.logger.debug(`AFTER LEAVE: ${role}`);
     //console.log(this.server.adapter['rooms']);
 
-    if (role && (role === 1 || role === 2)) {
+    if (role && (role === ROLE.Home || role === ROLE.Away)) {
       const room = this.gameService.rooms.get(roomName);
-      if (role === 1) room.setHome(null);
-      else if (role === 2) room.setAway(null);
+      if (role === ROLE.Home) room.setHome(null);
+      else if (role === ROLE.Away) room.setAway(null);
       this.server.to(roomName).emit('roomInfo', room);
     }
     if (!this.server.adapter['rooms'].get(roomName)) {

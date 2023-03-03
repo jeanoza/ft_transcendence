@@ -1,40 +1,40 @@
 import { User } from '../user/entities/user.entity';
 
-enum ROLE {
+export enum ROLE {
   Observer,
   Home,
   Away,
 }
-enum PADDLE_MOVE {
+export enum PADDLE_MOVE {
   Up = 1,
   Down,
 }
 
-enum GAME_STATUS {
+export enum GAME_STATUS {
   Waiting = 1,
   Playing,
   End,
 }
 
-interface BallPos {
+export interface BallPos {
   x: number;
   y: number;
 }
-interface BallDir {
+export interface BallDir {
   x: number;
   y: number;
 }
-interface Score {
+export interface Score {
   home: number;
   away: number;
 }
 
-interface Ready {
+export interface Ready {
   home: boolean;
   away: boolean;
 }
 
-interface PaddlePos {
+export interface PaddlePos {
   home: number;
   away: number;
 }

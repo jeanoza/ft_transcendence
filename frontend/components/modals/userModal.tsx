@@ -13,7 +13,6 @@ import { useSocket } from "../../utils/hooks/useSocket";
 import { DmModal } from "./dmModal";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { WaitingModal } from "./watingModal";
 
 export function UserModal({
 	userId,

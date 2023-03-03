@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { use2fa, useUser } from "../utils/hooks/swrHelper";
 import { useSocket } from "../utils/hooks/useSocket";
 import { Loader } from "./loader";
 import { Navbar } from "./navbar";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { ConfirmModal } from "./modals/confirmModal";
 
 let userConnected = false;
 
@@ -19,6 +20,7 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 	const { socket: chatSocket } = useSocket("chat");
 	const { socket: gameSocket } = useSocket("game");
 	const { isLoading: is2faLoading } = use2fa();
+	const [openConfirmModal, setConfirmModal] = useState<boolean>(false);
 	const router = useRouter();
 
 	useEffect(() => {
@@ -79,6 +81,7 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 		<div className="container">
 			<Navbar />
 			{user && children}
+			{/*{openConfirmModal && <ConfirmModal />*/}
 			<style jsx global>{`
 				.container {
 					height: 100vh;
