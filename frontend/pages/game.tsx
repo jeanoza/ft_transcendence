@@ -136,7 +136,7 @@ export default function Game() {
 				if (!home || !away) {
 					window.alert("A player has leaved. You will redirect to home");
 					socket.emit("leaveGame", { roomName });
-					router.push("/");
+					router?.push("/");
 				}
 				setHome(home);
 				setAway(away);

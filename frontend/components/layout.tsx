@@ -6,10 +6,13 @@ import { Navbar } from "./navbar";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { ConfirmModal } from "./modals/confirmModal";
+import { AlertModal } from "./modals/alertModal";
 
 let userConnected = false;
 
 interface IGame {
+	refuseUser: IUser;
+	inviteUser: IUser;
 	senderId: number;
 	receiverId: number;
 	roomName: string;
@@ -21,6 +24,10 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 	const { socket: gameSocket } = useSocket("game");
 	const { isLoading: is2faLoading } = use2fa();
 	const [openConfirmModal, setConfirmModal] = useState<boolean>(false);
+	const [openAlertModal, setAlertModal] = useState<boolean>(false);
+	const [roomName, setRoomName] = useState<string | null>(null);
+	const [inviteUser, setInviteUser] = useState<IUser | null>(null);
+	const [refuseUser, setRefuseUser] = useState<IUser | null>(null);
 	const router = useRouter();
 
 	useEffect(() => {
@@ -50,16 +57,20 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 		chatSocket.on("updatedStatus", function () {
 			revalid();
 		});
-		gameSocket.on("invitedGame", function ({ roomName }: IGame) {
-			if (window.confirm("Do you accept to join to game?"))
-				gameSocket.emit("acceptGame", { roomName });
-			else gameSocket.emit("refuseGame", { roomName });
+		gameSocket.on("invitedGame", function ({ inviteUser, roomName }: IGame) {
+			setRoomName(roomName);
+			setConfirmModal(true);
+			setInviteUser(inviteUser);
+			//if (window.confirm("Do you accept to join to game?"))
+			//	gameSocket.emit("acceptGame", { roomName });
+			//else gameSocket.emit("refuseGame", { roomName });
 		});
 		gameSocket.on("acceptedGame", function ({ roomName }) {
-			if (router) router.push("/game");
+			router?.push("/game");
 		});
-		gameSocket.on("refusedGame", function ({ roomName }: IGame) {
-			window.alert("The user refused your invite");
+		gameSocket.on("refusedGame", function ({ refuseUser, roomName }: IGame) {
+			setAlertModal(true);
+			setRefuseUser(refuseUser);
 			gameSocket.emit("leaveGame", { roomName });
 		});
 
@@ -71,6 +82,24 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 		};
 	}, []);
 
+	function onCloseConfirmModal() {
+		setInviteUser(null);
+		setRoomName(null);
+		setConfirmModal(false);
+	}
+	function onAccept() {
+		gameSocket.emit("acceptGame", { roomName });
+		onCloseConfirmModal();
+	}
+	function onCancelInvite() {
+		gameSocket.emit("refuseGame", { refuseUser: user, roomName });
+		onCloseConfirmModal();
+	}
+	function onCloseRefuseModal() {
+		setRefuseUser(null);
+		setAlertModal(false);
+	}
+
 	if (isLoading || is2faLoading)
 		return (
 			<div className="container">
@@ -81,7 +110,17 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 		<div className="container">
 			<Navbar />
 			{user && children}
-			{/*{openConfirmModal && <ConfirmModal />*/}
+			{openConfirmModal && inviteUser &&
+				<ConfirmModal
+					inviteUser={inviteUser}
+					text="Do you accept to join to game?"
+					onAccept={onAccept}
+					onCancel={onCancelInvite}
+				/>
+			}
+			{openAlertModal && refuseUser &&
+				<AlertModal refuseUser={refuseUser} text="The user refused your invite" onCancel={onCloseRefuseModal} />
+			}
 			<style jsx global>{`
 				.container {
 					height: 100vh;

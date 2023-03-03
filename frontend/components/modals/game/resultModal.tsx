@@ -19,7 +19,7 @@ export function ResultModal({
 
 	function onQuit() {
 		socket.emit("leaveGame", { roomName, role });
-		router.push("/");
+		router?.push("/");
 	}
 
 	return (

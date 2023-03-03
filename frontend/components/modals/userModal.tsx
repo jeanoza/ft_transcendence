@@ -71,8 +71,8 @@ export function UserModal({
 	}
 
 	async function inviteGame(receiverId: number) {
-		//router.push("/game");
-		socket.emit("inviteGame", { senderId: user.id, receiverId });
+		if (userData.status === 2) window.alert("You cannot invite a playing user")
+		else socket.emit("inviteGame", { senderId: user.id, receiverId });
 	}
 
 	if (!user) return null;

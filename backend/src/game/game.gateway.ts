@@ -64,7 +64,7 @@ export class GameGateway
   ) {
     this.online.set(userId, client.id);
     this.logger.debug('online users');
-    console.log(Array.from(this.online));
+    console.log(this.online);
   }
   @SubscribeMessage('inviteGame')
   async inviteGame(
@@ -77,8 +77,11 @@ export class GameGateway
       const roomName = `game-${senderId}-${receiverId}`;
       //const roomName = `game-${senderId}`;
       client.join(roomName);
+      const user = await this.userService.findOne(senderId);
 
-      this.server.to(receiverSocket).emit('invitedGame', { roomName });
+      this.server
+        .to(receiverSocket)
+        .emit('invitedGame', { inviteUser: user, roomName });
     } else
       client.emit('error', new UnauthorizedException('The user is offline!'));
   }
@@ -92,13 +95,15 @@ export class GameGateway
     if (intervalIds[roomName]) clearInterval(intervalIds[roomName]);
     intervalIds[roomName] = setInterval(() => {
       const room = this.gameService.rooms.get(roomName);
-      room.update();
-      if (room.getStatus() === GAME_STATUS.End) {
-        clearInterval(intervalIds[roomName]);
-        // FIXME: ici send match history and renouvel rank point
-        this.logger.debug('FIN interval');
+      if (room) {
+        room.update();
+        if (room.getStatus() === GAME_STATUS.End) {
+          clearInterval(intervalIds[roomName]);
+          // FIXME: ici send match history and renouvel rank point
+          this.logger.debug('FIN interval');
+        }
+        this.server.to(roomName).emit('roomInfo', room);
       }
-      this.server.to(roomName).emit('roomInfo', room);
     }, 25);
   }
 
@@ -145,10 +150,11 @@ export class GameGateway
   @SubscribeMessage('refuseGame')
   async refuseGame(
     @ConnectedSocket() client: Socket,
+    @MessageBody('refuseUser') refuseUser: User,
     @MessageBody('roomName') roomName: string,
   ) {
     console.log(this.server.adapter['rooms']);
-    this.server.to(roomName).emit('refusedGame', { roomName });
+    this.server.to(roomName).emit('refusedGame', { refuseUser, roomName });
   }
   @SubscribeMessage('leaveGame')
   async leaveGame(
