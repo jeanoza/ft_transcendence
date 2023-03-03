@@ -6,11 +6,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import EditModal from "../modals/editModal";
 import { FriendsModal } from "../modals/friendsModal";
 import { Avatar } from "../avatar";
+import { MatchModal } from "../modals/matchModal";
 
 export function Setting() {
 	const { user } = useUser();
 	const [openEditModal, setEditModal] = useState<boolean>(false);
 	const [openFriendsModal, setFriendsModal] = useState<boolean>(false);
+	const [openMatchModal, setMatchModal] = useState<boolean>(false);
 	const router = useRouter();
 
 	async function onLogout(e: React.MouseEvent<HTMLSpanElement>) {
@@ -37,15 +39,22 @@ export function Setting() {
 				</div>
 				<ul>
 					<li onClick={() => setEditModal(true)}>Edit</li>
-					<li>Match History</li>
+					<li onClick={() => setMatchModal(true)}>Match History</li>
 					<li onClick={() => setFriendsModal(true)}>Friends</li>
 					<li onClick={onLogout}>Logout</li>
 				</ul>
 			</div>
 			{openEditModal && <EditModal onClose={() => setEditModal(false)} />}
-			{openFriendsModal && (
-				<FriendsModal onClose={() => setFriendsModal(false)} />
-			)}
+			{
+				openFriendsModal && (
+					<FriendsModal onClose={() => setFriendsModal(false)} />
+				)
+			}
+			{
+				openMatchModal && (
+					<MatchModal onClose={() => setMatchModal(false)} />
+				)
+			}
 			<style jsx>{`
 				.icon {
 					padding: 1rem;
@@ -76,6 +85,6 @@ export function Setting() {
 					cursor: auto;
 				}
 			`}</style>
-		</div>
+		</div >
 	);
 }

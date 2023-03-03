@@ -16,11 +16,11 @@ import { MatchService } from '../services/match.service';
 @UseGuards(JwtAuthGuard)
 export class MatchController {
   constructor(private readonly matchService: MatchService) {}
-  logger = new Logger('blocked.controller');
+  logger = new Logger('match.controller');
 
   @Get()
   async getAll(@Request() req) {
-    //return await this.matchService.
+    return await this.matchService.getAllMatch(req.user.id);
   }
 
   @Get(':id')
