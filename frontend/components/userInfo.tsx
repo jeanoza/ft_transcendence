@@ -40,7 +40,7 @@ export function UserInfo({ user, isEditModal }: { user: IUser, isEditModal?: boo
 				<div className="d-flex justify-between">
 					<span>Rank</span>
 					<span>
-						{user.rank ? user.rank : "not yet"}
+						{user.rank}
 					</span>
 				</div>
 			</div>

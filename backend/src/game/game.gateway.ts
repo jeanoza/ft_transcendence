@@ -101,6 +101,10 @@ export class GameGateway
           clearInterval(intervalIds[roomName]);
           // FIXME: ici send match history and renouvel rank point
           this.logger.debug('FIN interval');
+          const winner = room.getWinner();
+          const loser = room.getLoser();
+          this.userService.updateRank(winner.id, true);
+          this.userService.updateRank(loser.id, false);
         }
         this.server.to(roomName).emit('roomInfo', room);
       }

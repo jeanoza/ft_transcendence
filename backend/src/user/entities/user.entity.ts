@@ -50,6 +50,9 @@ export class User {
   @Column('int', { name: 'status', nullable: true })
   status?: number;
 
+  @Column('int', { name: 'rank' })
+  rank: number;
+
   @Column('varchar', { name: 'image_url', length: 500 })
   imageURL: string;
 

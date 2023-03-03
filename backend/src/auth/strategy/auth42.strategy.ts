@@ -34,6 +34,7 @@ export class Auth42Strategy extends PassportStrategy(Strategy, 'auth42') {
           login,
           email,
           imageURL,
+          rank: 1000,
         };
         user = await this.authService.addUser42(data);
       }

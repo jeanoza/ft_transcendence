@@ -9,6 +9,7 @@ declare global {
 		rank?: number;
 		createdAt?: string;
 		chatSocket?: string;
+		rank?: number;
 	}
 	interface INote {
 		id?: number;

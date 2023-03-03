@@ -59,7 +59,8 @@ export class Room {
   private ballPos: BallPos;
   private ballDir: BallDir;
   private score: Score;
-  private winner: string | null;
+  private winner: User | null;
+  private loser: User | null;
 
   constructor(home: User, away: User, roomName: string) {
     this.home = home;
@@ -71,6 +72,12 @@ export class Room {
 
   //#region getter
 
+  getHome(): User {
+    return this.home;
+  }
+  getAway(): User {
+    return this.away;
+  }
   getReady(): Ready {
     return this.ready;
   }
@@ -88,6 +95,12 @@ export class Room {
   }
   getStatus(): GAME_STATUS {
     return this.status;
+  }
+  getWinner(): User {
+    return this.winner;
+  }
+  getLoser(): User {
+    return this.loser;
   }
   //#endregion
 
@@ -110,7 +123,6 @@ export class Room {
   setStatus(status: GAME_STATUS): void {
     this.status = status;
   }
-
   setHome(home: User | null): void {
     this.home = home;
   }
@@ -146,6 +158,7 @@ export class Room {
     this.ballDir = { x: 1, y: 1 };
     this.score = { home: 0, away: 0 };
     this.winner = null;
+    this.loser = null;
   }
 
   update() {
@@ -155,8 +168,15 @@ export class Room {
     }
     if (this.score.home === SCORE_TO_WIN || this.score.away === SCORE_TO_WIN) {
       this.status = GAME_STATUS.End;
-      this.winner =
-        this.score.home > this.score.away ? this.home.name : this.away.name;
+      //this.winner =
+      //  this.score.home > this.score.away ? this.home.name : this.away.name;
+      if (this.score.home > this.score.away) {
+        this.winner = this.home;
+        this.loser = this.away;
+      } else {
+        this.winner = this.away;
+        this.loser = this.home;
+      }
     }
     //// if wating status or end status, do not move ball
     if (this.status === GAME_STATUS.Waiting || this.status === GAME_STATUS.End)

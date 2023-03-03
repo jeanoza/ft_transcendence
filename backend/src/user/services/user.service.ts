@@ -34,6 +34,7 @@ export class UserService {
       name: data.name,
       password: hashedPassword,
       imageURL: '/default_profile.png',
+      rank: 1000,
     });
     if (!ret) throw new ForbiddenException('create failed');
 
@@ -85,6 +86,12 @@ export class UserService {
 
   async updateStatus(id: number, status: number | null) {
     return await this.userRepository.update(id, { status });
+  }
+
+  async updateRank(id: number, isWinner: boolean) {
+    const { rank } = await this.findOne(id);
+    const nextRank = isWinner ? rank + 15 : rank - 10;
+    return await this.update(id, { rank: nextRank });
   }
 
   async update(id: number, data) {

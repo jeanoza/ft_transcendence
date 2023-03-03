@@ -6,6 +6,7 @@ import { useSocket } from "../utils/hooks/useSocket";
 import { UserBoard } from "../components/game/userBoard";
 import { ResultModal } from "../components/modals/game/resultModal";
 import { useRouter } from "next/router";
+import { AlertModal } from "../components/modals/alertModal";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -70,7 +71,7 @@ interface RoomInfo {
 	ballDir: BallDir;
 	score: Score;
 	status: GAME_STATUS;
-	winner: string | null;
+	winner: IUser | null;
 }
 
 export default function Game() {
@@ -81,7 +82,7 @@ export default function Game() {
 	const [roomName, setRoomName] = useState<string | null>(null);
 	const [role, setRole] = useState<ROLE>(ROLE.Observer);
 	const [status, setStatus] = useState<GAME_STATUS>(GAME_STATUS.Waiting);
-	const [winner, setWinner] = useState<string | null>(null);
+	const [winner, setWinner] = useState<IUser | null>(null);
 	const router = useRouter();
 
 	const [ready, setReady] = useState<Ready>({ home: false, away: false });
@@ -89,6 +90,8 @@ export default function Game() {
 	const [ballPos, setBallPos] = useState<BallPos | null>(null);
 	const [ballDir, setBallDir] = useState<BallDir | null>(null);
 	const [score, setScore] = useState<Score | null>(null);
+
+	const [openAlertModal, setAlertModal] = useState<boolean>(false)
 
 	useEffect(() => {
 		const handleKeyDown = (e: any) => {
@@ -133,17 +136,12 @@ export default function Game() {
 				winner,
 			}: RoomInfo) => {
 				setRoomName(roomName);
-				if (!home || !away) {
-					window.alert("A player has leaved. You will redirect to home");
-					socket.emit("leaveGame", { roomName });
-					router?.push("/");
-				}
+				if (!home || !away) setAlertModal(true);
 				setHome(home);
 				setAway(away);
 				if (ready.home && ready.away)
 					socket.emit("startInterval", { roomName });
 				setReady(ready);
-				//if (status === GAME_STATUS.End) window.alert("finished");
 				setStatus(status);
 				setPaddlePos(paddlePos);
 				setBallPos(ballPos);
@@ -167,13 +165,18 @@ export default function Game() {
 		}
 	}
 
+	function onCancelAlert() {
+		setAlertModal(false);
+		socket.emit("leaveGame", { roomName });
+		router?.push("/");
+	}
+
 	return (
 		<AuthLayout>
 			<Seo title="Game" />
 			<main className="d-flex column center">
 				{isLoading && <Loader />}
 				<UserBoard home={home} away={away} ready={ready} score={score} />
-				{/*<Pong allPlayerReady={isHomeReady && isAwayReady ? true : false} />*/}
 				<div className="pong">
 					{paddlePos !== null && (
 						<>
@@ -208,12 +211,17 @@ export default function Game() {
 						role !== ROLE.Observer &&
 						status === GAME_STATUS.End && (
 							<ResultModal roomName={roomName} role={role}>
-								<h2>Winner : {winner}</h2>
+								<h2>Winner : {winner.name}</h2>
 								<h2>
 									{score.home} : {score.away}
 								</h2>
 							</ResultModal>
-						)}
+						)
+					}
+					{
+						openAlertModal &&
+						<AlertModal text="A player has leaved. You will redirect to home" onCancel={onCancelAlert} />
+					}
 				</div>
 			</main>
 			<style jsx>{`
