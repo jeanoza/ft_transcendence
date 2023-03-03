@@ -35,17 +35,21 @@ make fclean
 
     - [ ] leader board
 
+  - [ ] manage when user in game change router
+
 - Backend:
 
   - [ ] to implement swagger to make simple dto code
 
   - Game:
 
-    - [ ] ready btn condition (1. not in game 2. home or away)
+    - [x] ready btn condition (1. not in game 2. home or away)
 
     - [ ] when home or away has 11 scores => game over => send result to db(Match history and User.rank)
 
     - [ ] when user quit => send result to db(AFK)
+
+    - [ ] manage when user in game change router
 
     - [ ] random matching system
 

@@ -31,6 +31,7 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 	const router = useRouter();
 
 	useEffect(() => {
+		//console.log(router, roomName);
 		updateStatus();
 		async function updateStatus() {
 			try {
