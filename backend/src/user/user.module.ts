@@ -10,14 +10,22 @@ import { BlockedController } from './controllers/blocked.controller';
 import { FriendService } from './services/friend.service';
 import { UserService } from './services/user.service';
 import { BlockedService } from './services/blocked.service';
+import { MatchService } from './services/match.service';
+import { MatchController } from './controllers/match.controller';
+import { Match } from 'src/user/entities/match.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Friend, Blocked]),
+    TypeOrmModule.forFeature([User, Friend, Blocked, Match]),
     JwtModule.register({}),
   ],
-  controllers: [UserController, FriendController, BlockedController],
-  providers: [UserService, FriendService, BlockedService],
+  controllers: [
+    UserController,
+    FriendController,
+    BlockedController,
+    MatchController,
+  ],
+  providers: [UserService, FriendService, BlockedService, MatchService],
   exports: [UserService],
 })
 export class UserModule {}

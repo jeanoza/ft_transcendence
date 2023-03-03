@@ -88,12 +88,6 @@ export class UserService {
     return await this.userRepository.update(id, { status });
   }
 
-  async updateRank(id: number, isWinner: boolean) {
-    const { rank } = await this.findOne(id);
-    const nextRank = isWinner ? rank + 15 : rank - 10;
-    return await this.update(id, { rank: nextRank });
-  }
-
   async update(id: number, data) {
     if (data.name) {
       const user = await this.findByName(data.name);

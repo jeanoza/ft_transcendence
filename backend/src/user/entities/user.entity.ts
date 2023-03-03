@@ -13,6 +13,7 @@ import {
 import { Friend } from './friend.entity';
 import { Blocked } from './blocked.entity';
 import { DM } from 'src/chat/entities/dm.entity';
+import { Match } from 'src/user/entities/match.entity';
 
 //in postgresql do not put schema
 @Entity({ name: 'users' })
@@ -99,4 +100,10 @@ export class User {
 
   @OneToMany(() => Blocked, (blocked) => blocked.userB)
   blockedsAsB: Blocked[];
+
+  @OneToMany(() => Match, (match) => match.winner)
+  matchesAsWinner: Match[];
+
+  @OneToMany(() => Match, (match) => match.loser)
+  matchesAsLoser: Match[];
 }

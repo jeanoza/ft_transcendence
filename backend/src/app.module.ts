@@ -15,6 +15,7 @@ import { Blocked } from './user/entities/blocked.entity';
 import { AppController } from './app.controller';
 import { DM } from './chat/entities/dm.entity';
 import { GameModule } from './game/game.module';
+import { Match } from './user/entities/match.entity';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { GameModule } from './game/game.module';
         Friend,
         Blocked,
         DM,
+        Match,
       ],
       //logging: process.env.NODE_ENV !== 'production', // logging only on dev
       logging: false, // logging only on dev
