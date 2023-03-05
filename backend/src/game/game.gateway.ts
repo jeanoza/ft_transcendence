@@ -64,6 +64,8 @@ export class GameGateway
   ) {
     this.online.set(userId, client.id);
     this.logger.debug('online users');
+    if (this.gameService.rooms.size)
+      client.emit('liveGameList', Array.from(this.gameService.rooms));
     console.log(this.online);
   }
   @SubscribeMessage('inviteGame')
@@ -134,6 +136,7 @@ export class GameGateway
       const awayId = Number(_splitted[2]);
 
       await this.gameService.createRoom(roomName, homeId, awayId);
+      this.server.emit('liveGameList', Array.from(this.gameService.rooms));
 
       setTimeout(() => {
         //console.log('here', homeId, awayId);
@@ -179,6 +182,7 @@ export class GameGateway
       // FIXME: see side effect for observers....
       //console.log('before', this.gameService.rooms.get(roomName));
       this.gameService.rooms.delete(roomName);
+      this.server.emit('liveGameList', Array.from(this.gameService.rooms));
       //console.log('after', this.gameService.rooms.get(roomName));
     }
   }

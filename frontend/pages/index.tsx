@@ -3,6 +3,7 @@ import { useUser } from "../utils/hooks/swrHelper";
 import { AuthLayout } from "../components/layout";
 import { useEffect } from "react";
 import axios from "axios";
+import { LiveGameList } from "../components/index/liveGameList";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -22,26 +23,31 @@ export default function Home() {
 
 	useEffect(() => {
 		async function getAllUserByRank() {
-			axios.get("user/rank").then(res => {
+			axios.get("user/rank").then((res) => {
 				// use this data.
 				// put it on state and do it your self what you want
 				// data is already ordered by rank
 				//ex: res.data[0] is highest ranker
-				console.log(res.data);
-			})
+				//console.log(res.data);
+			});
 		}
 		getAllUserByRank();
-	}, [])
+	}, []);
 
 	return (
 		<AuthLayout>
 			<Seo title="Home" />
 			<main>
-				<h1 className="">Home</h1>
-				<div>
-					<span>hello, {user?.name}</span>
+				<div className="d-flex center justify-between">
+					<div className="leader-board">hello, {user?.name}</div>
+					<LiveGameList />
 				</div>
 			</main>
+			<style jsx>{`
+				.leader-board {
+					width: 100%;
+				}
+			`}</style>
 		</AuthLayout>
 	);
 }

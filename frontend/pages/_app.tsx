@@ -25,14 +25,18 @@ import {
 	faUserSlash,
 	faCrown,
 	faHammer,
+	faEye as fasEye,
 } from "@fortawesome/free-solid-svg-icons";
 import {
+	faEye,
 	faPaperPlane,
 	faTrashCan,
 	faCircleQuestion,
 } from "@fortawesome/free-regular-svg-icons";
 
 library.add(
+	faEye,
+	fasEye,
 	faHammer,
 	faCrown,
 	faUserSlash,

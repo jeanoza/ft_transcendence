@@ -37,13 +37,15 @@ make fclean
 
   - [ ] manage when user in game change router
 
+  - [ ] live game list
+
 - Backend:
 
   - [ ] to implement swagger to make simple dto code
 
-  - Game:
+  - [ ] Match history for other user by id
 
-    - [x] ready btn condition (1. not in game 2. home or away)
+  - Game:
 
     - [ ] when home or away has 11 scores => game over => send result to db(Match history and User.rank)
 
@@ -56,10 +58,6 @@ make fclean
 - Database:
 
   - [ ] db table draw.io => to update with recent db
-
-  - [ ] Match history table : `id`, `user1(home)`, `user2(away)`, `winner`...
-
-  - [ ] rank to implement in User table
 
 - Docker:
 

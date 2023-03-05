@@ -128,6 +128,8 @@
 
   - [x] game to manage in server (to avoid synchronization problems!!)
 
+  - [x] ready btn condition (1. not in game 2. home or away)
+
 - Database:
 
   - [x] config PostgreSQL and connect with nestJS server
@@ -143,6 +145,10 @@
   - [x] Blocked list
 
   - [x] User table update
+
+  - [x] Match history table : `id`, `user1(home)`, `user2(away)`, `winner`...
+
+  - [x] rank to implement in User table
 
 - Docker:
 
