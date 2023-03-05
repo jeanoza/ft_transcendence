@@ -71,7 +71,7 @@ export function UserModal({
 	}
 
 	async function inviteGame(receiverId: number) {
-		if (userData.status === 2) window.alert("You cannot invite a playing user")
+		if (userData.status === 2) window.alert("You cannot invite a user in game");
 		else socket.emit("inviteGame", { senderId: user.id, receiverId });
 	}
 

@@ -20,11 +20,6 @@ export function LiveGameList() {
 	return (
 		<div className="live-game-container p-2">
 			<h2>Live game</h2>
-			{liveList === null && (
-				<div className="list my-4">
-					<span>No games in live...</span>
-				</div>
-			)}
 			{liveList && (
 				<ul className="list my-4">
 					{liveList.map((live) => {
@@ -43,7 +38,7 @@ export function LiveGameList() {
 					})}
 				</ul>
 			)}
-			<div className="d-flex center">
+			<div className="d-flex center btn-container">
 				<button>Play</button>
 			</div>
 			<style jsx>{`
@@ -53,6 +48,9 @@ export function LiveGameList() {
 					overflow: none auto;
 					border: 1px solid var(--border-color);
 					border-radius: 8px;
+				}
+				.btn-container {
+					margin-top: 1rem;
 				}
 			`}</style>
 		</div>

@@ -31,13 +31,14 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 	const router = useRouter();
 
 	useEffect(() => {
-		//console.log(router, roomName);
 		updateStatus();
 		async function updateStatus() {
 			try {
 				const _user = (await axios.get("user/current")).data;
 				let status = 1;
 				if (router.pathname === "/game") status = 2;
+				else gameSocket.emit("leaveGamePage", { userId: _user.id });
+
 				chatSocket.emit("updateStatus", { userId: _user.id, status });
 			} catch (e) {
 				console.log(e);
@@ -62,9 +63,6 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 			setRoomName(roomName);
 			setConfirmModal(true);
 			setInviteUser(inviteUser);
-			//if (window.confirm("Do you accept to join to game?"))
-			//	gameSocket.emit("acceptGame", { roomName });
-			//else gameSocket.emit("refuseGame", { roomName });
 		});
 		gameSocket.on("acceptedGame", function ({ roomName }) {
 			router?.push("/game");
@@ -74,11 +72,18 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 			setRefuseUser(refuseUser);
 			gameSocket.emit("leaveGame", { roomName });
 		});
+		gameSocket.on(
+			"makeLeaveGame",
+			function ({ role, roomName }: { role: number; roomName: string }) {
+				gameSocket.emit("leaveGame", { role, roomName });
+			}
+		);
 
 		return () => {
 			gameSocket.off("invitedGame");
 			gameSocket.off("acceptedGame");
 			gameSocket.off("refusedGame");
+			gameSocket.off("makeLeaveGame");
 			chatSocket.off("connected");
 		};
 	}, []);
@@ -111,17 +116,21 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 		<div className="container">
 			<Navbar />
 			{user && children}
-			{openConfirmModal && inviteUser &&
+			{openConfirmModal && inviteUser && (
 				<ConfirmModal
 					inviteUser={inviteUser}
 					text="Do you accept to join to game?"
 					onAccept={onAccept}
 					onCancel={onCancelInvite}
 				/>
-			}
-			{openAlertModal && refuseUser &&
-				<AlertModal refuseUser={refuseUser} text="The user refused your invite" onCancel={onCloseRefuseModal} />
-			}
+			)}
+			{openAlertModal && refuseUser && (
+				<AlertModal
+					refuseUser={refuseUser}
+					text="The user refused your invite"
+					onCancel={onCloseRefuseModal}
+				/>
+			)}
 			<style jsx global>{`
 				.container {
 					height: 100vh;

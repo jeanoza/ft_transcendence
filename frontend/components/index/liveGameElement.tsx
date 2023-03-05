@@ -1,4 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRouter } from "next/router";
+import { useUser } from "../../utils/hooks/swrHelper";
+import { useSocket } from "../../utils/hooks/useSocket";
 import { Avatar } from "../avatar";
 
 interface IProps {
@@ -8,8 +11,12 @@ interface IProps {
 }
 
 export function LiveGameElement({ roomName, home, away }: IProps) {
+	const router = useRouter();
+	const { socket } = useSocket("game");
+	const { user } = useUser();
 	function handleObserve() {
-		console.log(roomName);
+		router.push("/game");
+		socket.emit("observeGame", { roomName, observerId: user.id });
 	}
 	return (
 		<li className="d-flex center gap">

@@ -62,15 +62,21 @@ export class Room {
   private winner: User | null;
   private loser: User | null;
 
+  private participants: Set<number>;
+
   constructor(home: User, away: User, roomName: string) {
     this.home = home;
     this.away = away;
     this.roomName = roomName;
     this.status = GAME_STATUS.Waiting;
+    this.participants = new Set();
     this.init();
   }
 
   //#region getter
+  getRoomName(): string {
+    return this.roomName;
+  }
 
   getHome(): User {
     return this.home;
@@ -102,6 +108,9 @@ export class Room {
   getLoser(): User {
     return this.loser;
   }
+  getParticipants(): Set<number> {
+    return this.participants;
+  }
   //#endregion
 
   //#region setter
@@ -129,7 +138,20 @@ export class Room {
   setAway(away: User | null): void {
     this.away = away;
   }
+  setWinner(winner: User | null): void {
+    this.winner = winner;
+  }
+  setLoser(loser: User | null): void {
+    this.loser = loser;
+  }
   //#endregion
+
+  addParticipant(userId: number) {
+    this.participants.add(userId);
+  }
+  deleteParticipant(userId: number) {
+    this.participants.delete(userId);
+  }
 
   paddleUp(posY: number) {
     return Math.max(posY - 20, 0);
@@ -168,14 +190,16 @@ export class Room {
     }
     if (this.score.home === SCORE_TO_WIN || this.score.away === SCORE_TO_WIN) {
       this.status = GAME_STATUS.End;
-      //this.winner =
-      //  this.score.home > this.score.away ? this.home.name : this.away.name;
-      if (this.score.home > this.score.away) {
-        this.winner = this.home;
-        this.loser = this.away;
-      } else {
-        this.winner = this.away;
-        this.loser = this.home;
+
+      // put winner or loser only two player is in room at the result moment.
+      if (this.home && this.away) {
+        if (this.score.home > this.score.away) {
+          this.winner = this.home;
+          this.loser = this.away;
+        } else {
+          this.winner = this.away;
+          this.loser = this.home;
+        }
       }
     }
     //// if wating status or end status, do not move ball

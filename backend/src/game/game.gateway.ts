@@ -102,7 +102,8 @@ export class GameGateway
           clearInterval(intervalIds[roomName]);
           // FIXME: ici send match history and renouvel rank point
           this.logger.debug('FIN interval');
-          this.gameService.updateMatchResult(room);
+          if (room.getWinner() && room.getLoser())
+            this.gameService.updateMatchResult(room);
         }
         this.server.to(roomName).emit('roomInfo', room);
       }
@@ -135,10 +136,10 @@ export class GameGateway
       const awayId = Number(_splitted[2]);
 
       await this.gameService.createRoom(roomName, homeId, awayId);
+
       this.server.emit('liveGameList', Array.from(this.gameService.rooms));
 
       setTimeout(() => {
-        //console.log('here', homeId, awayId);
         if (homeId)
           this.server
             .to(this.online.get(homeId))
@@ -150,6 +151,25 @@ export class GameGateway
       }, 1000);
     }
   }
+
+  @SubscribeMessage('observeGame')
+  async observeGame(
+    @ConnectedSocket() client: Socket,
+    @MessageBody('observerId') observerId: number,
+    @MessageBody('roomName') roomName: string,
+  ) {
+    if (this.server.adapter['rooms'].get(roomName)) {
+      client.join(roomName);
+      const room = this.gameService.rooms.get(roomName);
+      room.addParticipant(observerId);
+      setTimeout(() => {
+        this.server
+          .to(this.online.get(observerId))
+          .emit('enterRoom', ROLE.Observer, roomName);
+      }, 1000);
+    }
+  }
+
   @SubscribeMessage('refuseGame')
   async refuseGame(
     @ConnectedSocket() client: Socket,
@@ -167,12 +187,14 @@ export class GameGateway
   ) {
     //this.logger.debug('LEAVE-BEFORE');
     //console.log(this.server.adapter['rooms']);
+    const room = this.gameService.rooms.get(roomName);
+
     client.leave(roomName);
+
     //this.logger.debug(`AFTER LEAVE: ${role}`);
     //console.log(this.server.adapter['rooms']);
 
     if (role && (role === ROLE.Home || role === ROLE.Away)) {
-      const room = this.gameService.rooms.get(roomName);
       if (role === ROLE.Home) room.setHome(null);
       else if (role === ROLE.Away) room.setAway(null);
       this.server.to(roomName).emit('roomInfo', room);
@@ -219,5 +241,26 @@ export class GameGateway
   getLiveGameList(@ConnectedSocket() client: Socket) {
     if (this.gameService.rooms.size)
       client.emit('liveGameList', Array.from(this.gameService.rooms));
+  }
+
+  @SubscribeMessage('leaveGamePage')
+  testSocket(
+    @ConnectedSocket() client: Socket,
+    @MessageBody('userId') userId: number,
+  ) {
+    this.gameService.rooms.forEach((room) => {
+      const participants = room.getParticipants();
+
+      //Verify current user participe a game
+      //if participated, make it leave game
+      if (participants.has(userId)) {
+        participants.delete(userId);
+
+        let role = 0;
+        if (room.getHome()?.id === userId) role = 1;
+        else if (room.getAway()?.id === userId) role = 2;
+        client.emit('makeLeaveGame', { role, roomName: room.getRoomName() });
+      }
+    });
   }
 }

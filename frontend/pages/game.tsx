@@ -91,7 +91,7 @@ export default function Game() {
 	const [ballDir, setBallDir] = useState<BallDir | null>(null);
 	const [score, setScore] = useState<Score | null>(null);
 
-	const [openAlertModal, setAlertModal] = useState<boolean>(false)
+	const [openAlertModal, setAlertModal] = useState<boolean>(false);
 
 	useEffect(() => {
 		const handleKeyDown = (e: any) => {
@@ -216,12 +216,13 @@ export default function Game() {
 									{score.home} : {score.away}
 								</h2>
 							</ResultModal>
-						)
-					}
-					{
-						openAlertModal &&
-						<AlertModal text="A player has leaved. You will redirect to home" onCancel={onCancelAlert} />
-					}
+						)}
+					{openAlertModal && (
+						<AlertModal
+							text="A player has leaved. You will redirect to home"
+							onCancel={onCancelAlert}
+						/>
+					)}
 				</div>
 			</main>
 			<style jsx>{`

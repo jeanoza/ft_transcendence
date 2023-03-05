@@ -30,8 +30,10 @@ export class GameService {
       where: { id: awayId },
     });
     const room = new Room(home, away, roomName);
-
+    room.addParticipant(homeId);
+    room.addParticipant(awayId);
     this.rooms.set(roomName, room);
+    return room;
   }
 
   async updateMatchResult(room: Room) {
