@@ -64,8 +64,7 @@ export class GameGateway
   ) {
     this.online.set(userId, client.id);
     this.logger.debug('online users');
-    if (this.gameService.rooms.size)
-      client.emit('liveGameList', Array.from(this.gameService.rooms));
+
     console.log(this.online);
   }
   @SubscribeMessage('inviteGame')
@@ -214,5 +213,11 @@ export class GameGateway
   ) {
     const room = this.gameService.rooms.get(roomName);
     room.updatePaddles(role, move);
+  }
+
+  @SubscribeMessage('getLiveGameList')
+  getLiveGameList(@ConnectedSocket() client: Socket) {
+    if (this.gameService.rooms.size)
+      client.emit('liveGameList', Array.from(this.gameService.rooms));
   }
 }
