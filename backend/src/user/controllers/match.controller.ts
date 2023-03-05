@@ -24,7 +24,8 @@ export class MatchController {
   }
 
   @Get(':id')
-  async get(@Request() req, @Param('id') userId: number) {
+  async get(@Param('id') userId: number) {
+    return await this.matchService.getAllMatch(userId);
     //return await this.matchService.getBlocked(req.user.id, userId);
   }
 }

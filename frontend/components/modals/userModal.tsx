@@ -1,6 +1,7 @@
 import axios from "axios";
 import {
 	useAllFriend,
+	useAllMatchByUserId,
 	useBlocked,
 	useFriend,
 	useUser,
@@ -13,6 +14,7 @@ import { useSocket } from "../../utils/hooks/useSocket";
 import { DmModal } from "./dmModal";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { MatchHistory } from "./user/MatchHistory";
 
 export function UserModal({
 	userId,
@@ -123,6 +125,7 @@ export function UserModal({
 						)}
 					</div>
 					<UserInfo user={userData} />
+					<MatchHistory userId={userData.id} />
 				</div>
 			)}
 			{openDmModal && (
