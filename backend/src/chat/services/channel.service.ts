@@ -316,4 +316,12 @@ export class ChannelService {
     if (channel?.mutedIds.find((mutedId) => mutedId === userId)) return true;
     return false;
   }
+  async getAllPublic() {
+    const res = await this.channelRepository
+      .createQueryBuilder('channels')
+      .where('channels.isPublic = :isPublic', { isPublic: true })
+      .select(['channels.id', 'channels.name'])
+      .getMany();
+    return res;
+  }
 }
