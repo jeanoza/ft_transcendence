@@ -20,6 +20,7 @@ export class GameService {
   ) {}
 
   rooms = new Map<string, Room>();
+  waitings = new Map<number, string>();
   logger = new Logger('gameService');
 
   async createRoom(roomName: string, homeId: number, awayId: number) {
@@ -70,5 +71,20 @@ export class GameService {
       .getOne();
     const nextRank = isWinner ? rank + 15 : rank - 10;
     return await this.userRepository.update(id, { rank: nextRank });
+  }
+
+  findUser(currentId: number): number | null {
+    let otherId = null;
+    this.waitings.forEach((value, key) => {
+      if (key !== currentId) otherId = key;
+    });
+    return otherId;
+  }
+
+  addWaiting(id: number, socketId: string) {
+    this.waitings.set(id, socketId);
+  }
+  deleteWaiting(id: number) {
+    this.waitings.delete(id);
   }
 }

@@ -116,7 +116,7 @@ export default function Game() {
 	}, [isLoading, paddlePos, role]);
 
 	useEffect(() => {
-		socket.on("enterRoom", (role: ROLE, roomName: string) => {
+		socket.on("enterRoom", ({ role, roomName }) => {
 			setRole(role);
 			socket.emit("startInterval", { roomName });
 			setLoading(false);

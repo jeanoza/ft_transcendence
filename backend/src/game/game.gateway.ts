@@ -143,11 +143,11 @@ export class GameGateway
         if (homeId)
           this.server
             .to(this.online.get(homeId))
-            .emit('enterRoom', ROLE.Home, roomName);
+            .emit('enterRoom', { role: ROLE.Home, roomName });
         if (awayId)
           this.server
             .to(this.online.get(awayId))
-            .emit('enterRoom', ROLE.Away, roomName);
+            .emit('enterRoom', { role: ROLE.Away, roomName });
       }, 1000);
     }
   }
@@ -262,5 +262,54 @@ export class GameGateway
         client.emit('makeLeaveGame', { role, roomName: room.getRoomName() });
       }
     });
+  }
+
+  @SubscribeMessage('joinRandomMatch')
+  joinRandomMatch(
+    @ConnectedSocket() client: Socket,
+    @MessageBody('roomName') roomName: string,
+    @MessageBody('role') role: ROLE,
+  ) {
+    client.join(roomName);
+    setTimeout(() => {
+      client.emit('enterRoom', { role, roomName });
+    }, 1000);
+  }
+
+  @SubscribeMessage('addWaiting')
+  async addWaiting(
+    @ConnectedSocket() client: Socket,
+    @MessageBody('userId') userId: number,
+  ) {
+    this.gameService.addWaiting(userId, client.id);
+
+    this.logger.debug('AFTER ADD WAITING');
+    console.log(this.gameService.waitings);
+
+    const otherId = this.gameService.findUser(userId);
+    if (otherId) {
+      const roomName = `game-${otherId}-${userId}`;
+      await this.gameService.createRoom(roomName, otherId, userId);
+      this.server
+        .to(this.gameService.waitings.get(otherId))
+        .emit('foundRandomMatch', { roomName, role: ROLE.Home });
+      this.server
+        .to(this.gameService.waitings.get(userId))
+        .emit('foundRandomMatch', { roomName, role: ROLE.Away });
+
+      this.gameService.deleteWaiting(otherId);
+      this.gameService.deleteWaiting(userId);
+      this.server.emit('liveGameList', Array.from(this.gameService.rooms));
+    }
+  }
+
+  @SubscribeMessage('deleteWaiting')
+  deleteWaiting(
+    @ConnectedSocket() client: Socket,
+    @MessageBody('userId') userId: number,
+  ) {
+    this.gameService.deleteWaiting(userId);
+    this.logger.debug('AFTER DELETE WAITING');
+    console.log(this.gameService.waitings);
   }
 }
