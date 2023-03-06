@@ -48,9 +48,6 @@ export function MatchHistory({ userId }: { userId: number }) {
 				})}
 			</ul>
 			<style jsx>{`
-				.match-container {
-					/*margin*/
-				}
 				.list {
 					background-color: var(--gray-light-1);
 					border-radius: 8px;
@@ -58,7 +55,7 @@ export function MatchHistory({ userId }: { userId: number }) {
 					overflow-y: auto;
 				}
 				.text-overflow {
-					width: 7rem;
+					width: 5rem;
 					text-align: center;
 				}
 				.text {
@@ -69,6 +66,10 @@ export function MatchHistory({ userId }: { userId: number }) {
 				}
 				.text.lost {
 					color: red;
+				}
+				.date {
+					width:7rem;
+					text-align:center;
 				}
 			`}</style>
 		</div>
