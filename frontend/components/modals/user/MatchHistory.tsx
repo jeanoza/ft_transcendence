@@ -5,6 +5,7 @@ interface Match {
 	score: number[];
 	winner: IUser;
 	loser: IUser;
+	createdAt: string;
 }
 
 export function MatchHistory({ userId }: { userId: number }) {
@@ -21,22 +22,30 @@ export function MatchHistory({ userId }: { userId: number }) {
 					</li>
 				)}
 				{matches?.map((match: Match, index: string) => {
+					const isWinner = match.winner.id === userId ? true : false;
 					const _score = match.score;
-					const score =
-						_score[0] > _score[1]
-							? _score[0] + " : " + _score[1]
-							: _score[1] + " : " + _score[0];
+					const score = _score[0] + " : " + _score[1];
 					return (
 						<li key={index} className="d-flex center justify-between my-2 mx-4">
-							<Avatar size="sm" url={match.winner.imageURL}>
-								<h3 className="text won">Won</h3>
-							</Avatar>
-							<span className="text-overflow">{match.winner.name}</span>
-							<h3>{score}</h3>
-							<span className="text-overflow">{match.loser.name}</span>
-							<Avatar size="sm" url={match.loser.imageURL}>
-								<h3 className="text lost">Lost</h3>
-							</Avatar>
+							<div className="d-flex column center">
+								<Avatar size="sm" url={match.winner.imageURL} />
+								<h4 className="text-overflow">{match.winner.name}</h4>
+							</div>
+							<h3>VS</h3>
+							<div className="d-flex column center">
+								<Avatar size="sm" url={match.loser.imageURL} />
+								<h4 className="text-overflow">{match.loser.name}</h4>
+							</div>
+							<div className="d-flex column center">
+								<h3>{score}</h3>
+								{isWinner
+									? <span className="text won">Won</span>
+									: <span className="text lost">Lost</span>
+								}
+							</div>
+							<span className="date">
+								{new Date(match.createdAt).toLocaleString()}
+							</span>
 						</li>
 					);
 				})}
@@ -52,20 +61,21 @@ export function MatchHistory({ userId }: { userId: number }) {
 					overflow-y: auto;
 				}
 				.text-overflow {
-					width: 7rem;
+					width: 5rem;
 					text-align: center;
 				}
 				.text {
-					position: absolute;
-					top: 50%;
-					left: 50%;
-					transform: translate(-50%, -50%);
+					margin:auto;
+					font-weight:500;
 				}
 				.text.won {
-					color: white;
+					color: var(--accent);
 				}
 				.text.lost {
 					color: red;
+				}
+				.date {
+					width:5rem;
 				}
 			`}</style>
 		</div>
