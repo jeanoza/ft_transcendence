@@ -24,8 +24,8 @@ export function PlayButton() {
 
 	function handlePlay() {
 		socket.emit('addWaiting', { userId: user.id })
+		// to prevent invite user when the user is waiting random match
 		chatSocket.emit("updateStatus", { userId: user.id, status: 2 })
-
 		setWaitingModal(true);
 	}
 	function handleCancelWaiting() {
