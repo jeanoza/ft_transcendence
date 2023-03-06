@@ -160,7 +160,7 @@ export default function Game() {
 		if (role !== ROLE.Observer) {
 			const _ready = { ...ready };
 			if (role === ROLE.Home) _ready.home = !ready.home;
-			else _ready.away = !ready.away;
+			else if (role === ROLE.Away) _ready.away = !ready.away;
 			socket.emit("ready", { roomName, ready: _ready });
 		}
 	}
@@ -199,7 +199,7 @@ export default function Game() {
 							}}
 						/>
 					)}
-					{role !== ROLE.Observer && status !== GAME_STATUS.Playing && (
+					{role && (role === ROLE.Home || role === ROLE.Away) && status !== GAME_STATUS.Playing && (
 						<button className="readyBtn" onClick={handleReady}>
 							Ready
 						</button>

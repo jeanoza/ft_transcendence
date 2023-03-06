@@ -35,25 +35,11 @@ make fclean
 
     - [ ] leader board
 
-  - [ ] manage when user in game change router
-
-  - [ ] live game list
+  - responsive
 
 - Backend:
 
   - [ ] to implement swagger to make simple dto code
-
-  - [ ] Match history for other user by id
-
-  - Game:
-
-    - [ ] when home or away has 11 scores => game over => send result to db(Match history and User.rank)
-
-    - [ ] when user quit => send result to db(AFK)
-
-    - [ ] manage when user in game change router
-
-    - [ ] random matching system
 
 - Database:
 
@@ -65,17 +51,13 @@ make fclean
 
 - ETC:
 
-  - [ ] save only locally .env
+  - [x] save only locally .env
 
 ## BUG to fix
 
 - frontend:
 
 - backend:
-
-  - [x] validate local-auth : unique value validation to add for name
-
-  - [ ]
 
 ## Refactoring
 

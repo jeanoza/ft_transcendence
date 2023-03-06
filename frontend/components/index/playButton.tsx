@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 
 export function PlayButton() {
 	const { socket } = useSocket("game");
+	const { socket: chatSocket } = useSocket("chat")
 	const { user } = useUser();
 	const [openWaitingModal, setWaitingModal] = useState<boolean>(false);
 	const router = useRouter();
@@ -23,10 +24,13 @@ export function PlayButton() {
 
 	function handlePlay() {
 		socket.emit('addWaiting', { userId: user.id })
+		chatSocket.emit("updateStatus", { userId: user.id, status: 2 })
+
 		setWaitingModal(true);
 	}
 	function handleCancelWaiting() {
 		socket.emit('deleteWaiting', { userId: user.id })
+		chatSocket.emit("updateStatus", { userId: user.id, status: 1 })
 		setWaitingModal(false);
 	}
 	return <div className="d-flex center justify-end play-button-container">
