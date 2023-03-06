@@ -1,7 +1,10 @@
+import { Spinner } from "./spinner";
+
 export function Loader() {
 	return (
+
 		<div className="loader">
-			<div className="lds-default">
+			<div className="lds-spinner">
 				<div></div>
 				<div></div>
 				<div></div>
@@ -17,104 +20,96 @@ export function Loader() {
 			</div>
 			<style jsx>{`
 				.loader {
-					z-index: 1;
-					position: absolute;
-					top: 0px;
-					left: 0px;
-					width: 100%;
-					height: 100vh;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					background-color: var(--modal-bg-color);
-					overflow-y: fit;
+				z-index: 1;
+				position: absolute;
+				top: 0px;
+				left: 0px;
+				width: 100%;
+				height: 100vh;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				background-color: var(--modal-bg-color);
+				overflow-y: fit;
+			}
+			.lds-spinner {
+				display: inline-block;
+				position: relative;
+				width: 40px;
+				height: 40px;
+			}
+			.lds-spinner div {
+				transform-origin: 20px 20px;
+				animation: lds-spinner 1.2s linear infinite;
+			}
+			.lds-spinner div:after {
+				content: " ";
+				display: block;
+				position: absolute;
+				top: 1.5px;
+				left: 18.5px;
+				width: 3px;
+				height: 9px;
+				border-radius: 20%;
+				background-color: white;
+			}
+			.lds-spinner div:nth-child(1) {
+				transform: rotate(0deg);
+				animation-delay: -1.1s;
+			}
+			.lds-spinner div:nth-child(2) {
+				transform: rotate(30deg);
+				animation-delay: -1s;
+			}
+			.lds-spinner div:nth-child(3) {
+				transform: rotate(60deg);
+				animation-delay: -0.9s;
+			}
+			.lds-spinner div:nth-child(4) {
+				transform: rotate(90deg);
+				animation-delay: -0.8s;
+			}
+			.lds-spinner div:nth-child(5) {
+				transform: rotate(120deg);
+				animation-delay: -0.7s;
+			}
+			.lds-spinner div:nth-child(6) {
+				transform: rotate(150deg);
+				animation-delay: -0.6s;
+			}
+			.lds-spinner div:nth-child(7) {
+				transform: rotate(180deg);
+				animation-delay: -0.5s;
+			}
+			.lds-spinner div:nth-child(8) {
+				transform: rotate(210deg);
+				animation-delay: -0.4s;
+			}
+			.lds-spinner div:nth-child(9) {
+				transform: rotate(240deg);
+				animation-delay: -0.3s;
+			}
+			.lds-spinner div:nth-child(10) {
+				transform: rotate(270deg);
+				animation-delay: -0.2s;
+			}
+			.lds-spinner div:nth-child(11) {
+				transform: rotate(300deg);
+				animation-delay: -0.1s;
+			}
+			.lds-spinner div:nth-child(12) {
+				transform: rotate(330deg);
+				animation-delay: 0s;
+			}
+			@keyframes lds-spinner {
+				0% {
+					opacity: 1;
 				}
-				.lds-default {
-					display: inline-block;
-					position: relative;
-					width: 80px;
-					height: 80px;
+				100% {
+					opacity: 0;
 				}
-				.lds-default div {
-					position: absolute;
-					width: 6px;
-					height: 6px;
-					background: white;
-					border-radius: 50%;
-					animation: lds-default 1.2s linear infinite;
-				}
-				.lds-default div:nth-child(1) {
-					animation-delay: 0s;
-					top: 37px;
-					left: 66px;
-				}
-				.lds-default div:nth-child(2) {
-					animation-delay: -0.1s;
-					top: 22px;
-					left: 62px;
-				}
-				.lds-default div:nth-child(3) {
-					animation-delay: -0.2s;
-					top: 11px;
-					left: 52px;
-				}
-				.lds-default div:nth-child(4) {
-					animation-delay: -0.3s;
-					top: 7px;
-					left: 37px;
-				}
-				.lds-default div:nth-child(5) {
-					animation-delay: -0.4s;
-					top: 11px;
-					left: 22px;
-				}
-				.lds-default div:nth-child(6) {
-					animation-delay: -0.5s;
-					top: 22px;
-					left: 11px;
-				}
-				.lds-default div:nth-child(7) {
-					animation-delay: -0.6s;
-					top: 37px;
-					left: 7px;
-				}
-				.lds-default div:nth-child(8) {
-					animation-delay: -0.7s;
-					top: 52px;
-					left: 11px;
-				}
-				.lds-default div:nth-child(9) {
-					animation-delay: -0.8s;
-					top: 62px;
-					left: 22px;
-				}
-				.lds-default div:nth-child(10) {
-					animation-delay: -0.9s;
-					top: 66px;
-					left: 37px;
-				}
-				.lds-default div:nth-child(11) {
-					animation-delay: -1s;
-					top: 62px;
-					left: 52px;
-				}
-				.lds-default div:nth-child(12) {
-					animation-delay: -1.1s;
-					top: 52px;
-					left: 62px;
-				}
-				@keyframes lds-default {
-					0%,
-					20%,
-					80%,
-					100% {
-						transform: scale(1);
-					}
-					50% {
-						transform: scale(1.5);
-					}
-				}
-			`}</style>
-		</div>
+			}
+		`}</style>
+		</div >
 	);
 }

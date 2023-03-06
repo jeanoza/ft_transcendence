@@ -231,7 +231,7 @@ export default function Game() {
 					width: 600px;
 					height: 400px;
 					background: black;
-					margin: 0 auto;
+					margin: 0;
 					overflow: hidden;
 				}
 				.paddle {
