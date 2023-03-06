@@ -33,15 +33,11 @@ export default function LeaderBoard() {
 				<ol start={1} className="leaderboard">
 					{leaderList.map((list) => {
 						return (
-							<li
-								style={{ listStyleType: "lower-roman" }}
-								key={list.id}
-								className="tr2-home"
-							>
+							<li key={list.id} className="tr2-home">
 								<span className="image-home">
-									<Avatar size="smalls" url={list.imageURL} />
+									<Avatar size="sm" url={list.imageURL} />
 								</span>
-								<span className="id-home">{list.name}</span>
+								<span className="name-home">{list.name}</span>
 								<span className="rank-home">{list.rank}</span>
 							</li>
 						);
@@ -56,22 +52,40 @@ export default function LeaderBoard() {
 				.leaderboard {
 					margin-top: 40px;
 				}
-				.listBox {
-					border-radius: 8px;
-					border: solid, grey;
-				}
 
 				.tr2-home {
-					text-align: center;
-					background-color: white;
 					color: black;
 					font-size: small;
-					display: flex;
+					display: list-item;
+					list-style-position: inside;
+					background-color: var(--gray-light-1);
+					padding-left: 100px;
 					align-items: center;
-					justify-content: space-around;
-					font-family: "sans-serif";
-					padding: 10px;
-					list-style-type: decimal;
+					width: 60%;
+					align-position: center;
+					margin-left: 300px;
+					border-radius: 8px;
+					margin-bottom: 10px;
+					line-height: 100px;
+				}
+				.image-home {
+					display: inline-block;
+					width: 200px;
+					margin-left: 50px;
+					justify-content: center;
+					vertical-align: middle;
+				}
+				li::marker {
+					content: counter(list-item);
+					color: black;
+					font-size: 20px;
+					font-size: 100%;
+					color: black;
+				}
+				.name-home {
+					display: inline-block;
+					width: 200px;
+					margin-left: 50px;
 				}
 			`}</style>
 		</div>
