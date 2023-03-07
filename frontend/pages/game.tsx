@@ -93,7 +93,7 @@ export default function Game() {
 	const [ballPos, setBallPos] = useState<BallPos | null>(null);
 	const [ballDir, setBallDir] = useState<BallDir | null>(null);
 	const [score, setScore] = useState<Score | null>(null);
-	const [observers, setObservers] = useState<IUser[] | null>(null)
+	const [observers, setObservers] = useState<IUser[]>([])
 
 	const [openAlertModal, setAlertModal] = useState<boolean>(false);
 
@@ -225,7 +225,7 @@ export default function Game() {
 					</div>
 				</div>
 				<div className="observers-container p-2">
-					<h2>Observers</h2>
+					<h2>Observers({observers?.length})</h2>
 					<ul className="my-4">
 						{observers?.map(observer => {
 							return <li key={observer.id} className="d-flex center justify-start gap">
@@ -295,6 +295,7 @@ export default function Game() {
 					border-radius:8px;
 				}
 				.observers-container ul{
+					width:16rem;
 
 				}
 				.observers-container li{

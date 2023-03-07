@@ -262,7 +262,6 @@ export class GameGateway
       //if participated, make it leave game
       if (participants.has(userId)) {
         room.deleteParticipant(userId);
-
         let role = 0;
         if (room.getHome()?.id === userId) role = 1;
         else if (room.getAway()?.id === userId) role = 2;
