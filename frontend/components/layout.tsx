@@ -165,7 +165,7 @@ export function Layout({ children }: React.PropsWithChildren) {
 				}
 				main {
 					margin: 2rem auto;
-					width: 50%;
+					width: 70%;
 					height: calc(100vh - 96px);
 					min-width: 400px;
 					border-radius: 8px;
