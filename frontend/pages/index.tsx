@@ -38,9 +38,19 @@ export default function Home() {
 	return (
 		<AuthLayout>
 			<Seo title="Home" />
-			<div>
-				<LeaderBoard />
-			</div>
+			<main>
+				<div className="d-flex center justify-between">
+					<div className="leader-board">Hello, {user?.name}</div>
+					<LeaderBoard />
+					<LiveGameList />
+				</div>
+			</main>
+			<style jsx>{`
+				.leader-board {
+					width: 20%;
+				}
+			`}</style>
+			<div></div>
 		</AuthLayout>
 	);
 }

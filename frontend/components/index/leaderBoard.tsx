@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useUser } from "../../utils/hooks/swrHelper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Avatar } from "../avatar";
 
 export default function LeaderBoard() {
-	const { user } = useUser();
 	const [leaderList, setleaderList] = useState<IUser[]>([]);
 	useEffect(() => {
 		async function getAllUserByRank() {
@@ -22,18 +20,24 @@ export default function LeaderBoard() {
 	}, []);
 	return (
 		<div>
-			<h2>Hello, {user.name}</h2>
 			<h3 style={{ textAlign: "center", fontFamily: "sans-serif" }}>
 				<FontAwesomeIcon icon={"crown"} />
 				<br></br>
 				&nbsp; LEADER BOARD
 				<br></br>
 			</h3>
+			<div className="boardBar">
+				<li>Rank</li>
+				<li>Photo</li>
+				<li>Name</li>
+				<li>Score</li>
+			</div>
 			<div className="listBox">
-				<ol start={1} className="leaderboard">
-					{leaderList.map((list) => {
+				<ul className="leaderboard">
+					{leaderList.map((list, index) => {
 						return (
 							<li key={list.id} className="tr2-home">
+								<span>{index + 1}</span>
 								<span className="image-home">
 									<Avatar size="sm" url={list.imageURL} />
 								</span>
@@ -42,7 +46,7 @@ export default function LeaderBoard() {
 							</li>
 						);
 					})}
-				</ol>
+				</ul>
 			</div>
 
 			<style jsx>{`
@@ -50,42 +54,42 @@ export default function LeaderBoard() {
 					margin-top: 40px;
 				}
 				.leaderboard {
-					margin-top: 40px;
+					margin-top: 5px;
+					width: 100%;
 				}
-
+				.boardBar {
+					margin-top: 50px;
+					display: flex;
+					justify-content: space-between;
+					background-color: black;
+					color: white;
+					padding-right: 10px;
+					padding-left: 10px;
+				}
 				.tr2-home {
-					color: black;
-					font-size: small;
-					display: list-item;
-					list-style-position: inside;
+					display: flex;
+					/*justify-content: space-between;*/
 					background-color: var(--gray-light-1);
-					padding-left: 100px;
+					padding-left: 3px;
 					align-items: center;
-					width: 60%;
-					align-position: center;
-					margin-left: 300px;
 					border-radius: 8px;
-					margin-bottom: 10px;
-					line-height: 100px;
+					margin-bottom: 3px;
+					line-height: 30px;
+					padding-left: 20px;
 				}
 				.image-home {
-					display: inline-block;
-					width: 200px;
-					margin-left: 50px;
 					justify-content: center;
 					vertical-align: middle;
-				}
-				li::marker {
-					content: counter(list-item);
-					color: black;
-					font-size: 20px;
-					font-size: 100%;
-					color: black;
+					padding-left: 100px;
 				}
 				.name-home {
-					display: inline-block;
-					width: 200px;
-					margin-left: 50px;
+					padding-left: 80px;
+					width: 150px;
+				}
+				.rank-home {
+					padding-left: 60px;
+					width: 100px;
+					padding-right: 10px;
 				}
 			`}</style>
 		</div>
