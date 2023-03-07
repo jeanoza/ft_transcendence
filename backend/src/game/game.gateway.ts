@@ -94,10 +94,7 @@ export class GameGateway
     this.logger.debug('START INTERVAL');
     this.server
       .to(roomName)
-      .emit(
-        'updateParticipants',
-        this.gameService.getParticipantArrayInRoom(roomName),
-      );
+      .emit('updateObservers', this.gameService.getObserversInRoom(roomName));
     // clearInterval if already exist interval set
     if (intervalIds[roomName]) clearInterval(intervalIds[roomName]);
     intervalIds[roomName] = setInterval(() => {
@@ -215,10 +212,7 @@ export class GameGateway
 
     this.server
       .to(roomName)
-      .emit(
-        'updateParticipants',
-        this.gameService.getParticipantArrayInRoom(roomName),
-      );
+      .emit('updateObservers', this.gameService.getObserversInRoom(roomName));
   }
 
   @SubscribeMessage('leaveGameWithoutName')
@@ -267,7 +261,6 @@ export class GameGateway
       //Verify current user participe a game
       //if participated, make it leave game
       if (participants.has(userId)) {
-        //participants.delete(userId);
         room.deleteParticipant(userId);
 
         let role = 0;

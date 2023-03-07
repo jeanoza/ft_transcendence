@@ -93,11 +93,11 @@ export default function Game() {
 	const [ballPos, setBallPos] = useState<BallPos | null>(null);
 	const [ballDir, setBallDir] = useState<BallDir | null>(null);
 	const [score, setScore] = useState<Score | null>(null);
-	const [participants, setParticipants] = useState<IUser[] | null>(null)
+	const [observers, setObservers] = useState<IUser[] | null>(null)
 
 	const [openAlertModal, setAlertModal] = useState<boolean>(false);
 
-	//console.log(participants)
+	//console.log(observers)
 
 	useEffect(() => {
 		const handleKeyDown = (e: any) => {
@@ -123,7 +123,6 @@ export default function Game() {
 
 	useEffect(() => {
 		socket.on("enterRoom", ({ role, roomName }) => {
-			console.log(role, roomName)
 			setRole(role);
 			socket.emit("startInterval", { roomName });
 			setLoading(false);
@@ -157,18 +156,19 @@ export default function Game() {
 				setWinner(winner);
 			}
 		);
-		socket.on("updateParticipants", async (participantIds: number[]) => {
-			if (participantIds.length) {
-				const _participants: IUser[] = await Promise.all(participantIds.map((participantId) => {
-					return axios.get("user/" + participantId).then(res => res.data)
-				}));
-				setParticipants(_participants);
-			}
+		socket.on("updateObservers", async (observerIds: number[]) => {
+			if (observerIds.length) {
+				const _observers: IUser[] = await Promise.all(
+					observerIds.map(async (observerId) =>
+						axios.get("user/" + observerId).then(res => res.data)
+					));
+				setObservers(_observers);
+			} else setObservers([]);
 		});
 		return () => {
 			socket.off("roomInfo");
 			socket.off("enterRoom");
-			socket.off("updateParticipants");
+			socket.off("updateObservers");
 		};
 	}, []);
 
@@ -224,13 +224,13 @@ export default function Game() {
 						)}
 					</div>
 				</div>
-				<div className="participants-container p-2">
-					<h2>Participants</h2>
+				<div className="observers-container p-2">
+					<h2>Observers</h2>
 					<ul className="my-4">
-						{participants?.map(participant => {
-							return <li key={participant.id} className="d-flex center justify-start gap">
-								<Avatar size="sm" url={participant.imageURL} />
-								<span className="text-overflow">{participant.name}</span>
+						{observers?.map(observer => {
+							return <li key={observer.id} className="d-flex center justify-start gap">
+								<Avatar size="sm" url={observer.imageURL} />
+								<span className="text-overflow">{observer.name}</span>
 							</li>
 						}
 						)}
@@ -288,16 +288,16 @@ export default function Game() {
 					left: 50%;
 					transform: translate(-50%, -50%);
 				}
-				.participants-container {
+				.observers-container {
 					margin: 2rem 0;
 					height:560px;
 					border:1px solid var(--border-color);
 					border-radius:8px;
 				}
-				.participants-container ul{
+				.observers-container ul{
 
 				}
-				.participants-container li{
+				.observers-container li{
 					width:16rem;
 				}
 			`}</style>

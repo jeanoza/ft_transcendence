@@ -78,12 +78,21 @@ export class GameService {
   deleteWaiting(id: number) {
     this.waitings.delete(id);
   }
-  getParticipantArrayInRoom(roomName: string) {
+  getObserversInRoom(roomName: string) {
     const room = this.rooms.get(roomName);
-    console.log('before', room.getParticipants());
-    const participants = room.getParticipants();
-    participants.delete(room.getHome().id);
-    console.log('after', room.getParticipants());
-    return Array.from(participants);
+    if (room) {
+      const home = room.getHome();
+      const away = room.getAway();
+      const participants = Array.from(room.getParticipants());
+      if (home && away && participants) {
+        const observers = participants.filter(
+          (participant) =>
+            !(participant === home.id || participant === away.id),
+        );
+        //console.log(observers);
+        return observers;
+      }
+    }
+    return [];
   }
 }
