@@ -137,7 +137,7 @@ export function AuthLayout({ children }: React.PropsWithChildren) {
 				}
 				main {
 					margin: 1rem auto;
-					width: 50%;
+					width: 70%;
 					height: calc(100vh - 64px);
 					min-width: 400px;
 					border-radius: 8px;
