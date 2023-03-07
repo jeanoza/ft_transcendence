@@ -1,13 +1,8 @@
-import {
-  Injectable,
-  Logger,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
-import { Room, Score } from './room';
+import { Room } from './room';
 import { Match } from '../user/entities/match.entity';
 
 @Injectable()
@@ -52,15 +47,11 @@ export class GameService {
     }
   }
 
-  async updateMatchHistory(
-    winnerId: number,
-    loserId: number,
-    scores: number[],
-  ) {
+  async updateMatchHistory(winnerId: number, loserId: number, score: number[]) {
     const match = new Match();
     match.winnerId = winnerId;
     match.loserId = loserId;
-    match.score = scores;
+    match.score = score;
     return await this.matchRepository.save(match);
   }
 
@@ -86,5 +77,13 @@ export class GameService {
   }
   deleteWaiting(id: number) {
     this.waitings.delete(id);
+  }
+  getParticipantArrayInRoom(roomName: string) {
+    const room = this.rooms.get(roomName);
+    console.log('before', room.getParticipants());
+    const participants = room.getParticipants();
+    participants.delete(room.getHome().id);
+    console.log('after', room.getParticipants());
+    return Array.from(participants);
   }
 }

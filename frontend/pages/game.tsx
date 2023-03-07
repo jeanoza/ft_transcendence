@@ -7,6 +7,9 @@ import { UserBoard } from "../components/game/userBoard";
 import { ResultModal } from "../components/modals/game/resultModal";
 import { useRouter } from "next/router";
 import { AlertModal } from "../components/modals/alertModal";
+import { Set } from "typescript";
+import axios from "axios";
+import { Avatar } from "../components/avatar";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -90,8 +93,11 @@ export default function Game() {
 	const [ballPos, setBallPos] = useState<BallPos | null>(null);
 	const [ballDir, setBallDir] = useState<BallDir | null>(null);
 	const [score, setScore] = useState<Score | null>(null);
+	const [participants, setParticipants] = useState<IUser[] | null>(null)
 
 	const [openAlertModal, setAlertModal] = useState<boolean>(false);
+
+	//console.log(participants)
 
 	useEffect(() => {
 		const handleKeyDown = (e: any) => {
@@ -117,6 +123,7 @@ export default function Game() {
 
 	useEffect(() => {
 		socket.on("enterRoom", ({ role, roomName }) => {
+			console.log(role, roomName)
 			setRole(role);
 			socket.emit("startInterval", { roomName });
 			setLoading(false);
@@ -150,9 +157,18 @@ export default function Game() {
 				setWinner(winner);
 			}
 		);
+		socket.on("updateParticipants", async (participantIds: number[]) => {
+			if (participantIds.length) {
+				const _participants: IUser[] = await Promise.all(participantIds.map((participantId) => {
+					return axios.get("user/" + participantId).then(res => res.data)
+				}));
+				setParticipants(_participants);
+			}
+		});
 		return () => {
 			socket.off("roomInfo");
 			socket.off("enterRoom");
+			socket.off("updateParticipants");
 		};
 	}, []);
 
@@ -165,6 +181,7 @@ export default function Game() {
 		}
 	}
 
+
 	function onCancelAlert() {
 		setAlertModal(false);
 		socket.emit("leaveGame", { roomName });
@@ -174,57 +191,71 @@ export default function Game() {
 	return (
 		<AuthLayout>
 			<Seo title="Game" />
-			<main className="d-flex column center">
+			<main className="d-flex center gap">
 				{isLoading && <Loader />}
-				<UserBoard home={home} away={away} ready={ready} score={score} />
-				<div className="pong">
-					{paddlePos !== null && (
-						<>
-							<div
-								className="paddle home"
-								style={{ top: paddlePos?.home, left: 0 }}
-							/>
-							<div
-								className="paddle away"
-								style={{ top: paddlePos?.away, right: 0 }}
-							/>
-						</>
-					)}
-					{ballPos !== null && ballDir !== null && (
-						<div
-							className="ball"
-							style={{
-								top: ballPos.y,
-								left: ballPos.x,
-							}}
-						/>
-					)}
-					{role && (role === ROLE.Home || role === ROLE.Away) && status !== GAME_STATUS.Playing && (
-						<button className="readyBtn" onClick={handleReady}>
-							Ready
-						</button>
-					)}
-					{roomName &&
-						score &&
-						winner &&
-						role !== undefined &&
-						role !== ROLE.Observer &&
-						status === GAME_STATUS.End && (
-							<ResultModal roomName={roomName} role={role}>
-								<h2>Winner : {winner.name}</h2>
-								<h2>
-									{score.home} : {score.away}
-								</h2>
-							</ResultModal>
+				<div>
+					<UserBoard home={home} away={away} ready={ready} score={score} />
+					<div className="pong">
+						{paddlePos !== null && (
+							<>
+								<div
+									className="paddle home"
+									style={{ top: paddlePos?.home, left: 0 }}
+								/>
+								<div
+									className="paddle away"
+									style={{ top: paddlePos?.away, right: 0 }}
+								/>
+							</>
 						)}
-					{openAlertModal && (
-						<AlertModal
-							text="A player has leaved. You will redirect to home"
-							onCancel={onCancelAlert}
-						/>
-					)}
+						{ballPos !== null && ballDir !== null && (
+							<div
+								className="ball"
+								style={{
+									top: ballPos.y,
+									left: ballPos.x,
+								}}
+							/>
+						)}
+						{role && (role === ROLE.Home || role === ROLE.Away) && status !== GAME_STATUS.Playing && (
+							<button className="readyBtn" onClick={handleReady}>
+								Ready
+							</button>
+						)}
+					</div>
+				</div>
+				<div className="participants-container p-2">
+					<h2>Participants</h2>
+					<ul className="my-4">
+						{participants?.map(participant => {
+							return <li key={participant.id} className="d-flex center justify-start gap">
+								<Avatar size="sm" url={participant.imageURL} />
+								<span className="text-overflow">{participant.name}</span>
+							</li>
+						}
+						)}
+					</ul>
 				</div>
 			</main>
+			{roomName &&
+				score &&
+				winner &&
+				role !== undefined &&
+				role !== ROLE.Observer &&
+				status === GAME_STATUS.End && (
+					<ResultModal roomName={roomName} role={role}>
+						<h2>Winner : {winner.name}</h2>
+						<h2>
+							{score.home} : {score.away}
+						</h2>
+					</ResultModal>
+				)}
+			{openAlertModal && (
+				<AlertModal
+					text="A player has leaved. You will redirect to home"
+					onCancel={onCancelAlert}
+				/>
+			)}
 			<style jsx>{`
 				.pong {
 					position: relative;
@@ -256,6 +287,18 @@ export default function Game() {
 					top: 50%;
 					left: 50%;
 					transform: translate(-50%, -50%);
+				}
+				.participants-container {
+					margin: 2rem 0;
+					height:560px;
+					border:1px solid var(--border-color);
+					border-radius:8px;
+				}
+				.participants-container ul{
+
+				}
+				.participants-container li{
+					width:16rem;
 				}
 			`}</style>
 		</AuthLayout>

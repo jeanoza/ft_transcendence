@@ -76,7 +76,6 @@ export class GameGateway
     const receiverSocket = this.online.get(receiverId);
     if (receiverSocket) {
       const roomName = `game-${senderId}-${receiverId}`;
-      //const roomName = `game-${senderId}`;
       client.join(roomName);
       const user = await this.userService.findOne(senderId);
 
@@ -92,6 +91,13 @@ export class GameGateway
     @ConnectedSocket() client: Socket,
     @MessageBody('roomName') roomName: string,
   ) {
+    this.logger.debug('START INTERVAL');
+    this.server
+      .to(roomName)
+      .emit(
+        'updateParticipants',
+        this.gameService.getParticipantArrayInRoom(roomName),
+      );
     // clearInterval if already exist interval set
     if (intervalIds[roomName]) clearInterval(intervalIds[roomName]);
     intervalIds[roomName] = setInterval(() => {
@@ -100,8 +106,7 @@ export class GameGateway
         room.update();
         if (room.getStatus() === GAME_STATUS.End) {
           clearInterval(intervalIds[roomName]);
-          // FIXME: ici send match history and renouvel rank point
-          this.logger.debug('FIN interval');
+          //this.logger.debug('FIN interval');
           if (room.getWinner() && room.getLoser())
             this.gameService.updateMatchResult(room);
         }
@@ -160,12 +165,13 @@ export class GameGateway
   ) {
     if (this.server.adapter['rooms'].get(roomName)) {
       client.join(roomName);
+
       const room = this.gameService.rooms.get(roomName);
       room.addParticipant(observerId);
       setTimeout(() => {
         this.server
           .to(this.online.get(observerId))
-          .emit('enterRoom', ROLE.Observer, roomName);
+          .emit('enterRoom', { role: ROLE.Observer, roomName });
       }, 1000);
     }
   }
@@ -206,6 +212,13 @@ export class GameGateway
       this.server.emit('liveGameList', Array.from(this.gameService.rooms));
       //console.log('after', this.gameService.rooms.get(roomName));
     }
+
+    this.server
+      .to(roomName)
+      .emit(
+        'updateParticipants',
+        this.gameService.getParticipantArrayInRoom(roomName),
+      );
   }
 
   @SubscribeMessage('leaveGameWithoutName')
@@ -244,7 +257,7 @@ export class GameGateway
   }
 
   @SubscribeMessage('leaveGamePage')
-  testSocket(
+  leaveGamePage(
     @ConnectedSocket() client: Socket,
     @MessageBody('userId') userId: number,
   ) {
@@ -254,7 +267,8 @@ export class GameGateway
       //Verify current user participe a game
       //if participated, make it leave game
       if (participants.has(userId)) {
-        participants.delete(userId);
+        //participants.delete(userId);
+        room.deleteParticipant(userId);
 
         let role = 0;
         if (room.getHome()?.id === userId) role = 1;
