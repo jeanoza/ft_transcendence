@@ -77,6 +77,22 @@ interface RoomInfo {
 	winner: IUser | null;
 }
 
+enum EMap {
+	Default,
+	First,
+	Second
+}
+
+const MAP = [
+	"/",
+	"/maps/tennis1.jpeg",
+	"/maps/galaxy.jpeg",
+	"/maps/assembly.jpeg",
+	"/maps/order.jpeg",
+	"/maps/federation.jpeg",
+	"/maps/alliance.jpeg",
+]
+
 export default function Game() {
 	const [isLoading, setLoading] = useState<boolean>(true);
 	const { socket } = useSocket("game");
@@ -86,6 +102,7 @@ export default function Game() {
 	const [role, setRole] = useState<ROLE>(ROLE.Observer);
 	const [status, setStatus] = useState<GAME_STATUS>(GAME_STATUS.Waiting);
 	const [winner, setWinner] = useState<IUser | null>(null);
+	const [map, setMap] = useState<EMap>(EMap.Default);
 	const router = useRouter();
 
 	const [ready, setReady] = useState<Ready>({ home: false, away: false });
@@ -194,8 +211,9 @@ export default function Game() {
 			<main className="d-flex center gap">
 				{isLoading && <Loader />}
 				<div>
+
 					<UserBoard home={home} away={away} ready={ready} score={score} />
-					<div className="pong">
+					<div className="pong" style={map === 0 ? { backgroundColor: "black" } : { backgroundImage: `url(${MAP[map]})` }}>
 						{paddlePos !== null && (
 							<>
 								<div
@@ -224,17 +242,39 @@ export default function Game() {
 						)}
 					</div>
 				</div>
-				<div className="observers-container p-2">
-					<h2>Observers({observers?.length})</h2>
-					<ul className="my-4">
-						{observers?.map(observer => {
-							return <li key={observer.id} className="d-flex center justify-start gap">
-								<Avatar size="sm" url={observer.imageURL} />
-								<span className="text-overflow">{observer.name}</span>
-							</li>
-						}
-						)}
-					</ul>
+				<div className="right-pannel p-2">
+					<div className="quit-container d-flex center justify-end">
+						<button onClick={() => router?.push("/")}>Quit</button>
+					</div>
+					<div className="map-container">
+						<h3>Maps</h3>
+						<ul className="my-4">
+							{MAP.map((mapPath, index) => {
+								let mapStyle: any = {};
+								let liClassName = "p-1"
+								if (index === map)
+									liClassName += " selected";
+								if (index === 0) {
+									mapStyle["backgroundColor"] = "black";
+								} else mapStyle["backgroundImage"] = `url(${mapPath})`
+								return <li key={index} className={liClassName} onClick={() => setMap(index)}>
+									<div className="map" style={mapStyle} />
+								</li>
+							})}
+						</ul>
+					</div>
+					<div className="observers-container my-4">
+						<h3>Observers({observers?.length})</h3>
+						<ul className="my-4">
+							{observers?.map(observer => {
+								return <li key={observer.id} className="d-flex center justify-start gap">
+									<Avatar size="sm" url={observer.imageURL} />
+									<span className="text-overflow">{observer.name}</span>
+								</li>
+							}
+							)}
+						</ul>
+					</div>
 				</div>
 			</main>
 			{roomName &&
@@ -261,9 +301,10 @@ export default function Game() {
 					position: relative;
 					width: 600px;
 					height: 400px;
-					background: black;
 					margin: 0;
 					overflow: hidden;
+					background-size: cover;
+					background-position:center;
 				}
 				.paddle {
 					position: absolute;
@@ -288,7 +329,7 @@ export default function Game() {
 					left: 50%;
 					transform: translate(-50%, -50%);
 				}
-				.observers-container {
+				.right-pannel {
 					margin: 2rem 0;
 					height:560px;
 					border:1px solid var(--border-color);
@@ -300,6 +341,34 @@ export default function Game() {
 				}
 				.observers-container li{
 					width:16rem;
+				}
+				.map-container {
+				}
+				.map-container ul{
+					display: grid;
+   			 	grid-template-columns: repeat(auto-fill, 7.5rem);
+    			gap: 1rem;
+					
+				}
+				.map-container li{
+					position:relative;
+					width:7.5rem;
+					height:5rem;
+					border-radius:8px;
+					border:1px solid var(--border-color);
+				}
+				.map-container li.selected{
+					border:2px solid var(--bg-accent);
+				}
+				.map-container li:hover > .map{
+					transform:scale(1.05);
+					transition:all 0.2s linear;
+				}
+				.map {
+					width:100%;
+					height:100%;
+					background-size: cover;
+					background-position:center;
 				}
 			`}</style>
 		</AuthLayout>
