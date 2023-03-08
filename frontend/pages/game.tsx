@@ -77,20 +77,25 @@ interface RoomInfo {
 	winner: IUser | null;
 }
 
-//enum EMap {
-//	Default,
-//	First,
-//	Second
-//}
+
+//const MAP = [
+//	"/",
+//	"/maps/tennis.jpeg",
+//	"/maps/galaxy.jpeg",
+//	"/maps/assembly.jpeg",
+//	"/maps/order.jpeg",
+//	"/maps/federation.jpeg",
+//	"/maps/alliance.jpeg",
+//]
 
 const MAP = [
-	"/",
-	"/maps/tennis.jpeg",
-	"/maps/galaxy.jpeg",
-	"/maps/assembly.jpeg",
-	"/maps/order.jpeg",
-	"/maps/federation.jpeg",
-	"/maps/alliance.jpeg",
+	"default",
+	"tennis",
+	"galaxy",
+	"assembly",
+	"order",
+	"federation",
+	"alliance",
 ]
 
 export default function Game() {
@@ -102,7 +107,7 @@ export default function Game() {
 	const [role, setRole] = useState<ROLE>(ROLE.Observer);
 	const [status, setStatus] = useState<GAME_STATUS>(GAME_STATUS.Waiting);
 	const [winner, setWinner] = useState<IUser | null>(null);
-	const [map, setMap] = useState<number>(0);
+	const [mapIndex, setMapIndex] = useState<number>(0);
 	const router = useRouter();
 
 	const [ready, setReady] = useState<Ready>({ home: false, away: false });
@@ -211,9 +216,9 @@ export default function Game() {
 			<main className="d-flex center gap">
 				{isLoading && <Loader />}
 				<div>
-
 					<UserBoard home={home} away={away} ready={ready} score={score} />
-					<div className="pong" style={map === 0 ? { backgroundColor: "black" } : { backgroundImage: `url(${MAP[map]})` }}>
+					{/*<div className="pong" style={map === 0 ? { backgroundColor: "black" } : { backgroundImage: `url(${MAP[map]})` }}>*/}
+					<div className={`pong ${MAP[mapIndex]}`}>
 						{paddlePos !== null && (
 							<>
 								<div
@@ -249,16 +254,14 @@ export default function Game() {
 					<div className="map-container">
 						<h3>Maps</h3>
 						<ul className="my-4">
-							{MAP.map((mapPath, index) => {
-								let mapStyle: any = {};
+							{MAP.map((mapName, index) => {
 								let liClassName = "p-1"
-								if (index === map)
+								let mapClassName = "map "
+								if (index === mapIndex)
 									liClassName += " selected";
-								if (index === 0) {
-									mapStyle["backgroundColor"] = "black";
-								} else mapStyle["backgroundImage"] = `url(${mapPath})`
-								return <li key={index} className={liClassName} onClick={() => setMap(index)}>
-									<div className="map" style={mapStyle} />
+								mapClassName += mapName;
+								return <li key={index} className={liClassName} onClick={() => setMapIndex(index)}>
+									<div className={mapClassName} />
 								</li>
 							})}
 						</ul>
@@ -277,7 +280,8 @@ export default function Game() {
 					</div>
 				</div>
 			</main>
-			{roomName &&
+			{
+				roomName &&
 				score &&
 				winner &&
 				role !== undefined &&
@@ -289,13 +293,16 @@ export default function Game() {
 							{score.home} : {score.away}
 						</h2>
 					</ResultModal>
-				)}
-			{openAlertModal && (
-				<AlertModal
-					text="A player has leaved. You will redirect to home"
-					onCancel={onCancelAlert}
-				/>
-			)}
+				)
+			}
+			{
+				openAlertModal && (
+					<AlertModal
+						text="A player has leaved. You will redirect to home"
+						onCancel={onCancelAlert}
+					/>
+				)
+			}
 			<style jsx>{`
 				.pong {
 					position: relative;
@@ -370,7 +377,28 @@ export default function Game() {
 					background-size: cover;
 					background-position:center;
 				}
+				.default {
+					background-color:black;
+				}
+				.tennis {
+					background-image:url('/maps/tennis.jpeg')
+				}
+				.galaxy {
+					background-image:url('/maps/galaxy.jpeg')
+				}
+				.assembly {
+					background-image:url('/maps/assembly.jpeg')
+				}
+				.order {
+					background-image:url('/maps/order.jpeg')
+				}
+				.federation {
+					background-image:url('/maps/federation.jpeg')
+				}
+				.alliance {
+					background-image:url('/maps/alliance.jpeg')
+				}
 			`}</style>
-		</AuthLayout>
+		</AuthLayout >
 	);
 }

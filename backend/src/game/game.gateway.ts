@@ -96,7 +96,10 @@ export class GameGateway
       .to(roomName)
       .emit('updateObservers', this.gameService.getObserversInRoom(roomName));
     // clearInterval if already exist interval set
-    if (intervalIds[roomName]) clearInterval(intervalIds[roomName]);
+    if (intervalIds[roomName]) {
+      this.logger.debug('CLEAR INTERVAL');
+      clearInterval(intervalIds[roomName]);
+    }
     intervalIds[roomName] = setInterval(() => {
       const room = this.gameService.rooms.get(roomName);
       if (room) {
