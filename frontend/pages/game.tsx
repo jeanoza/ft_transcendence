@@ -77,15 +77,15 @@ interface RoomInfo {
 	winner: IUser | null;
 }
 
-enum EMap {
-	Default,
-	First,
-	Second
-}
+//enum EMap {
+//	Default,
+//	First,
+//	Second
+//}
 
 const MAP = [
 	"/",
-	"/maps/tennis1.jpeg",
+	"/maps/tennis.jpeg",
 	"/maps/galaxy.jpeg",
 	"/maps/assembly.jpeg",
 	"/maps/order.jpeg",
@@ -102,7 +102,7 @@ export default function Game() {
 	const [role, setRole] = useState<ROLE>(ROLE.Observer);
 	const [status, setStatus] = useState<GAME_STATUS>(GAME_STATUS.Waiting);
 	const [winner, setWinner] = useState<IUser | null>(null);
-	const [map, setMap] = useState<EMap>(EMap.Default);
+	const [map, setMap] = useState<number>(0);
 	const router = useRouter();
 
 	const [ready, setReady] = useState<Ready>({ home: false, away: false });
