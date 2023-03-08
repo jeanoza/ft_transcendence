@@ -217,7 +217,6 @@ export default function Game() {
 				{isLoading && <Loader />}
 				<div>
 					<UserBoard home={home} away={away} ready={ready} score={score} />
-					{/*<div className="pong" style={map === 0 ? { backgroundColor: "black" } : { backgroundImage: `url(${MAP[map]})` }}>*/}
 					<div className={`pong ${MAP[mapIndex]}`}>
 						{paddlePos !== null && (
 							<>
