@@ -280,6 +280,33 @@ export function useAllChannel() {
 	};
 }
 
+export function useAllPublicChannel() {
+	const { data, error, mutate, isLoading } = useSWR(`channel/public`, fetcher, {
+		onError: (e) => {
+			console.log("useAllPublicChannel", e);
+		},
+		onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+			// Never retry on 404.
+			if (error?.response?.status === 404) return;
+
+			// Never retry for a specific key.
+			if (key === `channel/public`) return;
+
+			// Only retry up to 10 times.
+			if (retryCount >= 10) return;
+
+			// Retry after 5 seconds.
+			setTimeout(() => revalidate({ retryCount }), 5000);
+		},
+	});
+	return {
+		publicChannels: data,
+		revalid: mutate,
+		isLoading,
+		error,
+	};
+}
+
 export function useAllUsersInChannel(channelName: string) {
 	const { data, error, mutate, isLoading } = useSWR(
 		`channel/${channelName}/user`,

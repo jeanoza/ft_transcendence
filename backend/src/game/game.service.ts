@@ -1,13 +1,8 @@
-import {
-  Injectable,
-  Logger,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
-import { Room, Score } from './room';
+import { Room } from './room';
 import { Match } from '../user/entities/match.entity';
 
 @Injectable()
@@ -20,6 +15,7 @@ export class GameService {
   ) {}
 
   rooms = new Map<string, Room>();
+  waitings = new Map<number, string>();
   logger = new Logger('gameService');
 
   async createRoom(roomName: string, homeId: number, awayId: number) {
@@ -51,15 +47,11 @@ export class GameService {
     }
   }
 
-  async updateMatchHistory(
-    winnerId: number,
-    loserId: number,
-    scores: number[],
-  ) {
+  async updateMatchHistory(winnerId: number, loserId: number, score: number[]) {
     const match = new Match();
     match.winnerId = winnerId;
     match.loserId = loserId;
-    match.score = scores;
+    match.score = score;
     return await this.matchRepository.save(match);
   }
 
@@ -70,5 +62,37 @@ export class GameService {
       .getOne();
     const nextRank = isWinner ? rank + 15 : rank - 10;
     return await this.userRepository.update(id, { rank: nextRank });
+  }
+
+  findUser(currentId: number): number | null {
+    let otherId = null;
+    this.waitings.forEach((value, key) => {
+      if (key !== currentId) otherId = key;
+    });
+    return otherId;
+  }
+
+  addWaiting(id: number, socketId: string) {
+    this.waitings.set(id, socketId);
+  }
+  deleteWaiting(id: number) {
+    this.waitings.delete(id);
+  }
+  getObserversInRoom(roomName: string) {
+    const room = this.rooms.get(roomName);
+    if (room) {
+      const home = room.getHome();
+      const away = room.getAway();
+      const participants = Array.from(room.getParticipants());
+      if (home && away && participants) {
+        const observers = participants.filter(
+          (participant) =>
+            !(participant === home.id || participant === away.id),
+        );
+        //console.log(observers);
+        return observers;
+      }
+    }
+    return [];
   }
 }

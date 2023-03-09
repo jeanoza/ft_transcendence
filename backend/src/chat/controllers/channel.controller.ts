@@ -54,6 +54,11 @@ export class ChannelController {
     return await this.channelService.updateChannelPassword(id, password);
   }
 
+  @Get('public')
+  async getAllPublic() {
+    return await this.channelService.getAllPublic();
+  }
+
   @Get(':name/user')
   async getAllUsers(@Param('name') name: string) {
     return await this.channelService.findAllUserInChannel(name);

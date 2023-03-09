@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useSocket } from "../../utils/hooks/useSocket";
 import { LiveGameElement } from "./liveGameElement";
+import { PlayButton } from "./playButton";
 
 export function LiveGameList() {
 	const { socket } = useSocket("game");
@@ -38,9 +39,7 @@ export function LiveGameList() {
 					})}
 				</ul>
 			)}
-			<div className="d-flex center btn-container">
-				<button>Play</button>
-			</div>
+			<PlayButton />
 			<style jsx>{`
 				.live-game-container {
 					width: 24rem;
@@ -51,9 +50,7 @@ export function LiveGameList() {
 					margin-left: 2em;
 					text-align: center;
 				}
-				.btn-container {
-					margin-top: 1rem;
-				}
+
 			`}</style>
 		</div>
 	);

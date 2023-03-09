@@ -74,6 +74,10 @@
 
   - [x] mute: mutted user can't send message (with time determinated)
 
+  - [x] manage when user in game change router => no game
+
+  - [x] live game list
+
 - Backend:
 
   - [x] connect Postgresql with typeorm
@@ -129,6 +133,16 @@
   - [x] game to manage in server (to avoid synchronization problems!!)
 
   - [x] ready btn condition (1. not in game 2. home or away)
+
+  - [x] Match history for other user by id
+
+  - Game:
+
+    - [x] when home or away has 3 scores => game over => send result to db(Match history and User.rank)
+
+    - [x] when user quit => send result to db(AFK) => no game
+
+    - [x] random matching system
 
 - Database:
 
