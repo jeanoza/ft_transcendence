@@ -18,13 +18,6 @@ export function PageList() {
 					</span>
 				</Link>
 			</li>
-			{/*<li>
-				<Link href="/game">
-					<span className={(router.pathname.includes("game")) ? "active" : ""} >
-						game
-					</span>
-				</Link>
-			</li>*/}
 			<style jsx>{`
 				img {
 					width: 2rem;
