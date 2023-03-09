@@ -20,7 +20,7 @@ export function LiveGameList() {
 	}, []);
 	return (
 		<div className="live-game-container p-2">
-			<h2>Live game</h2>
+			<h2>Live game list</h2>
 			{liveList && (
 				<ul className="list my-4">
 					{liveList.map((live) => {
@@ -47,8 +47,8 @@ export function LiveGameList() {
 					overflow: none auto;
 					border: 1px solid var(--border-color);
 					border-radius: 8px;
+					margin-left: 2em;
 				}
-
 			`}</style>
 		</div>
 	);

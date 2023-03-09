@@ -4,6 +4,7 @@ import { AuthLayout } from "../components/layout";
 import { useEffect } from "react";
 import axios from "axios";
 import { LiveGameList } from "../components/index/liveGameList";
+import LeaderBoard from "../components/index/leaderBoard";
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -39,15 +40,12 @@ export default function Home() {
 			<Seo title="Home" />
 			<main>
 				<div className="d-flex center justify-between">
-					<div className="leader-board">hello, {user?.name}</div>
+					<LeaderBoard />
 					<LiveGameList />
 				</div>
 			</main>
-			<style jsx>{`
-				.leader-board {
-					width: 100%;
-				}
-			`}</style>
+			<style jsx>{``}</style>
+			<div></div>
 		</AuthLayout>
 	);
 }
