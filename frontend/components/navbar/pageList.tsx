@@ -6,12 +6,12 @@ export function PageList() {
 
 	return (
 		<ul className="d-flex center">
-			<li style={{ listStyle: "none" }}>
+			<li>
 				<Link href="/">
 					<img src="/42_icon.svg" />
 				</Link>
 			</li>
-			<li style={{ listStyle: "none" }}>
+			<li>
 				<Link href="/chat">
 					<span className={router.pathname.includes("chat") ? "active" : ""}>
 						chat
