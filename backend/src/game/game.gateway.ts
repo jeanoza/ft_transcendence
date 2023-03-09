@@ -112,7 +112,7 @@ export class GameGateway
         }
         this.server.to(roomName).emit('roomInfo', room);
       }
-    }, 25);
+    }, 1000 / 60);
   }
 
   @SubscribeMessage('onWait')
