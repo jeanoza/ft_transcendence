@@ -91,13 +91,13 @@ export class GameGateway
     @ConnectedSocket() client: Socket,
     @MessageBody('roomName') roomName: string,
   ) {
-    this.logger.debug('START INTERVAL');
+    //this.logger.debug('START INTERVAL');
     this.server
       .to(roomName)
       .emit('updateObservers', this.gameService.getObserversInRoom(roomName));
     // clearInterval if already exist interval set
     if (intervalIds[roomName]) {
-      this.logger.debug('CLEAR INTERVAL');
+      //this.logger.debug('CLEAR INTERVAL');
       clearInterval(intervalIds[roomName]);
     }
     intervalIds[roomName] = setInterval(() => {
