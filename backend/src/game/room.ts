@@ -206,8 +206,8 @@ export class Room {
     if (this.status === GAME_STATUS.Waiting || this.status === GAME_STATUS.End)
       return;
 
-    const nextX = this.ballPos.x + this.ballDir.x * 5;
-    const nextY = this.ballPos.y + this.ballDir.y * 5;
+    const nextX = this.ballPos.x + this.ballDir.x * 4;
+    const nextY = this.ballPos.y + this.ballDir.y * 4;
 
     // Check for collision with walls
     if (nextX < 0 || nextX > GAME_WIDTH - BALL_SIZE)
