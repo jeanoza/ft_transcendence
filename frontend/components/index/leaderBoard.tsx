@@ -76,6 +76,7 @@ export default function LeaderBoard() {
 					margin-bottom: 3px;
 					line-height: 30px;
 					padding-left: 20px;
+					outline: solid 1px var(--gray-light-2);
 				}
 				.image-home {
 					justify-content: center;
