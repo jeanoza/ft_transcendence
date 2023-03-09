@@ -48,9 +48,7 @@ export function LiveGameList() {
 					border: 1px solid var(--border-color);
 					border-radius: 8px;
 					margin-left: 2em;
-					text-align: center;
 				}
-
 			`}</style>
 		</div>
 	);

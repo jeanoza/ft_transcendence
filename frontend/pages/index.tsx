@@ -40,16 +40,11 @@ export default function Home() {
 			<Seo title="Home" />
 			<main>
 				<div className="d-flex center justify-between">
-					<div className="leader-board">Hello, {user?.name}</div>
 					<LeaderBoard />
 					<LiveGameList />
 				</div>
 			</main>
-			<style jsx>{`
-				.leader-board {
-					width: 20%;
-				}
-			`}</style>
+			<style jsx>{``}</style>
 			<div></div>
 		</AuthLayout>
 	);
