@@ -31,7 +31,7 @@ export default function LeaderBoard() {
 				&nbsp; LEADER BOARD
 				<br></br>
 			</h3>
-			<div className="boardBar px-2">
+			<div className="boardBar p-2">
 				<li>Position</li>
 				<li>Photo</li>
 				<li className="name-home">Name</li>
