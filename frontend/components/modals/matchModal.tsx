@@ -15,7 +15,11 @@ export function MatchModal({ onClose }: { onClose: any }) {
 			<div className="modal-container">
 				<MatchHistory userId={user.id} />
 			</div>
-			<style jsx>{``}</style>
+			<style jsx>{`
+				.modal-container {
+					width: 30rem;
+				}
+			`}</style>
 		</div>
 	);
 }
