@@ -14,7 +14,6 @@ export default function LeaderBoard() {
 				// put it on state and do it your self what you want
 				// data is already ordered by rank
 				//ex: res.data[0] is highest ranker
-				console.log(res.data);
 				setleaderList(res.data);
 			});
 		}
