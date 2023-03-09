@@ -42,12 +42,12 @@ export function LiveGameList() {
 			<PlayButton />
 			<style jsx>{`
 				.live-game-container {
-					width: 24rem;
+					min-width: 18rem;
+					width: 18rem;
 					height: 100%;
 					overflow: none auto;
 					border: 1px solid var(--border-color);
 					border-radius: 8px;
-					margin-left: 2em;
 				}
 			`}</style>
 		</div>

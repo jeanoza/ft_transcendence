@@ -32,6 +32,7 @@ export default function Home() {
 			<style jsx>{`
 				.d-flex {
 					margin-top: 4rem;
+					gap: 2rem;
 				}
 			`}</style>
 			<div></div>
