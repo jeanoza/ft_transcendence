@@ -22,7 +22,10 @@ export default function LeaderBoard() {
 	}, []);
 	return (
 		<div>
-			<h3 style={{ textAlign: "center", fontFamily: "sans-serif" }}>
+			<h3
+				className="my-4"
+				style={{ textAlign: "center", fontFamily: "sans-serif" }}
+			>
 				<FontAwesomeIcon icon={"crown"} />
 				<br></br>
 				&nbsp; LEADER BOARD
@@ -56,7 +59,6 @@ export default function LeaderBoard() {
 
 			<style jsx>{`
 				h3 {
-					margin-top: 40px;
 				}
 				.leaderboard {
 					margin-top: 5px;

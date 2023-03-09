@@ -20,29 +20,20 @@ export function getServerSideProps({ req }: any) {
 	return { props: {} };
 }
 export default function Home() {
-	//useEffect(() => {
-	//	async function getAllUserByRank() {
-	//		axios.get("user/rank").then((res) => {
-	//			// use this data.
-	//			// put it on state and do it your self what you want
-	//			// data is already ordered by rank
-	//			//ex: res.data[0] is highest ranker
-	//			//console.log(res.data);
-	//		});
-	//	}
-	//	getAllUserByRank();
-	//}, []);
-
 	return (
 		<AuthLayout>
 			<Seo title="Home" />
 			<main>
-				<div className="d-flex center">
+				<div className="d-flex center align-start">
 					<LeaderBoard />
 					<LiveGameList />
 				</div>
 			</main>
-			<style jsx>{``}</style>
+			<style jsx>{`
+				.d-flex {
+					margin-top: 4rem;
+				}
+			`}</style>
 			<div></div>
 		</AuthLayout>
 	);
