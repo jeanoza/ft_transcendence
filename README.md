@@ -1,4 +1,8 @@
-This is a boiler plate to use generally at my futur web application.
+This is a final project in common core at 42 Paris.
+
+It's a web application which contains real time chat and pong game by websocket and socket io. And also, it contains two factor authentication(2fa) by qrcode thanks to google authentication.
+
+\*To test, you must have a .env file which contains all environement variable to configure docker and its containers(frontend, backend and database)
 
 ## Get start
 
@@ -17,7 +21,7 @@ make fclean
 
 ## Stacks
 
-- Frontend: React JS, Next JS
+- Frontend: React JS, Next JS, Socket io
 
 - Backend: Node JS, Nest JS
 
@@ -29,13 +33,7 @@ make fclean
 
 - Frontend:
 
-  - [ ] Match History => after
-
-  - [ ] Home page
-
-    - [ ] leader board
-
-  - responsive
+  - [ ] responsive
 
 - Backend:
 
@@ -62,8 +60,6 @@ make fclean
 ## Refactoring
 
 - frontend:
-
-  - [ ] General component to use dropdown(menu list) - using children props
 
 - backend:
 

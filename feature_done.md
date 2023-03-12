@@ -50,7 +50,7 @@
 
   - [x] edit profile => username
 
-  - [ ] chat page
+  - [x] chat page
 
     - [x] left
 
@@ -77,6 +77,12 @@
   - [x] manage when user in game change router => no game
 
   - [x] live game list
+
+  - [x] Match History
+
+  - [x] Home page
+
+    - [x] leader board
 
 - Backend:
 
