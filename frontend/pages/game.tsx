@@ -77,17 +77,6 @@ interface RoomInfo {
 	winner: IUser | null;
 }
 
-
-//const MAP = [
-//	"/",
-//	"/maps/tennis.jpeg",
-//	"/maps/galaxy.jpeg",
-//	"/maps/assembly.jpeg",
-//	"/maps/order.jpeg",
-//	"/maps/federation.jpeg",
-//	"/maps/alliance.jpeg",
-//]
-
 const MAP = [
 	"default",
 	"tennis",
@@ -318,10 +307,6 @@ export default function Game() {
 					height: 80px;
 					background: white;
 				}
-				/*.paddle.home,
-				.paddle.away{
-					top:160px;
-				}*/
 				.ball {
 					position: absolute;
 					width: 20px;
