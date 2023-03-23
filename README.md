@@ -55,6 +55,10 @@ make fclean
 
 - frontend:
 
+  - [ ] when create account without 42auth, verify name's length
+
+  - [ ] put all protection for input / submit(Zod maybe)
+
 - backend:
 
 ## Refactoring
