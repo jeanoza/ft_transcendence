@@ -17,7 +17,7 @@ export function Search() {
 	const [userId, setUserId] = useState<number | null>(null);
 
 	useEffect(() => {
-		if (name.length > 2) {
+		if (name.length) {
 			const res: IUser[] = users.filter((el: { id: number; name: string }) =>
 				//search whatever his case(upper or lower)
 				el.name.toLowerCase().includes(name.toLowerCase())
