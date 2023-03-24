@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError, AxiosHeaders } from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -25,8 +25,15 @@ export function AuthForm() {
 		let data: IUser = { email, password };
 		let url = "auth";
 
-		if (newAccount) data = { name, ...data };
-		else url += "/login";
+		if (newAccount) {
+			// protection for empty name
+			if (name.length < 4)
+				return window.alert(
+					"You must have put at least 4 letter for name field!"
+				);
+
+			data = { name, ...data };
+		} else url += "/login";
 
 		try {
 			await axios.post(url, data);
