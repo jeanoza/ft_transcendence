@@ -27,10 +27,7 @@ export function AuthForm() {
 
 		if (newAccount) {
 			// protection for empty name
-			if (name.length < 4)
-				return window.alert(
-					"You must have put at least 4 letter for name field!"
-				);
+			if (!name.length) return window.alert("You have to write your name!!");
 
 			data = { name, ...data };
 		} else url += "/login";
