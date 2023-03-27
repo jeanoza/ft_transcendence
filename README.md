@@ -37,6 +37,16 @@ make fclean
 
   - [ ] put all protection for input / submit(Zod maybe)
 
+    - [x] userInfo
+
+    - [ ] authForm
+
+    - [ ] newChatModal
+
+    - [ ] updateChatModal
+
+    - [ ] \_2fa
+
 - Backend:
 
   - [ ] DTOs

@@ -3,6 +3,13 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { InputField } from "../inputField";
+import { z } from "zod";
+
+const schema = z.object({
+	email: z.string().email(),
+	password: z.string(),
+	name: z.string().optional(),
+});
 
 export function AuthForm() {
 	const [email, setEmail] = useState<string>("");

@@ -5,7 +5,7 @@ import { useUser } from "../utils/hooks/swrHelper";
 import { z } from "zod";
 
 const schema = z.object({
-	name: z.string(),
+	name: z.string().trim(),
 });
 
 export function UserInfo({
@@ -22,9 +22,10 @@ export function UserInfo({
 		if (e.code === "Enter" && name.length) {
 			if (name === user.name) return;
 			try {
-				const { name: _name } = schema.parse({ name: name.trim() });
-				await axios.patch("user", { name: _name });
-				setName(_name);
+				const formData = schema.parse({ name });
+				console.log(formData);
+				await axios.patch("user", formData);
+				setName(formData.name);
 				window.alert("updated");
 				revalid();
 			} catch (e: any) {
