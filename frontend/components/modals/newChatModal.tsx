@@ -6,7 +6,13 @@ import {
 	useAllPublicChannel,
 	useUser,
 } from "../../utils/hooks/swrHelper";
-import axios from "axios";
+import { z } from "zod";
+
+const schema = z.object({
+	name: z.string().trim().min(1).max(20).optional(),
+	password: z.string(),
+	isPublic: z.boolean(),
+});
 
 export function NewChatModal({ onClose }: { onClose: any }) {
 	const [name, setName] = useState<string>("");
@@ -34,13 +40,25 @@ export function NewChatModal({ onClose }: { onClose: any }) {
 	}
 
 	function onSubmit() {
-		const channel = {
-			name,
-			password,
-			isPublic: password.length ? false : true,
-		};
-		if (!name.length) return window.alert("Put channel name!");
-		socket.emit("newChannel", { channel, userId: user.id });
+		//const channel = {
+		//	name,
+		//	password,
+		//	isPublic: password.length ? false : true,
+		//};
+		try {
+			const channel = schema.parse({
+				name,
+				password,
+				isPublic: password.length ? false : true,
+			});
+			socket.emit("newChannel", { channel, userId: user.id });
+		} catch (e: any) {
+			if (e.name === "ZodError") {
+				const error = JSON.parse(e);
+				// just send 1st error to window.alert
+				window.alert(error[0].path + " : " + error[0].message);
+			} else if (e.response) window.alert(e.response.data?.message);
+		}
 	}
 
 	function handleClickChannel({ target }: any) {
