@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { InputField } from "../inputField";
 import { z } from "zod";
+import DOMPurify from "dompurify";
 
 const schema = z.object({
 	email: z.string().email(),
@@ -29,13 +30,16 @@ export function AuthForm() {
 	async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 
-		let data: IUser = { email, password };
+		let data: IUser = {
+			email: DOMPurify.sanitize(email),
+			password: DOMPurify.sanitize(password),
+		};
 		let url = "auth";
 
 		if (newAccount) {
 			// protection for empty name
 			if (!name.length) return window.alert("You have to write your name!!");
-			data = { name, ...data };
+			data = { name: DOMPurify.sanitize(name), ...data };
 		} else url += "/login";
 
 		try {

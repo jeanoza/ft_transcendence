@@ -1,11 +1,14 @@
-import { Seo } from "../components/seo";
-import { useUser } from "../utils/hooks/swrHelper";
 import { Layout } from "../components/layout";
-import { Loader } from "../components/loader";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import React, { useState } from "react";
 import { InputField } from "../components/inputField";
 import Router from "next/router";
+import { z } from "zod";
+import DOMPurify from "dompurify";
+
+const schema = z.object({
+	_2faCode: z.string().length(6),
+});
 
 export function getServerSideProps({ req }: any) {
 	const accessToken = req.cookies["accessToken"] || null;
@@ -25,13 +28,17 @@ export default function _2fa() {
 
 	async function authenticate() {
 		try {
-			await axios.post("2fa/authenticate", {
-				_2faCode,
-			});
+			const data = schema.parse({ _2faCode: DOMPurify.sanitize(_2faCode) });
+			await axios.post("2fa/authenticate", data);
 			set_2faCode("");
 			Router.push("/");
-		} catch (e: AxiosError | any) {
-			window.alert(e.message);
+		} catch (e: any) {
+			//window.alert(e.message);
+			if (e.name === "ZodError") {
+				const error = JSON.parse(e);
+				// just send 1st error to window.alert
+				window.alert(error[0].path + " : " + error[0].message);
+			} else if (e.response) window.alert(e.response.data?.message);
 		}
 	}
 	async function onSubmit2faByEnter(e: React.KeyboardEvent) {

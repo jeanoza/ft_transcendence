@@ -43,9 +43,11 @@ make fclean
 
     - [x] newChatModal
 
-    - [ ] updateChatModal
+    - [x] updateChatModal
 
-    - [ ] \_2fa
+    - [x] \_2fa
+
+    - [x] \_2faSetting
 
 - Backend:
 

@@ -7,6 +7,7 @@ import {
 	useUser,
 } from "../../utils/hooks/swrHelper";
 import { z } from "zod";
+import DOMPurify from "dompurify";
 
 const schema = z.object({
 	name: z.string().trim().min(1).max(20).optional(),
@@ -40,15 +41,10 @@ export function NewChatModal({ onClose }: { onClose: any }) {
 	}
 
 	function onSubmit() {
-		//const channel = {
-		//	name,
-		//	password,
-		//	isPublic: password.length ? false : true,
-		//};
 		try {
 			const channel = schema.parse({
-				name,
-				password,
+				name: DOMPurify.sanitize(name),
+				password: DOMPurify.sanitize(password),
 				isPublic: password.length ? false : true,
 			});
 			socket.emit("newChannel", { channel, userId: user.id });

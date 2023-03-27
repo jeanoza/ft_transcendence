@@ -2,6 +2,12 @@ import axios from "axios";
 import { useUser } from "../../../utils/hooks/swrHelper";
 import { useState } from "react";
 import { InputField } from "../../inputField";
+import { z } from "zod";
+import DOMPurify from "dompurify";
+
+const schema = z.object({
+	_2faCode: z.string().length(6),
+});
 
 export function TwoFactorSetting() {
 	const { user, revalid } = useUser();
@@ -29,12 +35,15 @@ export function TwoFactorSetting() {
 	async function switch2fa() {
 		try {
 			const path = "2fa/" + (user._2faEnabled ? "disable" : "enable");
-			await axios.post(path, {
-				_2faCode,
-			});
+			const data = schema.parse({ _2faCode: DOMPurify.sanitize(_2faCode) });
+			await axios.post(path, data);
 			revalid();
 		} catch (e: any) {
-			window.alert(e.response.data.message);
+			if (e.name === "ZodError") {
+				const error = JSON.parse(e);
+				// just send 1st error to window.alert
+				window.alert(error[0].path + " : " + error[0].message);
+			} else if (e.response) window.alert(e.response.data?.message);
 		}
 	}
 
@@ -73,7 +82,7 @@ export function TwoFactorSetting() {
 					margin-bottom: 1rem;
 				}
 				.twofactor-cont {
-					width:14rem;
+					width: 14rem;
 				}
 				.twofactor {
 					width: 4rem;
@@ -88,7 +97,7 @@ export function TwoFactorSetting() {
 					height: 2rem;
 					background-color: white;
 					border-radius: 50%;
-					transition:all 0.2s linear;
+					transition: all 0.2s linear;
 				}
 				.twofactor.enabled > div {
 					transform: translateX(2rem);

@@ -3,6 +3,7 @@ import { InputField } from "./inputField";
 import axios from "axios";
 import { useUser } from "../utils/hooks/swrHelper";
 import { z } from "zod";
+import DOMPurify from "dompurify";
 
 const schema = z.object({
 	name: z.string().trim().min(1).max(20),
@@ -22,7 +23,7 @@ export function UserInfo({
 		if (e.code === "Enter" && name.length) {
 			if (name === user.name) return;
 			try {
-				const formData = schema.parse({ name });
+				const formData = schema.parse({ name: DOMPurify.sanitize(name) });
 				await axios.patch("user", formData);
 				setName(formData.name);
 				window.alert("updated");

@@ -4,6 +4,7 @@ import { useAllPublicChannel, useChannel } from "../../utils/hooks/swrHelper";
 import { InputField } from "../inputField";
 import { Loader } from "../loader";
 import { z } from "zod";
+import DOMPurify from "dompurify";
 
 const schema = z.object({
 	id: z.number(),
@@ -29,7 +30,7 @@ export function UpdateChatModal({
 		try {
 			const formData = schema.parse({
 				id: channelId,
-				password,
+				password: DOMPurify.sanitize(password),
 				isPublic: password.length ? false : true,
 			});
 			await axios.patch("channel", formData);
