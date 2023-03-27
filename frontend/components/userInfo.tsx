@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import { InputField } from "./inputField";
 import axios from "axios";
 import { useUser } from "../utils/hooks/swrHelper";
-import zod from "zod";
+import { z } from "zod";
+
+const schema = z.object({
+	name: z.string(),
+});
 
 export function UserInfo({
 	user,
@@ -18,16 +22,18 @@ export function UserInfo({
 		if (e.code === "Enter" && name.length) {
 			if (name === user.name) return;
 			try {
-				await axios.patch("user", { name: name.trim() });
+				const { name: _name } = schema.parse({ name: name.trim() });
+				await axios.patch("user", { name: _name });
+				setName(_name);
 				window.alert("updated");
 				revalid();
 			} catch (e: any) {
+				setName(user.name);
+				console.error(e);
 				window.alert(e?.response?.data.message);
 			}
 		}
 	}
-
-	console.log(zod);
 
 	return (
 		<div className="user-info">
