@@ -35,7 +35,11 @@ make fclean
 
   - [ ] responsive
 
+  - [ ] put all protection for input / submit(Zod maybe)
+
 - Backend:
+
+  - [ ] DTOs
 
   - [ ] to implement swagger to make simple dto code
 
@@ -49,15 +53,9 @@ make fclean
 
 - ETC:
 
-  - [x] save only locally .env
-
 ## BUG to fix
 
 - frontend:
-
-  - [ ] when create account without 42auth, verify name's length
-
-  - [ ] put all protection for input / submit(Zod maybe)
 
 - backend:
 

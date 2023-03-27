@@ -84,6 +84,8 @@
 
     - [x] leader board
 
+  - [x] when create account without 42auth, verify name's length
+
 - Backend:
 
   - [x] connect Postgresql with typeorm
@@ -173,3 +175,7 @@
 - Docker:
 
   - [x] docker-compose.yml
+
+- ETC:
+
+  - [x] save only locally .env
