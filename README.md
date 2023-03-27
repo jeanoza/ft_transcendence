@@ -41,7 +41,7 @@ make fclean
 
     - [x] authForm
 
-    - [ ] newChatModal
+    - [x] newChatModal
 
     - [ ] updateChatModal
 

@@ -205,9 +205,9 @@ export class ChannelService {
     return channel;
   }
 
-  async updateChannelPassword(id: number, password: string) {
+  async updateChannelPassword(id: number, password: string, isPublic: boolean) {
     const hashed = await bcrypt.hash(password, 12);
-    return await this.update(id, { password: hashed });
+    return await this.update(id, { password: hashed, isPublic });
   }
 
   //update

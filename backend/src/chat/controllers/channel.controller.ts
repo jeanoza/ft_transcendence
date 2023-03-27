@@ -45,13 +45,18 @@ export class ChannelController {
     @Req() req,
     @Body('id') id: number,
     @Body('password') password: string,
+    @Body('isPublic') isPublic: boolean,
   ) {
     const channel = await this.channelService.findOne(id);
     if (!channel || channel.ownerId !== req.user.id)
       throw new UnauthorizedException(
         'No channel or you are not channel owner!',
       );
-    return await this.channelService.updateChannelPassword(id, password);
+    return await this.channelService.updateChannelPassword(
+      id,
+      password,
+      isPublic,
+    );
   }
 
   @Get('public')

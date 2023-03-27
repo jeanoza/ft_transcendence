@@ -1,8 +1,15 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useChannel } from "../../utils/hooks/swrHelper";
+import { useAllPublicChannel, useChannel } from "../../utils/hooks/swrHelper";
 import { InputField } from "../inputField";
 import { Loader } from "../loader";
+import { z } from "zod";
+
+const schema = z.object({
+	id: z.number(),
+	password: z.string(),
+	isPublic: z.boolean(),
+});
 
 export function UpdateChatModal({
 	channelId,
@@ -19,17 +26,21 @@ export function UpdateChatModal({
 		if (e.target.classList.contains("modal-background")) onClose();
 	}
 	async function onSubmit() {
-		const _channel = {
-			id: channelId,
-			password,
-			isPublic: password.length ? false : true,
-		};
 		try {
-			await axios.patch("channel", _channel);
+			const formData = schema.parse({
+				id: channelId,
+				password,
+				isPublic: password.length ? false : true,
+			});
+			await axios.patch("channel", formData);
 			onClose();
 			window.alert("Channel password updated");
-		} catch (e) {
-			console.log(e);
+		} catch (e: any) {
+			if (e.name === "ZodError") {
+				const error = JSON.parse(e);
+				// just send 1st error to window.alert
+				window.alert(error[0].path + " : " + error[0].message);
+			} else if (e.response) window.alert(e.response.data?.message);
 		}
 	}
 
