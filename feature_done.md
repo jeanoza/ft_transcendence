@@ -86,6 +86,20 @@
 
   - [x] when create account without 42auth, verify name's length
 
+  - [x] put all protection for input / submit(Zod && DOMpurify)
+
+    - [x] userInfo
+
+    - [x] authForm
+
+    - [x] newChatModal
+
+    - [x] updateChatModal
+
+    - [x] \_2fa
+
+    - [x] \_2faSetting
+
 - Backend:
 
   - [x] connect Postgresql with typeorm
