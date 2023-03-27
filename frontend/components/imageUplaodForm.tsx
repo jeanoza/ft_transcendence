@@ -22,10 +22,10 @@ export function ImageUploadForm() {
 		e.preventDefault();
 		setLoading(true);
 
-		const formData = new FormData();
-		formData.append('image', image);
 		try {
-			const res = await axios.post('/user/avatar', formData);
+			const formData = new FormData();
+			formData.append("image", image);
+			const res = await axios.post("/user/avatar", formData);
 			window.alert(res.data);
 			revalid();
 		} catch (err) {
@@ -35,7 +35,7 @@ export function ImageUploadForm() {
 		}
 	};
 
-	if (loading) <Loader />
+	if (loading) <Loader />;
 	return (
 		<form onSubmit={handleSubmit}>
 			<div className="field">
@@ -47,9 +47,9 @@ export function ImageUploadForm() {
 			</button>
 			<style jsx>{`
 				form {
-					width:200px;
+					width: 200px;
 				}
 			`}</style>
 		</form>
 	);
-};
+}
