@@ -5,7 +5,7 @@ import { useUser } from "../utils/hooks/swrHelper";
 import { z } from "zod";
 
 const schema = z.object({
-	name: z.string().trim(),
+	name: z.string().trim().min(1).max(20),
 });
 
 export function UserInfo({
@@ -23,15 +23,17 @@ export function UserInfo({
 			if (name === user.name) return;
 			try {
 				const formData = schema.parse({ name });
-				console.log(formData);
 				await axios.patch("user", formData);
 				setName(formData.name);
 				window.alert("updated");
 				revalid();
 			} catch (e: any) {
 				setName(user.name);
-				console.error(e);
-				window.alert(e?.response?.data.message);
+				if (e.name === "ZodError") {
+					const error = JSON.parse(e);
+					// just send 1st error to window.alert
+					window.alert(error[0].path + " : " + error[0].message);
+				} else if (e.response) window.alert(e.response.data?.message);
 			}
 		}
 	}

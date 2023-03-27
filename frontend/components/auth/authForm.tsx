@@ -7,8 +7,8 @@ import { z } from "zod";
 
 const schema = z.object({
 	email: z.string().email(),
-	password: z.string(),
-	name: z.string().optional(),
+	password: z.string().min(5).max(20),
+	name: z.string().trim().min(1).max(20).optional(),
 });
 
 export function AuthForm() {
@@ -35,15 +35,19 @@ export function AuthForm() {
 		if (newAccount) {
 			// protection for empty name
 			if (!name.length) return window.alert("You have to write your name!!");
-
 			data = { name, ...data };
 		} else url += "/login";
 
 		try {
-			await axios.post(url, data);
+			const formData = schema.parse(data);
+			await axios.post(url, formData);
 			router.push("/");
-		} catch (e: AxiosError | any) {
-			window.alert(e?.response?.data?.message);
+		} catch (e: any) {
+			if (e.name === "ZodError") {
+				const error = JSON.parse(e);
+				// just send 1st error to window.alert
+				window.alert(error[0].path + " : " + error[0].message);
+			} else if (e.response) window.alert(e.response.data?.message);
 		}
 	}
 	return (
