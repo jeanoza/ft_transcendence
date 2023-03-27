@@ -1,11 +1,19 @@
 import { Router, useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import { useAllBlocked, useAllDM, useBlocked, useIsBanned, useIsMuted, useUser } from "../../utils/hooks/swrHelper";
+import {
+	useAllBlocked,
+	useAllDM,
+	useBlocked,
+	useIsBanned,
+	useIsMuted,
+	useUser,
+} from "../../utils/hooks/swrHelper";
 import { useSocket } from "../../utils/hooks/useSocket";
 import { Avatar } from "../avatar";
 import { InputField } from "../inputField";
 import axios from "axios";
 import { Loader } from "../loader";
+import DOMPurify from "dompurify";
 
 interface IChat {
 	sender: IUser;
@@ -43,17 +51,17 @@ export function ChatDisplay({
 			window.alert(`Your are muted in ${mutedChannel}`);
 			setTimeout(() => {
 				revalidMuted();
-			}, mutedTime)
+			}, mutedTime);
 		});
 		socket.on("banned", function (bannedChannel: string) {
 			window.alert(`Your are banned in ${bannedChannel}`);
-			socket.emit("leaveChannel", { channelName: bannedChannel })
+			socket.emit("leaveChannel", { channelName: bannedChannel });
 			setChannelName(null);
 			setChats([]);
 		});
 		socket.on("kicked", function (kickedChannel: string) {
 			window.alert(`Your are kicked in ${kickedChannel} `);
-			socket.emit("leaveChannel", { channelName: kickedChannel })
+			socket.emit("leaveChannel", { channelName: kickedChannel });
 			setChannelName(null);
 			setChats([]);
 		});
@@ -87,8 +95,8 @@ export function ChatDisplay({
 	async function filterChatByBlocked(channelChats: IChat[]) {
 		const blockeds = await (await axios.get("blocked/")).data;
 		return channelChats.filter(
-			(chat) => !blockeds.find(
-				(blocked: IUser) => blocked.id === chat.sender.id)
+			(chat) =>
+				!blockeds.find((blocked: IUser) => blocked.id === chat.sender.id)
 		);
 	}
 
@@ -101,6 +109,7 @@ export function ChatDisplay({
 
 	function onKeyUp(e: KeyboardEvent) {
 		if (content.length && (channelName || dmName) && e.code === "Enter") {
+			const _content = DOMPurify.sanitize(content);
 			if (channelName)
 				socket?.emit("channelChat", {
 					user: {
@@ -109,20 +118,20 @@ export function ChatDisplay({
 						status: user.status,
 						imageURL: user.imageURL,
 					},
-					content,
+					content: _content,
 					channelName,
 				});
 			else if (dmName) {
 				socket?.emit("dm", {
 					sender: user,
 					receiverName: dmName,
-					content,
+					content: _content,
 				});
 			}
 			setContent("");
 		}
 	}
-	if ((!channelName && !dmName) || isBanned) return null
+	if ((!channelName && !dmName) || isBanned) return null;
 	return (
 		<div className="chat-display d-flex column justify-between">
 			<h3>
@@ -155,21 +164,20 @@ export function ChatDisplay({
 			</div>
 			{(channelName || dmName) && (
 				<div className="message">
-					{
-						isMuted
-							? <div className="field">
-								<label>message</label>
-								<input type="text" placeholder="You are muted" readOnly />
-							</div >
-							:
-							<InputField
-								type="text"
-								name="message"
-								state={content}
-								setState={setContent}
-								onKeyUp={onKeyUp}
-							/>
-					}
+					{isMuted ? (
+						<div className="field">
+							<label>message</label>
+							<input type="text" placeholder="You are muted" readOnly />
+						</div>
+					) : (
+						<InputField
+							type="text"
+							name="message"
+							state={content}
+							setState={setContent}
+							onKeyUp={onKeyUp}
+						/>
+					)}
 				</div>
 			)}
 			<style jsx>{`
