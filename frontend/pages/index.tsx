@@ -34,6 +34,11 @@ export default function Home() {
 					margin-top: 4rem;
 					gap: 2rem;
 				}
+				@media screen and (max-width: 512px) {
+					.d-flex {
+						flex-direction:column;
+					}
+				}
 			`}</style>
 			<div></div>
 		</AuthLayout>

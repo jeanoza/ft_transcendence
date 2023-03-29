@@ -20,80 +20,69 @@ export default function LeaderBoard() {
 		getAllUserByRank();
 	}, []);
 	return (
-		<div>
-			<h3
-				className="my-4"
-				style={{ textAlign: "center", fontFamily: "sans-serif" }}
-			>
-				<FontAwesomeIcon icon={"crown"} />
-				<br></br>
-				&nbsp; LEADER BOARD
-				<br></br>
-			</h3>
-			<div className="boardBar p-2">
-				<li>Position</li>
-				<li>Photo</li>
-				<li className="name-home">Name</li>
-				<li>Rank</li>
+		<div className="leader-container">
+			<div className="d-flex center column my-4">
+				<FontAwesomeIcon icon={"crown"} size="lg" />
+				<h2 className="my-4" >
+					&nbsp; LEADER BOARD
+				</h2>
 			</div>
-			<div className="listBox">
-				<ul className="leaderboard">
-					{leaderList.map((list, index) => {
-						return (
-							<li
-								key={list.id}
-								className={`tr2-home px-2 ${list.id === user.id ? "me" : ""}`}
-							>
-								<span>{index + 1}</span>
-								<span className="image-home">
-									<Avatar size="sm" url={list.imageURL} />
-								</span>
-								<span className="name-home">{list.name}</span>
-								<span className="rank-home">{list.rank}</span>
-							</li>
-						);
-					})}
-				</ul>
-			</div>
-
+			<ul className="">
+				<li className="d-flex gap header p-2">
+					<span>Position</span>
+					<span>Photo</span>
+					<span className="name">Name</span>
+					<span>Rank</span>
+				</li>
+				{leaderList.map((list, index) => {
+					return (
+						<li
+							key={list.id}
+							className={`d-flex gap p-2 center ${list.id === user.id ? "me" : ""}`}
+						>
+							<span>{index + 1}</span>
+							<div className="d-flex center">
+								<Avatar size="sm" url={list.imageURL} />
+							</div>
+							<span className="name">{list.name}</span>
+							<span className="">{list.rank}</span>
+						</li>
+					);
+				})}
+			</ul>
 			<style jsx>{`
-				h3 {
+				.leader-container {
+					width:100%;
 				}
-				.leaderboard {
-					margin-top: 5px;
-					width: 100%;
+				ul {
+					border:1px solid var(--border-color);
+					border-top:none;
+					border-radius:8px;
 				}
-				.boardBar {
-					margin-top: 50px;
-					display: flex;
-					justify-content: space-between;
-					background-color: black;
-					color: white;
+				ul > li:last-child {
+					border-radius: 0 0 8px 8px;
 				}
-				.tr2-home {
-					display: flex;
-					gap: 2rem;
-					/*justify-content: space-between;*/
+				ul > li {
+					width:100%;
 					background-color: var(--gray-light-1);
-					align-items: center;
-					border-radius: 8px;
-					margin-bottom: 3px;
-					line-height: 30px;
-					outline: solid 1px var(--gray-light-2);
 				}
-				.image-home {
-					justify-content: center;
-					vertical-align: middle;
-				}
-				.tr2-home.me {
+				ul > li.me {
 					background-color: white;
 				}
-				.boardBar > li:not(.name-home),
-				.tr2-home > span:not(.name-home) {
-					width: 56px;
+				ul > li.header {
+					background-color: var(--gray-dark);
+					border-radius:8px 8px 0 0;
+					color:white;
 				}
-				.name-home {
-					width: 256px;
+				ul > li > span {
+					width:56px;
+					text-align:center;
+				}
+				ul > li > div {
+					width:56px;
+				}
+				.name {
+					flex-grow:1;
 				}
 			`}</style>
 		</div>

@@ -43,11 +43,17 @@ export function LiveGameList() {
 			<style jsx>{`
 				.live-game-container {
 					min-width: 18rem;
-					width: 18rem;
+					width: 30%;
 					height: 100%;
 					overflow: none auto;
 					border: 1px solid var(--border-color);
 					border-radius: 8px;
+				}
+				@media screen and (max-width: 512px) {
+					.live-game-container {
+						min-width:0px;
+						width:100%;
+					}
 				}
 			`}</style>
 		</div>
