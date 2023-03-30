@@ -11,7 +11,7 @@ import {
 } from '@nestjs/websockets';
 
 import { Server, Socket } from 'socket.io';
-import { User } from 'src/user/entities/user.entity';
+import { User } from '../user/entities/user.entity';
 import { UserService } from 'src/user/services/user.service';
 import { clearInterval } from 'timers';
 import { GameService } from './game.service';

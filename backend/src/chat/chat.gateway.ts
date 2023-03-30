@@ -14,7 +14,7 @@ import { Server, Socket } from 'socket.io';
 import { ChannelService } from 'src/chat/services/channel.service';
 import { UserService } from 'src/user/services/user.service';
 import { DMService } from './services/dm.service';
-import { User } from 'src/user/entities/user.entity';
+import { User } from '../user/entities/user.entity';
 import { BlockedService } from 'src/user/services/blocked.service';
 import { Channel } from './entities/channel.entity';
 

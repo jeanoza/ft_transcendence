@@ -1,6 +1,6 @@
-import { ChannelChat } from 'src/chat/entities/channelChat.entity';
-import { ChannelMember } from 'src/chat/entities/channelMember.entity';
-import { Note } from 'src/note/entities/note.entity';
+import { ChannelChat } from '../../chat/entities/channelChat.entity';
+import { ChannelMember } from '../../chat/entities/channelMember.entity';
+import { Note } from '../../note/entities/note.entity';
 import {
   Column,
   CreateDateColumn,
@@ -12,8 +12,8 @@ import {
 } from 'typeorm';
 import { Friend } from './friend.entity';
 import { Blocked } from './blocked.entity';
-import { DM } from 'src/chat/entities/dm.entity';
-import { Match } from 'src/user/entities/match.entity';
+import { DM } from '../../chat/entities/dm.entity';
+import { Match } from '../../user/entities/match.entity';
 
 //in postgresql do not put schema
 @Entity({ name: 'users' })

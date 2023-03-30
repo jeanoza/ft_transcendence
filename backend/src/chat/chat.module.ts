@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { Channel } from './entities/channel.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ChannelMember } from './entities/channelMember.entity';
-import { User } from 'src/user/entities/user.entity';
+import { User } from '../user/entities/user.entity';
 import { ChannelChat } from './entities/channelChat.entity';
 import { ChannelService } from './services/channel.service';
 import { ChatGateway } from './chat.gateway';
