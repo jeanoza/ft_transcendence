@@ -42,7 +42,13 @@ export default function LeaderBoard() {
 						>
 							<span>{index + 1}</span>
 							<div className="d-flex center">
-								<Avatar size="sm" url={list.imageURL} />
+								<Avatar size="sm" url={list.imageURL} >
+									{index === 0 && (
+										<div className="leader">
+											<FontAwesomeIcon icon={["fas", "crown"]} />
+										</div>
+									)}
+								</Avatar>
 							</div>
 							<span className="name">{list.name}</span>
 							<span className="">{list.rank}</span>
@@ -83,6 +89,12 @@ export default function LeaderBoard() {
 				}
 				.name {
 					flex-grow:1;
+				}
+				.leader {
+					position:absolute;
+					color: #ffb142;
+					bottom:0;
+					left:0;
 				}
 			`}</style>
 		</div>
