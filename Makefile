@@ -10,5 +10,6 @@ fclean: clean
 	docker image prune --force --all
 	docker network prune --force
 	docker volume prune --force
+	docker system prune --all
 
 re: fclean up
